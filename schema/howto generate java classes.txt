@@ -1,0 +1,16 @@
+----------------------------------------------
+The generated classes should not be committed.
+----------------------------------------------
+
+Steps to generate a Java data model from the XSD file (Java JDK has to be installed).
+
+1) Add C:/Program Files/Java/jdk../bin to system path variable
+
+2) execute "xjc -p situationtemplate.model situation_template_draft01.xsd" in the command line to generate the classes to
+   folder situationtemplate/model
+
+3) execute ant script (command line: "ant build") to generate JAR file from the generated classes
+
+4) only once: import the jar or the generated classes into the respective project
+
+5) use classes in Java (TSituationTemplate st = new TSituationTemplate()...)

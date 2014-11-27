@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!-- XML Schema definition of a SituationTemplate to observe sensor data and detects occurring situations -->
+<xs:schema version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	
+	<!-- root -->
+	<xs:element name="SituationTemplate" type="tSituationTemplate"/>
+	
+	<!-- TODO: set maxOccurs="unbounded", a situation template could contain more than one situation -->
+	<xs:complexType name="tSituationTemplate">
+		<xs:sequence>
+			<xs:element name="Situation" type="tSituation" maxOccurs="1"/>
+		</xs:sequence>
+		<xs:attribute name="id" type="xs:ID" use="required"/>
+	</xs:complexType>
+	
+	<!--  -->
+	<xs:complexType name="tSituation">
+		<xs:sequence>
+			<xs:element name="node" type="tNode" maxOccurs="unbounded"/>
+			<xs:element name="sensorNode" type="tSensorNode" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="id" type="xs:ID" use="required"/>
+	</xs:complexType>
+	
+	<!-- TODO (?): set use="required" on parent element of sensor nodes, each sensor should be processed -->
+	<xs:complexType name="tSensorNode">
+		<xs:sequence>
+			<xs:element name="parent" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="name" type="xs:string"/>
+		</xs:sequence>
+		<xs:attribute name="id" type="xs:ID" use="required"/>
+	</xs:complexType>
+	
+	<!-- main processing node. TODO: handle sub-situations -->
+	<xs:complexType name="tNode">
+		<xs:sequence>
+			<xs:element name="type" type="xs:string"/> 
+			<xs:element name="measureName" type="xs:string"/>
+			<xs:element name="opType" type="xs:string" maxOccurs="1" minOccurs="1"/>
+			<xs:element name="condValues" type="tCondValues"/>
+			<xs:element name="parent" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="comparisonType">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:pattern value="or|and|between"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element> 
+		</xs:sequence>
+		<xs:attribute name="id" type="xs:ID" use="required"/>
+	</xs:complexType>
+
+	<!-- TODO: change to attribute "val" of element condValues-->
+	<xs:complexType name ="tCondValues">
+		<xs:sequence>
+			<xs:element name="val" type="xs:integer"/>		
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

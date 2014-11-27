@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project basedir="." default="build" name="situationtemplate">
+    <property environment="env"/>
+    <property name="srcDir" value="."/>
+    <property name="debuglevel" value="source,lines,vars"/>
+    <property name="target" value="1.7"/>
+    <property name="source" value="1.7"/>
+    <property name="ARCHIVE_DIR" value="."/>
+	<property name="jarname" value= "situation_template_v01.jar"/>
+    <path id="classpathDir">
+        <pathelement location="build/classes"/>
+    </path>
+    <target name="init">
+        <mkdir dir="build/classes"/>
+    </target>
+    <target name="clean">
+        <delete dir="build/classes"/>
+		<delete file="${ARCHIVE_DIR}/${jarname}" />		
+    </target>
+    <target name="build" depends="build-project,build-jar"/>
+    <target name="cleanall" depends="clean"/>
+    <target name="build-project" depends="clean,init">
+    	<copy todir="${ARCHIVE_DIR}">
+	      <fileset file="manifest.yml" />
+	    </copy>
+        <echo message="${ant.project.name}: ${ant.file}"/>
+        <javac debug="true" debuglevel="${debuglevel}" destdir="build/classes" source="${source}" target="${target}"
+		includeantruntime="false">
+            <src path="situationtemplate/model/"/>
+            <classpath refid="classpathDir"/>
+        </javac>
+    </target>
+ 
+   <target name="build-jar" depends="build-project">
+	  <jar destfile="${ARCHIVE_DIR}/${jarname}" basedir="build/classes"/>
+   </target>
+
+</project>

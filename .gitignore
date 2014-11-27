@@ -4,6 +4,9 @@
 
 *.class
 
+# folder containing the generated JAXB classes
+model
+
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
 
