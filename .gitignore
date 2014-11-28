@@ -36,3 +36,4 @@ results
  
 node_modules
 npm-debug.log
+/schema/*.jar
