@@ -15,7 +15,7 @@
 	
 	<xs:complexType name="tSituation">
 		<xs:sequence>
-			<xs:element name="logicNode" type="tLogicNode"/>
+			<xs:element name="logicNode" type="tLogicNode" maxOccurs="unbounded"/>
 			<xs:element name="node" type="tNode" maxOccurs="unbounded"/>
 			<xs:element name="sensorNode" type="tSensorNode" maxOccurs="unbounded"/>
 		</xs:sequence>
