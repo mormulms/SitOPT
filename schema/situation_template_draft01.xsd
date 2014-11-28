@@ -59,7 +59,7 @@
 	<!-- TODO: change to attribute "val" of element condValues-->
 	<xs:complexType name ="tCondValues">
 		<xs:sequence>
-			<xs:element name="val" type="xs:integer"/>		
+			<xs:element name="val" type="xs:string"/>		
 		</xs:sequence>
 	</xs:complexType>
 </xs:schema>
