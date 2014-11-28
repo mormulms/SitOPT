@@ -13,11 +13,24 @@
 		<xs:attribute name="id" type="xs:ID" use="required"/>
 	</xs:complexType>
 	
-	<!--  -->
 	<xs:complexType name="tSituation">
 		<xs:sequence>
+			<xs:element name="logicNode" type="tLogicNode"/>
 			<xs:element name="node" type="tNode" maxOccurs="unbounded"/>
 			<xs:element name="sensorNode" type="tSensorNode" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="id" type="xs:ID" use="required"/>
+	</xs:complexType>
+	
+	<xs:complexType name="tLogicNode">
+		<xs:sequence>
+			<xs:element name="type">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:pattern value="or|and"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
 		</xs:sequence>
 		<xs:attribute name="id" type="xs:ID" use="required"/>
 	</xs:complexType>
@@ -39,13 +52,6 @@
 			<xs:element name="opType" type="xs:string" maxOccurs="1" minOccurs="1"/>
 			<xs:element name="condValues" type="tCondValues"/>
 			<xs:element name="parent" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
-			<xs:element name="comparisonType">
-				<xs:simpleType>
-					<xs:restriction base="xs:string">
-						<xs:pattern value="or|and|between"/>
-					</xs:restriction>
-				</xs:simpleType>
-			</xs:element> 
 		</xs:sequence>
 		<xs:attribute name="id" type="xs:ID" use="required"/>
 	</xs:complexType>
