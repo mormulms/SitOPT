@@ -4,11 +4,11 @@
 	xsi:noNamespaceSchemaLocation="situation_template_draft01.xsd"
 	name="SystemObservation">
 	<Situation id="A1" name="SystemFailure">
-		<logicNode id="A2" name="sensorCombinationNode">
+		<logicNode id="A2" name="AND (CPU and RAM sensor)">
 			<parent parentID="A3"/>
 			<type>and</type>
 		</logicNode>
-		<logicNode id="A3" name="SituationRootNode">
+		<logicNode id="A3" name="OR (rootNode)">
 			<type>or</type>
 		</logicNode>
 		<node id="A4" name="CPU high load">
