@@ -23,9 +23,9 @@
 		<node id="A8" name="RAM full">
 			<type>type</type>
 			<measureName>measureName</measureName>
-			<opType>greaterThan</opType>
+			<opType>smallerThan</opType>
 			<condValues>
-				<val>90</val>
+				<val>10</val>
 			</condValues>
 			<parent parentID="A2"/>
 		</node>
