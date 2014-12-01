@@ -5,7 +5,7 @@
 	name="SystemObservation">
 	<Situation id="A1" name="SystemFailure">
 		<logicNode id="A2">
-			<parent>3</parent>
+			<parent parentID="A3"/>
 			<name>sensorCombinationNode</name>
 			<type>and</type>
 		</logicNode>
@@ -20,7 +20,7 @@
 			<condValues>
 				<val>70</val>
 			</condValues>
-			<parent>2</parent>
+			<parent parentID="A2"></parent>
 		</node>
 		<node id="A8">
 			<type>type</type>
@@ -29,18 +29,18 @@
 			<condValues>
 				<val>90</val>
 			</condValues>
-			<parent>2</parent>
+			<parent parentID="A2"></parent>
 		</node>
 		<sensorNode id="A5">
-			<parent>8</parent>
+			<parent parentID="A8"></parent>
 			<name>memorySensor</name>
 		</sensorNode>
 		<sensorNode id="A6">
-			<parent>8</parent>
+			<parent parentID="A8"></parent>
 			<name>cpuSensor</name>
 		</sensorNode>
 		<sensorNode id="A7">
-			<parent>3</parent>
+			<parent parentID="A3"></parent>
 			<name>watchdogSensor</name>
 		</sensorNode>
 	</Situation>

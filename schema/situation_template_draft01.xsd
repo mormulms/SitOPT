@@ -61,7 +61,7 @@
 	</xs:complexType>
 
 	<xs:complexType name="tParent">
-		<xs:attribute name="parentID" type="IDREF"/>
+		<xs:attribute name="parentID" type="xs:IDREF"/>
 	</xs:complexType>
 	
 	<!-- TODO: change to attribute "val" of element condValues-->
