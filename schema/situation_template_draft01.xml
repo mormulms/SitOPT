@@ -5,7 +5,7 @@
 	name="SystemObservation">
 	<Situation id="A1" name="SystemFailure">
 		<logicNode id="A3" name="combine Sensors">
-			<type>and</type>
+			<type>or</type>
 		</logicNode>
 		<node id="A4" name="% CPU load">
 			<type>type</type>
@@ -28,7 +28,7 @@
 		<node id="A9">
 			<type>type</type>
 			<measureName>measureName</measureName>
-			<opType>statusCode</opType>
+			<opType>notStatusCode</opType>
 			<condValues>
 				<val>200</val>
 			</condValues>
