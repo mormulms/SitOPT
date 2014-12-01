@@ -21,6 +21,7 @@
 			<xs:element name="sensorNode" type="tSensorNode" maxOccurs="unbounded"/>
 		</xs:sequence>
 		<xs:attribute name="id" type="xs:ID" use="required"/>
+		<xs:attribute name="name" type="xs:string"/>
 	</xs:complexType>
 	
 	<xs:complexType name="tLogicNode">

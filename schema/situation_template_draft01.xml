@@ -1,44 +1,47 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<SituationTemplate id="A0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="situation_template_draft01.xsd">
-  <Situation id="A1" name="SystemFailure">
-    <logicNode id="A2">
-      <parent>3</parent>
-      <name>sensorCombinationNode</name>
-      <type>and</type>
-    </logicNode>
-    <logicNode id="A3">
-    	<name>SituationRootNode</name>
-    	<type>or</type>
-    </logicNode>
-    <node id="A4">
-      <type>type</type>
-      <measureName>measureName</measureName>
-      <opType>greaterThan</opType>
-      <condValues>
-        <val>70</val>
-      </condValues>
-      <parent>2</parent>
-    </node>
-    <node id="A8">
-    	<type>type</type>
-    	<measureName>measureName</measureName>
-    	<opType>greaterThan</opType>
-    	<condValues>
-    		<val>90</val>
-    	</condValues>
-    	<parent>2</parent>
-    </node>
-    <sensorNode id="A5">
-      <parent>8</parent>
-      <name>memorySensor</name>
-    </sensorNode>
-    <sensorNode id="A6">
-    	<parent>8</parent>
-    	<name>cpuSensor</name>
-    </sensorNode>
-    <sensorNode id="A7">
-    	<parent>3</parent>
-    	<name>watchdogSensor</name>
-    </sensorNode>
-  </Situation>
+<SituationTemplate id="A0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="situation_template_draft01.xsd"
+	name="SystemObservation">
+	<Situation id="A1" name="SystemFailure">
+		<logicNode id="A2">
+			<parent>3</parent>
+			<name>sensorCombinationNode</name>
+			<type>and</type>
+		</logicNode>
+		<logicNode id="A3">
+			<name>SituationRootNode</name>
+			<type>or</type>
+		</logicNode>
+		<node id="A4">
+			<type>type</type>
+			<measureName>measureName</measureName>
+			<opType>greaterThan</opType>
+			<condValues>
+				<val>70</val>
+			</condValues>
+			<parent>2</parent>
+		</node>
+		<node id="A8">
+			<type>type</type>
+			<measureName>measureName</measureName>
+			<opType>greaterThan</opType>
+			<condValues>
+				<val>90</val>
+			</condValues>
+			<parent>2</parent>
+		</node>
+		<sensorNode id="A5">
+			<parent>8</parent>
+			<name>memorySensor</name>
+		</sensorNode>
+		<sensorNode id="A6">
+			<parent>8</parent>
+			<name>cpuSensor</name>
+		</sensorNode>
+		<sensorNode id="A7">
+			<parent>3</parent>
+			<name>watchdogSensor</name>
+		</sensorNode>
+	</Situation>
 </SituationTemplate>
