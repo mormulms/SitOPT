@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <SituationTemplate id="A0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="situation_template_draft01.xsd">
-  <Situation id="A1">
+  <Situation id="A1" name="SystemFailure">
     <logicNode id="A2">
       <parent>3</parent>
       <name>sensorCombinationNode</name>
