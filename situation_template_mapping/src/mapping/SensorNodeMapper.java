@@ -57,7 +57,8 @@ public class SensorNodeMapper {
 			JSONArray connections = new JSONArray();
 
 			// map the sensor node to a debug node
-			JSONObject debugNode = NodeREDUtils.generateDebugNode(zCoordinate);
+			// TODO X/Y coordinates
+			JSONObject debugNode = NodeREDUtils.generateDebugNode("600", "500", zCoordinate);
 			nodeREDModel.add(debugNode);
 			connections.add(debugNode.get("id"));
 
@@ -75,8 +76,7 @@ public class SensorNodeMapper {
 			nodeREDNode.put("wires", wiresNode);
 			nodeREDModel.add(nodeREDNode);
 
-			// TODO: implement method to style the graphical model
-			yCoordinate += 50;
+			yCoordinate += 100;
 		}
 
 		return nodeREDModel;

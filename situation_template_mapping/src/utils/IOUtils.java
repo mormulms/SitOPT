@@ -32,8 +32,7 @@ public class IOUtils {
 	 *            the situation template of the model
 	 */
 	@SuppressWarnings("unchecked")
-	public static void writeJSONFile(JSONArray nodeREDModel,
-			TSituationTemplate situationTemplate) {
+	public static void writeJSONFile(JSONArray nodeREDModel, TSituationTemplate situationTemplate) {
 		// try {
 		JSONArray flow = new JSONArray();
 		JSONObject sheet = new JSONObject();
@@ -101,15 +100,13 @@ public class IOUtils {
 			connection.setRequestProperty("Content-Type", "application/json");
 			connection.setRequestProperty("charset", "UTF-8");
 
-			OutputStreamWriter writer = new OutputStreamWriter(
-					connection.getOutputStream());
+			OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream());
 
 			writer.write(body);
 
 			writer.flush();
 
-			BufferedReader reader = new BufferedReader(new InputStreamReader(
-					connection.getInputStream()));
+			BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 
 			// debug code
 			for (String line; (line = reader.readLine()) != null;) {

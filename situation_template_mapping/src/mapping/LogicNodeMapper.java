@@ -12,7 +12,6 @@ import utils.NodeREDUtils;
 
 /**
  * This class maps the logic nodes of the situation template to corresponding NodeRED implementations
- * 
  */
 public class LogicNodeMapper {
 
@@ -23,14 +22,14 @@ public class LogicNodeMapper {
 	 * 			 the situation template to be mapped
 	 * @param nodeREDModel
 	 * 			 the existing flow defined in NodeRed JSON
-	 * @return the mapped model
 	 * 
+	 * @return the mapped model
 	 */
 	@SuppressWarnings("unchecked")
 	public JSONArray mapLogicNodes(TSituationTemplate situationTemplate, JSONArray nodeREDModel) {
 		
 		// TODO those are just random values, write style function!
-		int xCoordinate = 300;
+		int xCoordinate = 900;
 		int yCoordinate = 50;
 
 		// the z coordinate is used to assign the nodes to a corresponding sheet
@@ -85,7 +84,7 @@ public class LogicNodeMapper {
 					}
 				}
 			} else {
-				JSONObject debugNode = NodeREDUtils.generateDebugNode(zCoordinate);
+				JSONObject debugNode = NodeREDUtils.generateDebugNode("600", "500", zCoordinate);
 				nodeREDModel.add(debugNode);
 				connections.add(debugNode.get("id"));
 			}
@@ -93,6 +92,8 @@ public class LogicNodeMapper {
 			wiresNode.add(connections);
 			nodeREDNode.put("wires", wiresNode);
 			nodeREDModel.add(nodeREDNode);
+			
+			yCoordinate += 100;
 		}
 		
 		return nodeREDModel;

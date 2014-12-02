@@ -11,7 +11,6 @@ import situationtemplate.model.TSituationTemplate;
 /**
  * This class contains util methods to be used to generate the NodeRED JSON
  * model.
- * 
  */
 public class NodeREDUtils {
 
@@ -58,7 +57,7 @@ public class NodeREDUtils {
 	 * @return the debug node
 	 */
 	@SuppressWarnings("unchecked")
-	public static JSONObject generateDebugNode(String zCoordinate) {
+	public static JSONObject generateDebugNode(String x, String y, String zCoordinate) {
 
 		JSONObject output = new JSONObject();
 		String id = generateNodeREDId();
@@ -68,8 +67,8 @@ public class NodeREDUtils {
 		output.put("active", true);
 		output.put("console", "false");
 		output.put("complete", "false");
-		output.put("x", "537");
-		output.put("y", "65");
+		output.put("x", x);
+		output.put("y", y);
 		output.put("z", zCoordinate);
 
 		JSONArray opWires = new JSONArray();
@@ -101,7 +100,7 @@ public class NodeREDUtils {
 		input.put("repeat", "1");
 		input.put("crontab", "");
 		input.put("once", false);
-		// the position doesn't really matter
+		// TODO: this is hard coded
 		input.put("x", "100");
 		input.put("y", "75");
 		input.put("z", zCoordinate);

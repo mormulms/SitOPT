@@ -17,16 +17,19 @@ public class Mapper {
 
 	TSituationTemplate situationTemplate;
 
+	/**
+	 * Class constructor
+	 * 
+	 * @param situation
+	 * 			 instance of the situation template
+	 */
 	public Mapper(TSituationTemplate situation) {
 		this.situationTemplate = situation;
 	}
 
 	/**
-	 * Main class of the mapping that receives the pattern-based model as JSON
-	 * and invokes methods to transform it into an executable model.
-	 * 
-	 * @param jsonInput
-	 *            the model to be transformed
+	 * Main class of the mapping that receives the pattern-based model as XML
+	 * and invokes methods to transform it into an executable model in JSON.
 	 */
 	@SuppressWarnings("unchecked")
 	public void map() {
@@ -34,8 +37,7 @@ public class Mapper {
 
 			JSONArray nodeREDModel = new JSONArray();
 
-			// each NodeRED flow needs an inject input node, which is generated
-			// and added at this point
+			// each NodeRED flow needs an inject input node, which is generated and added at this point
 			JSONObject input = NodeREDUtils.generateInputNode(situationTemplate.getId(), situationTemplate);
 			nodeREDModel.add(input);
 
@@ -49,8 +51,7 @@ public class Mapper {
 			NodeMapper nm = new NodeMapper();
 			JSONArray finalModel = nm.mapNodes(situationTemplate, nodeREDModel);
 			
-			// write the JSON file (just for debug reasons) and deploy the JSON
-			// model to NodeRED
+			// write the JSON file (just for debug reasons) and deploy the JSON model to NodeRED
 			// TODO: call the deployToNodeRED method here
 			IOUtils.writeJSONFile(finalModel, situationTemplate);
 
