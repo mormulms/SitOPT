@@ -15,18 +15,14 @@
 			<type>type</type>
 			<measureName>measureName</measureName>
 			<opType>greaterThan</opType>
-			<condValues>
-				<val>70</val>
-			</condValues>
+			<condValue value="70"/>
 			<parent parentID="A2"/>
 		</node>
 		<node id="A8" name="RAM full">
 			<type>type</type>
 			<measureName>measureName</measureName>
 			<opType>greaterThan</opType>
-			<condValues>
-				<val>90</val>
-			</condValues>
+			<condValue value="90"/>
 			<parent parentID="A2"/>
 		</node>
 		<sensorNode id="A5" name="memorySensor">

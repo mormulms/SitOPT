@@ -42,7 +42,7 @@ public class NodeMapper {
 			JSONObject functionNodeAsJSON = null;
 			
 			if (node.getOpType().equals("greaterThan")) {
-				String conditionValues = node.getCondValues().getVal();
+				String conditionValues = node.getCondValue().getValue();
 
 				JSONParser parser = new JSONParser();
 				functionNodeAsJSON = (JSONObject) parser.parse(Nodes.getGreaterThanNode(conditionValues, situationTemplate.getId(), node, xCoordinate, Integer.toString(yCoordinate)));
@@ -54,7 +54,7 @@ public class NodeMapper {
 				functionNodeAsJSON.put("func", functionContent);
 				functionNodeAsJSON.put("id", node.getId());
 			} else if (node.getOpType().equals("lowerThan")) {
-				String conditionValues = node.getCondValues().getVal();
+				String conditionValues = node.getCondValue().getValue();
 
 				JSONParser parser = new JSONParser();
 				functionNodeAsJSON = (JSONObject) parser.parse(Nodes.getLowerThanNode(conditionValues, situationTemplate.getId(), node, xCoordinate, Integer.toString(yCoordinate)));
@@ -66,7 +66,7 @@ public class NodeMapper {
 				functionNodeAsJSON.put("func", functionContent);
 				functionNodeAsJSON.put("id", node.getId());				
 			} else if (node.getOpType().equals("equals")) {
-				String conditionValues = node.getCondValues().getVal();
+				String conditionValues = node.getCondValue().getValue();
 
 				JSONParser parser = new JSONParser();
 				functionNodeAsJSON = (JSONObject) parser.parse(Nodes.getEqualsNode(conditionValues, situationTemplate.getId(), node, xCoordinate, Integer.toString(yCoordinate)));
@@ -78,7 +78,7 @@ public class NodeMapper {
 				functionNodeAsJSON.put("func", functionContent);
 				functionNodeAsJSON.put("id", node.getId());				
 			} else if (node.getOpType().equals("notStatusCode")) {
-				String conditionValues = node.getCondValues().getVal();
+				String conditionValues = node.getCondValue().getValue();
 
 				JSONParser parser = new JSONParser();
 				functionNodeAsJSON = (JSONObject) parser.parse(Nodes.getNotStatusCodeNode(conditionValues, situationTemplate.getId(), node, xCoordinate, Integer.toString(yCoordinate)));

@@ -8,9 +8,9 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.transform.stream.StreamSource;
 
-import situationtemplate.model.TCondValues;
 import situationtemplate.model.TLogicNode;
 import situationtemplate.model.TNode;
+import situationtemplate.model.TNode.CondValue;
 import situationtemplate.model.TParent;
 import situationtemplate.model.TSensorNode;
 import situationtemplate.model.TSituation;
@@ -52,9 +52,9 @@ public class Main {
 				cpuGreatherThanNode.setType("CPU");
 				String gtId = NodeREDUtils.generateNodeREDId();
 				cpuGreatherThanNode.setId(gtId);
-				TCondValues cond = new TCondValues();
-				cond.setVal("90");
-				cpuGreatherThanNode.setCondValues(cond);
+				CondValue cond = new CondValue();
+				cond.setValue("90");
+				cpuGreatherThanNode.setCondValue(cond);
 				cpuGreatherThanNode.setMeasureName("Measure_CPU");
 				TParent parent = new TParent();
 				parent.setParentID(myAND);
@@ -65,9 +65,9 @@ public class Main {
 				freeRAMLowerThanNode.setType("RAM");
 				String ltId = NodeREDUtils.generateNodeREDId();
 				freeRAMLowerThanNode.setId(ltId);
-				TCondValues condition = new TCondValues();
-				condition.setVal("2000");
-				freeRAMLowerThanNode.setCondValues(condition);
+				CondValue condition = new CondValue();
+				condition.setValue("2000");
+				freeRAMLowerThanNode.setCondValue(condition);
 				freeRAMLowerThanNode.setMeasureName("Measure_RAM");
 				TParent parent2 = new TParent();
 				parent2.setParentID(myAND);

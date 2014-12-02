@@ -54,7 +54,11 @@
 			<xs:element name="type" type="xs:string"/> 
 			<xs:element name="measureName" type="xs:string"/>
 			<xs:element name="opType" type="xs:string" maxOccurs="1" minOccurs="1"/>
-			<xs:element name="condValues" type="tCondValues"/>
+			<xs:element name="condValue">
+				<xs:complexType>
+					<xs:attribute name="value" type="xs:string"/>
+				</xs:complexType>
+			</xs:element>
 			<xs:element name="parent" type="tParent" minOccurs="0" maxOccurs="unbounded"/>
 		</xs:sequence>
 		<xs:attribute name="id" type="xs:ID" use="required"/>
@@ -64,11 +68,5 @@
 	<xs:complexType name="tParent">
 		<xs:attribute name="parentID" type="xs:IDREF"/>
 	</xs:complexType>
-	
-	<!-- TODO: change to attribute "val" of element condValues-->
-	<xs:complexType name ="tCondValues">
-		<xs:sequence>
-			<xs:element name="val" type="xs:string"/>		
-		</xs:sequence>
-	</xs:complexType>
+
 </xs:schema>
