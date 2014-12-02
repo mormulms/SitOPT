@@ -25,7 +25,7 @@ public class MockUpRegistry {
 		} else if (name.equals("cpuSensor")) {
 			return "localhost:8080/cpuusage";
 		} else if (name.equals("watchdogSensor")) {
-			return "localhost:1880/ping";
+			return "localhost:8080/ping";
 		}
 
 		return null;

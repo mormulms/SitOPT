@@ -4,35 +4,30 @@
 	xsi:noNamespaceSchemaLocation="situation_template_draft01.xsd"
 	name="SystemObservation">
 	<Situation id="A1" name="SystemFailure">
-		<logicNode id="A3" name="combine Sensors">
+		<logicNode id="A2" name="AND (CPU and RAM sensor)">
+			<parent parentID="A3"/>
+			<type>and</type>
+		</logicNode>
+		<logicNode id="A3" name="OR (rootNode)">
 			<type>or</type>
 		</logicNode>
-		<node id="A4" name="% CPU load">
+		<node id="A4" name="CPU high load">
 			<type>type</type>
 			<measureName>measureName</measureName>
 			<opType>greaterThan</opType>
 			<condValues>
 				<val>70</val>
 			</condValues>
-			<parent parentID="A3"/>
+			<parent parentID="A2"/>
 		</node>
-		<node id="A8" name="MB RAM free">
+		<node id="A8" name="RAM full">
 			<type>type</type>
 			<measureName>measureName</measureName>
-			<opType>lowerThan</opType>
+			<opType>greaterThan</opType>
 			<condValues>
-				<val>10</val>
+				<val>90</val>
 			</condValues>
-			<parent parentID="A3"/>
-		</node>
-		<node id="A9" name="StatusCodeChecker">
-			<type>type</type>
-			<measureName>measureName</measureName>
-			<opType>notStatusCode</opType>
-			<condValues>
-				<val>200</val>
-			</condValues>
-			<parent parentID="A3"></parent>
+			<parent parentID="A2"/>
 		</node>
 		<sensorNode id="A5" name="memorySensor">
 			<parent parentID="A8"></parent>
@@ -41,7 +36,7 @@
 			<parent parentID="A4"></parent>
 		</sensorNode>
 		<sensorNode id="A7" name ="watchdogSensor">
-			<parent parentID="A9"/>
+			<parent parentID="A3"/>
 		</sensorNode>
 	</Situation>
 </SituationTemplate>

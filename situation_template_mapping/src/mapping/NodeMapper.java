@@ -60,6 +60,18 @@ public class NodeMapper {
 				functionNodeAsJSON.remove("func");
 				functionNodeAsJSON.put("func", functionContent);
 				functionNodeAsJSON.put("id", node.getId());				
+			} if (node.getOpType().equals("notStatusCode")) {
+				String conditionValues = node.getCondValues().getVal();
+
+				JSONParser parser = new JSONParser();
+				functionNodeAsJSON = (JSONObject) parser.parse(Nodes.getNotStatusCodeNode(conditionValues, situationTemplate.getId(), node));
+
+				String functionContent = (String) functionNodeAsJSON.get("func");
+				functionContent = "var comparisonValue = " + conditionValues + ";\n" + functionContent;
+
+				functionNodeAsJSON.remove("func");
+				functionNodeAsJSON.put("func", functionContent);
+				functionNodeAsJSON.put("id", node.getId());		
 			}
 			
 			// connect node to the existing flow or to a debug node

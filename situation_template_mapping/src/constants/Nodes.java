@@ -13,6 +13,10 @@ public class Nodes {
 	 * 
 	 * @param comparisonValue
 	 *            the value to be compared
+	 * @param sheetId
+	 * 			 the id of the sheet to be used
+	 * @param node
+	 * 			 the JAXB node
 	 * @return the node as JSON string
 	 */
 	public static String getGreaterThanNode(String comparisonValue, String sheetId, TNode node) {
@@ -28,6 +32,10 @@ public class Nodes {
 	 * 
 	 * @param comparisonValue
 	 *            the value to be compared
+	 * @param sheetId
+	 * 			 the id of the sheet to be used
+	 * @param node
+	 * 			 the JAXB node
 	 * @return the node as JSON string
 	 */
 	public static String getLowerThanNode(String comparisonValue, String sheetId, TNode node) {
@@ -43,6 +51,10 @@ public class Nodes {
 	 * 
 	 * @param comparisonValue
 	 *            the value to be compared
+	 * @param sheetId
+	 * 			 the id of the sheet to be used
+	 * @param node
+	 * 			 the JAXB node
 	 * @return the node as JSON string
 	 */
 	public static String getEqualsNode(String comparisonValue, String sheetId, TNode node) {
@@ -70,6 +82,19 @@ public class Nodes {
 	public static Object getORNode(String numberOfInputs) {
 		return "context.values = context.values || new Array();\ncontext.values.push(msg.payload);\n\nvar inputs = " + numberOfInputs + ";\nif (context.values.length == inputs) {\n  var returnValue = false;\n  for (var i = 0; i < inputs; i++) {\n\tif (context.values[i]) {\n\t  returnValue = true;\n\t}\n  }\n\n  msg.payload = returnValue;\n  context.values = null;\n  \n  return msg;\n} else {\n  return null;\n}\n\n";
 	}
-	
-	
+
+	/**
+	 * Generates the status code node
+	 * 
+	 * @param conditionValues
+	 * 			 the status code to be checked
+	 * @param sheetId
+	 * 			 the id of the sheet to be used
+	 * @param node
+	 * 			 the JAXB node
+	 * @return the node in JSON
+	 */
+	public static String getNotStatusCodeNode(String conditionValues, String sheetId, TNode node) {
+		return "{\"id\":\"" + NodeREDUtils.generateNodeREDId() + "\",\"type\":\"function\",\"name\":\"" + node.getName() + "\",\"func\":\"if (msg.statusCode == " + conditionValues + ") {\n  return true;  \n} else {\n  return false;\n}\n\nreturn null;\",\"outputs\":1,\"x\":181.11666870117188,\"y\":152.11666870117188,\"z\":\"" + sheetId + "\",\"wires\":[[]]}";
+	}	
 }
