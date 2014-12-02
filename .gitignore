@@ -1,8 +1,8 @@
 #
 # Ignore Java binaries
 #
-
 *.class
+/.metadata
 
 # folder containing the generated JAXB classes
 model
@@ -13,6 +13,7 @@ model
 # Package Files #
 *.war
 *.ear
+/schema/*.jar
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
@@ -36,4 +37,5 @@ results
  
 node_modules
 npm-debug.log
-/schema/*.jar
+/situation_template_mapping/build
+/situation_template_mapping/src/situationtemplate

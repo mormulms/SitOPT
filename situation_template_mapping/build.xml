@@ -27,7 +27,7 @@
         <echo message="${ant.project.name}: ${ant.file}"/>
         <javac debug="true" debuglevel="${debuglevel}" destdir="build/classes" source="${source}" target="${target}"
 		includeantruntime="false">
-            <src path="situationtemplate/model/"/>
+            <src path="src/situationtemplate/model/"/>
             <classpath refid="classpathDir"/>
         </javac>
     </target>
