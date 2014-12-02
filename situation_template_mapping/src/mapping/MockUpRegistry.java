@@ -13,10 +13,6 @@ public class MockUpRegistry {
 			return ("memorySensor");
 		case 1:
 			return ("cpuSensor");
-		case 2:
-			return ("2");
-		case 3:
-			return ("3");
 		}
 
 		return null;
