@@ -1,8 +1,7 @@
 SitOPT
 ======
 
-- situation_template_mapping
-	Contains an Eclipse project of the mapping implementation from an XML-based situation template into Nod-RED compliant JSON.
+- situation_template_mapping: contains an Eclipse project of the mapping implementation from an XML-based situation template into Nod-RED compliant JSON.
 	
 ----------------------------------
 How to run/test the implementation
