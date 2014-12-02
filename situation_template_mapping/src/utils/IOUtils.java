@@ -33,7 +33,7 @@ public class IOUtils {
 	 */
 	@SuppressWarnings("unchecked")
 	public static void writeJSONFile(JSONArray nodeREDModel, TSituationTemplate situationTemplate) {
-		// try {
+		 try {
 		JSONArray flow = new JSONArray();
 		JSONObject sheet = new JSONObject();
 
@@ -49,26 +49,21 @@ public class IOUtils {
 			flow.add(nodeREDModel.get(i));
 		}
 
-		// TODO this shouldn't be called here
-		IOUtils.deployToNodeRED(flow.toJSONString());
-
 		// pretty print json
 		Gson gson = new GsonBuilder().setPrettyPrinting().create();
 		String json = gson.toJson(flow);
 		System.out.println(json);
 
-		// TODO DEBUG: use this code to write the json string to a local file
-
 		// specify path here
-		// String path = "";
+		 String path = "mappingOutput.json";
 
-		// Files.delete(Paths.get(path));
-		// Files.write(Paths.get(path), json.getBytes(),
-		// StandardOpenOption.CREATE);
-		// } catch (IOException e) {
-		// // TODO Auto-generated catch block
-		// e.printStackTrace();
-		// }
+		 Files.delete(Paths.get(path));
+		 Files.write(Paths.get(path), json.getBytes(),
+		 StandardOpenOption.CREATE);
+		 } catch (IOException e) {
+			 // TODO Auto-generated catch block
+			 e.printStackTrace();
+		 }
 	}
 
 	/**
@@ -77,9 +72,30 @@ public class IOUtils {
 	 * @param nodeREDJsonModelAsString
 	 *            the JSON string to be deployed
 	 */
-	public static void deployToNodeRED(String nodeREDJsonModelAsString) {
+	@SuppressWarnings("unchecked")
+	public static void deployToNodeRED(JSONArray nodeREDModel, TSituationTemplate situationTemplate) {
 		try {
 
+			JSONArray flow = new JSONArray();
+			JSONObject sheet = new JSONObject();
+
+			// TODO create constant for tab
+			sheet.put("type", "tab");
+			sheet.put("id", situationTemplate.getId());
+			sheet.put("label", situationTemplate.getId() + ": " + situationTemplate.getName());
+
+			// add the sheet definition and all other components to the node red flow
+			flow.add(sheet);
+
+			for (int i = 0; i < nodeREDModel.size(); i++) {
+				flow.add(nodeREDModel.get(i));
+			}
+
+			// pretty print json
+			Gson gson = new GsonBuilder().setPrettyPrinting().create();
+			String json = gson.toJson(flow);
+			System.out.println(json);
+			
 			// we use this POST call to deploy the JSON
 			// $.ajax({
 			// url:"flows",
@@ -88,7 +104,7 @@ public class IOUtils {
 			// contentType: "application/json; charset=utf-8"
 			// });
 
-			String body = nodeREDJsonModelAsString;
+			String body = flow.toJSONString();
 
 			URL url = new URL("http://localhost:1880/flows");
 			HttpURLConnection connection = (HttpURLConnection) url

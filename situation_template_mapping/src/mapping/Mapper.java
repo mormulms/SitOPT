@@ -51,10 +51,12 @@ public class Mapper {
 			NodeMapper nm = new NodeMapper();
 			JSONArray finalModel = nm.mapNodes(situationTemplate, nodeREDModel);
 			
-			// write the JSON file (just for debug reasons) and deploy the JSON model to NodeRED
-			// TODO: call the deployToNodeRED method here
-			IOUtils.writeJSONFile(finalModel, situationTemplate);
+			// write the JSON file (just for debug reasons), remember to change the path when using this method
+			//IOUtils.writeJSONFile(finalModel, situationTemplate);
 
+			// deploy the flow to NodeRED
+			IOUtils.deployToNodeRED(finalModel, situationTemplate);
+			
 		} catch (ParseException e) {
 			System.err.println("Could not parse JSON, an error occurred.");
 			e.printStackTrace();
