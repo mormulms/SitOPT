@@ -9,9 +9,13 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 import situationtemplate.model.TSituationTemplate;
 
@@ -32,59 +36,20 @@ public class IOUtils {
 	 *            the situation template of the model
 	 */
 	@SuppressWarnings("unchecked")
-	public static void writeJSONFile(JSONArray nodeREDModel, TSituationTemplate situationTemplate) {
-		 try {
-		JSONArray flow = new JSONArray();
-		JSONObject sheet = new JSONObject();
-
-		// TODO create constant for tab
-		sheet.put("type", "tab");
-		sheet.put("id", situationTemplate.getId());
-		sheet.put("label", situationTemplate.getId() + ": " + situationTemplate.getName());
-
-		// add the sheet definition and all other components to the node red flow
-		flow.add(sheet);
-
-		for (int i = 0; i < nodeREDModel.size(); i++) {
-			flow.add(nodeREDModel.get(i));
-		}
-
-		// pretty print json
-		Gson gson = new GsonBuilder().setPrettyPrinting().create();
-		String json = gson.toJson(flow);
-		System.out.println(json);
-
-		// specify path here
-		 String path = "mappingOutput.json";
-
-		 Files.delete(Paths.get(path));
-		 Files.write(Paths.get(path), json.getBytes(),
-		 StandardOpenOption.CREATE);
-		 } catch (IOException e) {
-			 // TODO Auto-generated catch block
-			 e.printStackTrace();
-		 }
-	}
-
-	/**
-	 * This method deploys the model to NodeRED
-	 * 
-	 * @param nodeREDJsonModelAsString
-	 *            the JSON string to be deployed
-	 */
-	@SuppressWarnings("unchecked")
-	public static void deployToNodeRED(JSONArray nodeREDModel, TSituationTemplate situationTemplate) {
+	public static void writeJSONFile(JSONArray nodeREDModel,
+			TSituationTemplate situationTemplate) {
 		try {
-
 			JSONArray flow = new JSONArray();
 			JSONObject sheet = new JSONObject();
 
 			// TODO create constant for tab
 			sheet.put("type", "tab");
 			sheet.put("id", situationTemplate.getId());
-			sheet.put("label", situationTemplate.getId() + ": " + situationTemplate.getName());
+			sheet.put("label", situationTemplate.getId() + ": "
+					+ situationTemplate.getName());
 
-			// add the sheet definition and all other components to the node red flow
+			// add the sheet definition and all other components to the node red
+			// flow
 			flow.add(sheet);
 
 			for (int i = 0; i < nodeREDModel.size(); i++) {
@@ -95,7 +60,75 @@ public class IOUtils {
 			Gson gson = new GsonBuilder().setPrettyPrinting().create();
 			String json = gson.toJson(flow);
 			System.out.println(json);
+
+			// specify path here
+			String path = "mappingOutput.json";
+
+			Files.delete(Paths.get(path));
+			Files.write(Paths.get(path), json.getBytes(),
+					StandardOpenOption.CREATE);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * This method deploys the model to NodeRED
+	 * 
+	 * @param doOverwrite
+	 * 
+	 * @param nodeREDJsonModelAsString
+	 *            the JSON string to be deployed
+	 */
+	@SuppressWarnings("unchecked")
+	public static void deployToNodeRED(JSONArray nodeREDModel, TSituationTemplate situationTemplate, boolean doOverwrite) {
+		try {
+			JSONArray flow;
 			
+			if (doOverwrite) {
+				flow = new JSONArray();
+			} else {
+				String currentFlows = getHTML("http://localhost:1880/flows");
+				JSONParser parser = new JSONParser();
+				flow = (JSONArray) parser.parse(currentFlows);
+				
+				List<JSONObject> toBeRemoved = new ArrayList<>();
+
+				for (int i = 0; i < flow.size(); i++) {
+					JSONObject flowElement = (JSONObject) flow.get(i);
+					
+					String id = (String) flowElement.get("id");
+					String z = (String) flowElement.get("z");
+					if (id != null && id.equals(situationTemplate.getId()) || (z != null && z.equals(situationTemplate.getId()))) {
+						// this template already exists, delete it and replace it with the generated one
+						toBeRemoved.add(flowElement);
+					}
+				}
+				for (JSONObject remove: toBeRemoved) {
+					flow.remove(remove);
+				}
+			}
+			
+			JSONObject sheet = new JSONObject();
+
+			// TODO create constant for tab
+			sheet.put("type", "tab");
+			sheet.put("id", situationTemplate.getId());
+			sheet.put("label", situationTemplate.getId() + ": "	+ situationTemplate.getName());
+
+			// add the sheet definition and all other components to the node red flow
+			flow.add(sheet);
+
+			for (int i = 0; i < nodeREDModel.size(); i++) {
+				flow.add(nodeREDModel.get(i));
+			}
+			
+			// pretty print json
+			Gson gson = new GsonBuilder().setPrettyPrinting().create();
+			String json = gson.toJson(flow);
+			System.out.println(json);
+
 			// we use this POST call to deploy the JSON
 			// $.ajax({
 			// url:"flows",
@@ -107,8 +140,7 @@ public class IOUtils {
 			String body = flow.toJSONString();
 
 			URL url = new URL("http://localhost:1880/flows");
-			HttpURLConnection connection = (HttpURLConnection) url
-					.openConnection();
+			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 			connection.setRequestMethod("POST");
 			connection.setDoInput(true);
 			connection.setDoOutput(true);
@@ -135,7 +167,34 @@ public class IOUtils {
 		} catch (IOException e) {
 			System.err.println("Could not process HTTP request.");
 			e.printStackTrace();
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 
+	public static String getHTML(String urlToRead) {
+		URL url;
+		HttpURLConnection conn;
+		BufferedReader rd;
+		String line;
+		String result = "";
+		try {
+			url = new URL(urlToRead);
+			conn = (HttpURLConnection) url.openConnection();
+			conn.setRequestMethod("GET");
+			conn.setRequestProperty("Content-Type", "application/json");
+			rd = new BufferedReader(
+					new InputStreamReader(conn.getInputStream()));
+			while ((line = rd.readLine()) != null) {
+				result += line;
+			}
+			rd.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
 }

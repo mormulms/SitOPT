@@ -54,8 +54,11 @@ public class Mapper {
 			// write the JSON file (just for debug reasons), remember to change the path when using this method
 			//IOUtils.writeJSONFile(finalModel, situationTemplate);
 
+			// set this value to false if the existing flows in NodeRED shall be overwritten
+			boolean doOverwrite = false;
+			
 			// deploy the flow to NodeRED
-			IOUtils.deployToNodeRED(finalModel, situationTemplate);
+			IOUtils.deployToNodeRED(finalModel, situationTemplate, doOverwrite);
 			
 		} catch (ParseException e) {
 			System.err.println("Could not parse JSON, an error occurred.");
