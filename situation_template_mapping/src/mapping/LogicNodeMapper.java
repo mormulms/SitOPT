@@ -55,7 +55,7 @@ public class LogicNodeMapper {
 
 			// create the comparison node in NodeRED
 			JSONObject nodeREDNode = new JSONObject();
-			nodeREDNode.put("id", logicNode.getId());
+			nodeREDNode.put("id", situationTemplate.getId() + "." + logicNode.getId());
 			nodeREDNode.put("type", "function");
 			if (logicNode.getType().equals("and")) {
 				nodeREDNode.put("name", logicNode.getName());
@@ -77,10 +77,10 @@ public class LogicNodeMapper {
 				for (TParent parent: logicNode.getParent()) {
 					if (parent.getParentID() instanceof TNode) {
 						String parentId = ((TNode) parent.getParentID()).getId();
-						connections.add(parentId);
+						connections.add(situationTemplate.getId() + "." + parentId);
 					} else if (parent.getParentID() instanceof TLogicNode) {
 						String parentId = ((TLogicNode) parent.getParentID()).getId();
-						connections.add(parentId);
+						connections.add(situationTemplate.getId() + "." + parentId);
 					}
 				}
 			} else {

@@ -43,7 +43,7 @@ public class SensorNodeMapper {
 
 			// create the corresponding JSON node
 			JSONObject nodeREDNode = new JSONObject();
-			nodeREDNode.put("id", sensorNode.getId());
+			nodeREDNode.put("id", situationTemplate.getId() + "." + sensorNode.getId());
 			nodeREDNode.put("type", TYPE);
 			nodeREDNode.put("name", sensorNode.getName());
 			nodeREDNode.put("method", METHOD);
@@ -65,9 +65,9 @@ public class SensorNodeMapper {
 			// connect to the parents
 			for (TParent parent : sensorNode.getParent()) {
 				if (parent.getParentID() instanceof TNode) {
-					connections.add(((TNode) parent.getParentID()).getId());
+					connections.add(situationTemplate.getId() + "." +((TNode) parent.getParentID()).getId());
 				} else if (parent.getParentID() instanceof TLogicNode) {
-					connections.add(((TLogicNode) parent.getParentID()).getId());
+					connections.add(situationTemplate.getId() + "." +((TLogicNode) parent.getParentID()).getId());
 				}
 			}
 

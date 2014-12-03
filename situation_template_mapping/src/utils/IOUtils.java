@@ -173,6 +173,13 @@ public class IOUtils {
 		}
 	}
 
+	/**
+	 * This methods gets the currently deployed flows in Node-RED 
+	 * 
+	 * @param urlToRead
+	 * 				 the url of Node-RED
+	 * @return the current flow
+	 */
 	public static String getHTML(String urlToRead) {
 		URL url;
 		HttpURLConnection conn;

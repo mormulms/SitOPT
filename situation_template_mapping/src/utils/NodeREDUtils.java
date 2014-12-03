@@ -112,7 +112,7 @@ public class NodeREDUtils {
 		for (TSensorNode sensorNode : situationTemplate.getSituation()
 				.getSensorNode()) {
 			String sensorNodeId = sensorNode.getId();
-			connections.add(sensorNodeId);
+			connections.add(situationTemplate.getId() + "." + sensorNodeId);
 		}
 
 		wires.add(connections);

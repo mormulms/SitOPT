@@ -52,7 +52,7 @@ public class NodeMapper {
 
 				functionNodeAsJSON.remove("func");
 				functionNodeAsJSON.put("func", functionContent);
-				functionNodeAsJSON.put("id", node.getId());
+				functionNodeAsJSON.put("id", situationTemplate.getId() + "." + node.getId());
 			} else if (node.getOpType().equals("lowerThan")) {
 				String conditionValues = node.getCondValue().getValue();
 
@@ -64,7 +64,7 @@ public class NodeMapper {
 
 				functionNodeAsJSON.remove("func");
 				functionNodeAsJSON.put("func", functionContent);
-				functionNodeAsJSON.put("id", node.getId());				
+				functionNodeAsJSON.put("id", situationTemplate.getId() + "." + node.getId());				
 			} else if (node.getOpType().equals("equals")) {
 				String conditionValues = node.getCondValue().getValue();
 
@@ -76,7 +76,7 @@ public class NodeMapper {
 
 				functionNodeAsJSON.remove("func");
 				functionNodeAsJSON.put("func", functionContent);
-				functionNodeAsJSON.put("id", node.getId());				
+				functionNodeAsJSON.put("id", situationTemplate.getId() + "." + node.getId());				
 			} else if (node.getOpType().equals("notStatusCode")) {
 				String conditionValues = node.getCondValue().getValue();
 
@@ -88,7 +88,7 @@ public class NodeMapper {
 
 				functionNodeAsJSON.remove("func");
 				functionNodeAsJSON.put("func", functionContent);
-				functionNodeAsJSON.put("id", node.getId());		
+				functionNodeAsJSON.put("id", situationTemplate.getId() + "." + node.getId());		
 			}
 			
 			// connect node to the existing flow or to a debug node
@@ -98,9 +98,9 @@ public class NodeMapper {
 
 			for (TParent parent : node.getParent()) {
 				if (parent.getParentID() instanceof TNode) {
-					connections.add(((TNode) parent.getParentID()).getId());
+					connections.add(situationTemplate.getId() + "." + ((TNode) parent.getParentID()).getId());
 				} else if (parent.getParentID() instanceof TLogicNode) {
-					connections.add(((TLogicNode) parent.getParentID()).getId());
+					connections.add(situationTemplate.getId() + "." +((TLogicNode) parent.getParentID()).getId());
 				}
 			}
 

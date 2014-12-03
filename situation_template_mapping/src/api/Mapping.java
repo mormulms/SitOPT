@@ -11,8 +11,19 @@ import javax.xml.transform.stream.StreamSource;
 import mapping.Mapper;
 import situationtemplate.model.TSituationTemplate;
 
+/**
+ * Class implementing the interface of the mapping
+ */
 public class Mapping implements MappingInterface {
-
+	
+	/**
+	 * Invokes the mapping of the situation template and the deployment to Node-RED
+	 * 
+	 * @param situationTemplatePath
+	 * 				 the path to the situation template XML as string
+	 * @param doOverwrite
+	 * 				 determines whether the currently deployed flows shall be overwritten 
+	 */
 	@Override
 	public void mapAndDeploy(String situationTemplatePath, boolean doOverwrite) {
 		try {

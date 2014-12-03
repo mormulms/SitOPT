@@ -1,7 +1,18 @@
 package api;
 
+/**
+ * The interface of the mapping
+ */
 public interface MappingInterface {
 
+	/**
+	 * Invokes the mapping of the situation template and the deployment to Node-RED
+	 * 
+	 * @param situationTemplatePath
+	 * 				 the path to the situation template XML as string
+	 * @param doOverwrite
+	 * 				 determines whether the currently deployed flows shall be overwritten 
+	 */
 	public void mapAndDeploy(String situationTemplatePath, boolean doOverwrite);
 	
 }
