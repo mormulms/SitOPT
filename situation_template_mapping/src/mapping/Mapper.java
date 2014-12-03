@@ -15,6 +15,9 @@ import utils.NodeREDUtils;
  */
 public class Mapper {
 
+	/**
+	 * The situation template to be mapped
+	 */
 	TSituationTemplate situationTemplate;
 
 	/**

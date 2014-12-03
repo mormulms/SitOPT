@@ -39,13 +39,7 @@ public class NodeMapper {
 		for (TNode node : situationTemplate.getSituation().getNode()) {
 			
 			String conditionValues = node.getCondValue().getValue();
-			JSONObject nodeREDNode = new JSONObject();
-			nodeREDNode.put("id", situationTemplate.getId() + "." + node.getId());
-			nodeREDNode.put("type", "function");
-			nodeREDNode.put("name", node.getName());
-			nodeREDNode.put("x", xCoordinate);
-			nodeREDNode.put("y", yCoordinate);
-			nodeREDNode.put("z", situationTemplate.getId());
+			JSONObject nodeREDNode = NodeREDUtils.createNodeREDNode(situationTemplate.getId() + "." + node.getId(), node.getName(), "function", xCoordinate, Integer.toString(yCoordinate), situationTemplate.getId());
 			
 			if (node.getOpType().equals("greaterThan")) {
 				nodeREDNode.put("func", Nodes.getGreaterThanNode(conditionValues));

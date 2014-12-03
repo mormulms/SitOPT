@@ -120,4 +120,35 @@ public class NodeREDUtils {
 
 		return input;
 	}
+	
+	/**
+	 * Creates a NodeRED JSON node
+	 * 
+	 * @param id
+	 * 			 the id of the node
+	 * @param name
+	 * 			 the name of the node
+	 * @param type
+	 * 			 the type of the node
+	 * @param x
+	 * 			the x coordinate of the node
+	 * @param y
+	 * 			the y coordinate of the node
+	 * @param z
+	 * 			the sheet id
+	 * 
+	 * @return the node as JSONObject
+	 */
+	@SuppressWarnings("unchecked")
+	public static JSONObject createNodeREDNode(String id, String name, String type, String x, String y, String z) {
+		JSONObject nodeREDNode = new JSONObject();
+		nodeREDNode.put("id", id);
+		nodeREDNode.put("type", type);
+		nodeREDNode.put("name", name);
+		nodeREDNode.put("x", x);
+		nodeREDNode.put("y", y);
+		nodeREDNode.put("z", z);
+		
+		return nodeREDNode;
+	}
 }

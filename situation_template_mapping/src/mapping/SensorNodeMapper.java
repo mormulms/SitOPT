@@ -41,16 +41,10 @@ public class SensorNodeMapper {
 			// TODO: create real Registry
 			url = MockUpRegistry.getURLForID(sensorNode.getName());
 
-			// create the corresponding JSON node
-			JSONObject nodeREDNode = new JSONObject();
-			nodeREDNode.put("id", situationTemplate.getId() + "." + sensorNode.getId());
-			nodeREDNode.put("type", TYPE);
-			nodeREDNode.put("name", sensorNode.getName());
+			// create the corresponding NodeRED JSON node
+			JSONObject nodeREDNode = NodeREDUtils.createNodeREDNode(situationTemplate.getId() + "." + sensorNode.getId(), sensorNode.getName(), TYPE, Integer.toString(xCoordinate), Integer.toString(yCoordinate), zCoordinate);
 			nodeREDNode.put("method", METHOD);
 			nodeREDNode.put("url", url);
-			nodeREDNode.put("x", Integer.toString(xCoordinate));
-			nodeREDNode.put("y", Integer.toString(yCoordinate));
-			nodeREDNode.put("z", zCoordinate);
 
 			// now connect the node to the flow
 			JSONArray wiresNode = new JSONArray();

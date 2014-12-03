@@ -54,22 +54,16 @@ public class LogicNodeMapper {
 			}
 
 			// create the comparison node in NodeRED
-			JSONObject nodeREDNode = new JSONObject();
-			nodeREDNode.put("id", situationTemplate.getId() + "." + logicNode.getId());
-			nodeREDNode.put("type", "function");
+			JSONObject nodeREDNode = NodeREDUtils.createNodeREDNode(situationTemplate.getId() + "." + logicNode.getId(), logicNode.getName(), "function", Integer.toString(xCoordinate), Integer.toString(yCoordinate), zCoordinate);
+
 			if (logicNode.getType().equals("and")) {
-				nodeREDNode.put("name", logicNode.getName());
 				nodeREDNode.put("func", Nodes.getANDNode(Integer.toString(children)));
 			} else {
-				nodeREDNode.put("name", logicNode.getName());
 				nodeREDNode.put("func", Nodes.getORNode(Integer.toString(children)));
 			}
 			nodeREDNode.put("outputs", "1");
-			nodeREDNode.put("x", xCoordinate);
-			nodeREDNode.put("y", yCoordinate);
-			nodeREDNode.put("z", zCoordinate);
 			
-			// connect it to the parent
+			// connect it to the parent(s)
 			JSONArray wiresNode = new JSONArray();
 			JSONArray connections = new JSONArray();
 			
