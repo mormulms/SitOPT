@@ -1,90 +1,60 @@
 package constants;
 
-import situationtemplate.model.TNode;
-import utils.NodeREDUtils;
-
 /**
  * This class offers methods to generate the Node-RED function nodes as JSON
  */
 public class Nodes {
 
 	/**
-	 * Generates the "greater than" node as JSON object
+	 * Generates the JavaScript implementation of the "greater than" node
 	 * 
 	 * @param comparisonValue
 	 *            the value to be compared
-	 * @param sheetId
-	 * 			 the id of the sheet to be used
-	 * @param node
-	 * 			 the JAXB node
 	 * 
 	 * @return the node as JSON string
 	 */
-	public static String getGreaterThanNode(String comparisonValue, String sheetId, TNode node, String x, String y) {
-		return "{\"id\":\""
-				+ NodeREDUtils.generateNodeREDId()
-				+ "\",\"type\":\"function\",\"name\":\"" + node.getName() + "\",\"func\":\"var curr = msg.payload;\n\nif (curr > "
-				+ comparisonValue
-				+ ") {\n\tmsg.payload = true;\n} else {\n\tmsg.payload = false;\n}\n\nreturn msg;\",\"outputs\":1,\"x\":" + x + ",\"y\":" + y + ",\"z\":\"" + sheetId + "\",\"wires\":[[]]}";
+	public static String getGreaterThanNode(String comparisonValue) {
+		return "var curr = msg.payload;\n\nif (curr > "	+ comparisonValue + ") {\n\tmsg.payload = true;\n} else {\n\tmsg.payload = false;\n}\n\nreturn msg;";
 	}
 
 	/**
-	 * Generates the "lower than" node as JSON object
+	 * Generates the JavaScript implementation of the "lower than" node
 	 * 
 	 * @param comparisonValue
 	 *            the value to be compared
-	 * @param sheetId
-	 * 			 the id of the sheet to be used
-	 * @param node
-	 * 			 the JAXB node
 	 * 
 	 * @return the node as JSON string
 	 */
-	public static String getLowerThanNode(String comparisonValue, String sheetId, TNode node, String x, String y) {
-		return "{\"id\":\""
-				+ NodeREDUtils.generateNodeREDId()
-				+ "\",\"type\":\"function\",\"name\":\"" + node.getName() + "\",\"func\":\"var curr = msg.payload;\n\nif (curr < "
-				+ comparisonValue
-				+ ") {\n\tmsg.payload = true;\n} else {\n\tmsg.payload = false;\n}\n\nreturn msg;\",\"outputs\":1,\"x\":" + x + ",\"y\":" + y + ",\"z\":\"" + sheetId + "\",\"wires\":[[]]}";
+	public static String getLowerThanNode(String comparisonValue) {
+		return "var curr = msg.payload;\n\nif (curr < "	+ comparisonValue	+ ") {\n\tmsg.payload = true;\n} else {\n\tmsg.payload = false;\n}\n\nreturn msg;";
 	}
 
 	/**
-	 * Generates the "equals" node as JSON object
+	 * Generates the JavaScript implementation of the "equals" node
 	 * 
 	 * @param comparisonValue
 	 *            the value to be compared
-	 * @param sheetId
-	 * 			 the id of the sheet to be used
-	 * @param node
-	 * 			 the JAXB node
 	 * 
 	 * @return the node as JSON string
 	 */
-	public static String getEqualsNode(String comparisonValue, String sheetId, TNode node, String x, String y) {
-		return "{\"id\":\""
-				+ NodeREDUtils.generateNodeREDId()
-				+ "\",\"type\":\"function\",\"name\":\"" + node.getName() + "\",\"func\":\"var curr = msg.payload;\n\nif (curr == "
-				+ comparisonValue
-				+ ") {\n\tmsg.payload = true;\n} else {\n\tmsg.payload = false;\n}\n\nreturn msg;\",\"outputs\":1,\"x\":" + x + ",\"y\":" + y + ",\"z\":\"" + sheetId + "\",\"wires\":[[]]}";
+	public static String getEqualsNode(String comparisonValue) {
+		return "var curr = msg.payload;\n\nif (curr == " + comparisonValue + ") {\n\tmsg.payload = true;\n} else {\n\tmsg.payload = false;\n}\n\nreturn msg;";
 	}
 
 	/**
-	 * Generates the "status code" node as JSON object
+	 * Generates the JavaScript implementation of the "status code" node
 	 * 
 	 * @param conditionValues
 	 * 			 the status code to be checked
-	 * @param sheetId
-	 * 			 the id of the sheet to be used
-	 * @param node
-	 * 			 the JAXB node
+	 * 
 	 * @return the node in JSON
 	 */
-	public static String getNotStatusCodeNode(String conditionValues, String sheetId, TNode node, String x, String y) {
-		return "{\"id\":\"" + NodeREDUtils.generateNodeREDId() + "\",\"type\":\"function\",\"name\":\"" + node.getName() + "\",\"func\":\"if (msg.statusCode == " + conditionValues + ") {\n  msg.payload = true;\n return msg;  \n} else {\n  msg.payload = false;\n return msg;\n}\n\nreturn null;\",\"outputs\":1,\"x\":" + x + ",\"y\":" + y + ",\"z\":\"" + sheetId + "\",\"wires\":[[]]}";
+	public static String getNotStatusCodeNode(String conditionValues) {
+		return "if (msg.statusCode == " + conditionValues + ") {\n  msg.payload = true;\n return msg;  \n} else {\n  msg.payload = false;\n return msg;\n}\n\nreturn null;";
 	}
 	
 	/**
-	 * Generates the JavaScript code of the "AND" node
+	 * Generates the JavaScript implementation of the "AND" node
 	 * 
 	 * @return the AND Node in JavaScript
 	 */
@@ -93,7 +63,7 @@ public class Nodes {
 	}
 	
 	/**
-	 * Generates the JavaScript code of the "OR" node
+	 * Generates the JavaScript implementation of the "OR" node
 	 * 
 	 * @return the OR Node in JavaScript
 	 */

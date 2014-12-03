@@ -2,7 +2,6 @@ package mapping;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import constants.Nodes;
@@ -39,63 +38,30 @@ public class NodeMapper {
 		
 		for (TNode node : situationTemplate.getSituation().getNode()) {
 			
-			JSONObject functionNodeAsJSON = null;
+			String conditionValues = node.getCondValue().getValue();
+			JSONObject nodeREDNode = new JSONObject();
+			nodeREDNode.put("id", situationTemplate.getId() + "." + node.getId());
+			nodeREDNode.put("type", "function");
+			nodeREDNode.put("name", node.getName());
+			nodeREDNode.put("x", xCoordinate);
+			nodeREDNode.put("y", yCoordinate);
+			nodeREDNode.put("z", situationTemplate.getId());
 			
 			if (node.getOpType().equals("greaterThan")) {
-				String conditionValues = node.getCondValue().getValue();
-
-				JSONParser parser = new JSONParser();
-				functionNodeAsJSON = (JSONObject) parser.parse(Nodes.getGreaterThanNode(conditionValues, situationTemplate.getId(), node, xCoordinate, Integer.toString(yCoordinate)));
-
-				String functionContent = (String) functionNodeAsJSON.get("func");
-				functionContent = "var comparisonValue = " + conditionValues + ";\n" + functionContent;
-
-				functionNodeAsJSON.remove("func");
-				functionNodeAsJSON.put("func", functionContent);
-				functionNodeAsJSON.put("id", situationTemplate.getId() + "." + node.getId());
+				nodeREDNode.put("func", Nodes.getGreaterThanNode(conditionValues));
 			} else if (node.getOpType().equals("lowerThan")) {
-				String conditionValues = node.getCondValue().getValue();
-
-				JSONParser parser = new JSONParser();
-				functionNodeAsJSON = (JSONObject) parser.parse(Nodes.getLowerThanNode(conditionValues, situationTemplate.getId(), node, xCoordinate, Integer.toString(yCoordinate)));
-
-				String functionContent = (String) functionNodeAsJSON.get("func");
-				functionContent = "var comparisonValue = " + conditionValues + ";\n" + functionContent;
-
-				functionNodeAsJSON.remove("func");
-				functionNodeAsJSON.put("func", functionContent);
-				functionNodeAsJSON.put("id", situationTemplate.getId() + "." + node.getId());				
+				nodeREDNode.put("func", Nodes.getLowerThanNode(conditionValues));
 			} else if (node.getOpType().equals("equals")) {
-				String conditionValues = node.getCondValue().getValue();
-
-				JSONParser parser = new JSONParser();
-				functionNodeAsJSON = (JSONObject) parser.parse(Nodes.getEqualsNode(conditionValues, situationTemplate.getId(), node, xCoordinate, Integer.toString(yCoordinate)));
-
-				String functionContent = (String) functionNodeAsJSON.get("func");
-				functionContent = "var comparisonValue = " + conditionValues + ";\n" + functionContent;
-
-				functionNodeAsJSON.remove("func");
-				functionNodeAsJSON.put("func", functionContent);
-				functionNodeAsJSON.put("id", situationTemplate.getId() + "." + node.getId());				
+				nodeREDNode.put("func", Nodes.getEqualsNode(conditionValues));
 			} else if (node.getOpType().equals("notStatusCode")) {
-				String conditionValues = node.getCondValue().getValue();
-
-				JSONParser parser = new JSONParser();
-				functionNodeAsJSON = (JSONObject) parser.parse(Nodes.getNotStatusCodeNode(conditionValues, situationTemplate.getId(), node, xCoordinate, Integer.toString(yCoordinate)));
-
-				String functionContent = (String) functionNodeAsJSON.get("func");
-				functionContent = "var comparisonValue = " + conditionValues + ";\n" + functionContent;
-
-				functionNodeAsJSON.remove("func");
-				functionNodeAsJSON.put("func", functionContent);
-				functionNodeAsJSON.put("id", situationTemplate.getId() + "." + node.getId());		
+				nodeREDNode.put("func", Nodes.getNotStatusCodeNode(conditionValues));
 			}
-			
+		
 			// connect node to the existing flow or to a debug node
-			JSONArray wiresNode = (JSONArray) functionNodeAsJSON.get("wires");
-			wiresNode.clear();
+			JSONArray wiresNode = new JSONArray();
 			JSONArray connections = new JSONArray();
 
+			// add parents
 			for (TParent parent : node.getParent()) {
 				if (parent.getParentID() instanceof TNode) {
 					connections.add(situationTemplate.getId() + "." + ((TNode) parent.getParentID()).getId());
@@ -110,9 +76,9 @@ public class NodeMapper {
 			connections.add(debugNode.get("id"));
 			wiresNode.add(connections);
 
-			functionNodeAsJSON.put("wires", wiresNode);
+			nodeREDNode.put("wires", wiresNode);
 
-			nodeREDModel.add(functionNodeAsJSON);
+			nodeREDModel.add(nodeREDNode);
 			yCoordinate += 100;
 		}
 		

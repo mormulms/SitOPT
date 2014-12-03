@@ -68,7 +68,7 @@ public class IOUtils {
 			Files.write(Paths.get(path), json.getBytes(),
 					StandardOpenOption.CREATE);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			System.err.println("Could not write the json file, an error occurred.");
 			e.printStackTrace();
 		}
 	}
@@ -76,10 +76,12 @@ public class IOUtils {
 	/**
 	 * This method deploys the model to NodeRED
 	 * 
+	 * @param nodeREDModel
+	 * 			 the model to be deployed
+	 * @param situationTemplate
+	 * 			 the situation template as XML
 	 * @param doOverwrite
-	 * 
-	 * @param nodeREDJsonModelAsString
-	 *            the JSON string to be deployed
+	 * 			 boolean detemining whether the flow shall be overwritten or not
 	 */
 	@SuppressWarnings("unchecked")
 	public static void deployToNodeRED(JSONArray nodeREDModel, TSituationTemplate situationTemplate, boolean doOverwrite) {
@@ -156,11 +158,6 @@ public class IOUtils {
 
 			BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 
-			// debug code
-			for (String line; (line = reader.readLine()) != null;) {
-				System.out.println(line);
-			}
-
 			writer.close();
 			reader.close();
 
@@ -168,7 +165,7 @@ public class IOUtils {
 			System.err.println("Could not process HTTP request.");
 			e.printStackTrace();
 		} catch (ParseException e) {
-			// TODO Auto-generated catch block
+			System.err.println("Could not parse JSON.");
 			e.printStackTrace();
 		}
 	}
