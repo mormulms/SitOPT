@@ -2,6 +2,6 @@ package api;
 
 public interface MappingInterface {
 
-	public void mapAndDeploy(String situationTemplatePath);
+	public void mapAndDeploy(String situationTemplatePath, boolean doOverwrite);
 	
 }

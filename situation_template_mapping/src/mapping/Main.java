@@ -98,7 +98,7 @@ public class Main {
 				situationTemplate.setSituation(situation);
 				
 				Mapper mapper = new Mapper(situationTemplate);
-				mapper.map();
+				mapper.map(false);
 			} else {
 				// input is defined, parse the XML model
 				JAXBContext jc = JAXBContext.newInstance(TSituationTemplate.class);
@@ -109,7 +109,7 @@ public class Main {
 				TSituationTemplate situationTemplate = root.getValue();
 				
 				Mapper mapper = new Mapper(situationTemplate);
-				mapper.map();
+				mapper.map(false);
 			}
 		} catch (JAXBException e) {
 			System.err.println("Could not parse JAXB object.");

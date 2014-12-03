@@ -32,7 +32,7 @@ public class Mapper {
 	 * and invokes methods to transform it into an executable model in JSON.
 	 */
 	@SuppressWarnings("unchecked")
-	public void map() {
+	public void map(boolean doOverwrite) {
 		try {
 
 			JSONArray nodeREDModel = new JSONArray();
@@ -53,9 +53,6 @@ public class Mapper {
 			
 			// write the JSON file (just for debug reasons), remember to change the path when using this method
 			//IOUtils.writeJSONFile(finalModel, situationTemplate);
-
-			// set this value to false if the existing flows in NodeRED shall be overwritten
-			boolean doOverwrite = false;
 			
 			// deploy the flow to NodeRED
 			IOUtils.deployToNodeRED(finalModel, situationTemplate, doOverwrite);

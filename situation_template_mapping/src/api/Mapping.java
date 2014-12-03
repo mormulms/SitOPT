@@ -14,7 +14,7 @@ import situationtemplate.model.TSituationTemplate;
 public class Mapping implements MappingInterface {
 
 	@Override
-	public void mapAndDeploy(String situationTemplatePath) {
+	public void mapAndDeploy(String situationTemplatePath, boolean doOverwrite) {
 		try {
 			// input is defined, parse the XML model
 			JAXBContext jc;
@@ -27,7 +27,7 @@ public class Mapping implements MappingInterface {
 			TSituationTemplate situationTemplate = root.getValue();
 
 			Mapper mapper = new Mapper(situationTemplate);
-			mapper.map();
+			mapper.map(doOverwrite);
 
 		} catch (JAXBException e) {
 			// TODO Auto-generated catch block
