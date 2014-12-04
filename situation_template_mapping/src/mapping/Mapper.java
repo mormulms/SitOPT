@@ -33,9 +33,12 @@ public class Mapper {
 	/**
 	 * Main class of the mapping that receives the pattern-based model as XML
 	 * and invokes methods to transform it into an executable model in JSON.
+	 * 
+	 * @param url
+	 * 				 the URL of the machine 
 	 */
 	@SuppressWarnings("unchecked")
-	public void map(boolean doOverwrite) {
+	public void map(boolean doOverwrite, String url) {
 		try {
 
 			JSONArray nodeREDModel = new JSONArray();
@@ -49,7 +52,7 @@ public class Mapper {
 			lnm.mapLogicNodes(situationTemplate, nodeREDModel);
 			
 			SensorNodeMapper snm = new SensorNodeMapper();
-			nodeREDModel = snm.mapSensorNodes(situationTemplate, nodeREDModel);
+			nodeREDModel = snm.mapSensorNodes(situationTemplate, nodeREDModel, url);
 			
 			NodeMapper nm = new NodeMapper();
 			JSONArray finalModel = nm.mapNodes(situationTemplate, nodeREDModel);

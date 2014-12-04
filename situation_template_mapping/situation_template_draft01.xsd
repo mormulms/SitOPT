@@ -53,10 +53,18 @@
 		<xs:sequence>
 			<xs:element name="type" type="xs:string"/> 
 			<xs:element name="measureName" type="xs:string"/>
-			<xs:element name="opType" type="xs:string" maxOccurs="1" minOccurs="1"/>
+			<xs:element name="opType" maxOccurs="1" minOccurs="1">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:pattern value="lowerThan|greaterThan|equals|notEquals|between"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
 			<xs:element name="condValue">
 				<xs:complexType>
-					<xs:attribute name="value" type="xs:string"/>
+					<xs:sequence>
+						<xs:element name="value" type="xs:string" maxOccurs="2"/>
+					</xs:sequence>
 				</xs:complexType>
 			</xs:element>
 			<xs:element name="parent" type="tParent" minOccurs="0" maxOccurs="unbounded"/>

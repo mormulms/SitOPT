@@ -15,7 +15,7 @@ How to run/test the implementation
 
 4) Only once, or if the schema changes: Generate the JAXB classes (see "howto generate java classes"), they will be deployed in the right place, don't commit these classes.
 
-5) Only once, or if the test file location changes: Enter Situation Template Test file: right Click on Project => Run as => Run Configuration => Arguments => Add "test/situation_template_draft01.xml" 
+5) Only once, or if the test file location changes: Enter Situation Template Test file: right Click on Project => Run as => Run Configuration => Arguments => Add as first parameter the URL of the machine to be monitored, e.g., "http://localhost:8080/" and as second parameter "test/situation_template_draft01.xml" 
 
 6) Apply => Run
 

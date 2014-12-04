@@ -1,5 +1,7 @@
 package mapping;
 
+import java.util.List;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
@@ -38,17 +40,19 @@ public class NodeMapper {
 		
 		for (TNode node : situationTemplate.getSituation().getNode()) {
 			
-			String conditionValues = node.getCondValue().getValue();
+			List<String> conditionValues = node.getCondValue().getValue();
 			JSONObject nodeREDNode = NodeREDUtils.createNodeREDNode(situationTemplate.getId() + "." + node.getId(), node.getName(), "function", xCoordinate, Integer.toString(yCoordinate), situationTemplate.getId());
 			
 			if (node.getOpType().equals("greaterThan")) {
-				nodeREDNode.put("func", Nodes.getGreaterThanNode(conditionValues));
+				nodeREDNode.put("func", Nodes.getGreaterThanNode(conditionValues.get(0)));
 			} else if (node.getOpType().equals("lowerThan")) {
-				nodeREDNode.put("func", Nodes.getLowerThanNode(conditionValues));
+				nodeREDNode.put("func", Nodes.getLowerThanNode(conditionValues.get(0)));
 			} else if (node.getOpType().equals("equals")) {
-				nodeREDNode.put("func", Nodes.getEqualsNode(conditionValues));
-			} else if (node.getOpType().equals("notStatusCode")) {
-				nodeREDNode.put("func", Nodes.getNotStatusCodeNode(conditionValues));
+				nodeREDNode.put("func", Nodes.getEqualsNode(conditionValues.get(0)));
+			} else if (node.getOpType().equals("notEquals")) {
+				nodeREDNode.put("func", Nodes.getNotEquals(conditionValues.get(0)));
+			} else if (node.getOpType().equals("between")) {
+				nodeREDNode.put("func", Nodes.getBetween(conditionValues));
 			}
 		
 			// connect node to the existing flow or to a debug node

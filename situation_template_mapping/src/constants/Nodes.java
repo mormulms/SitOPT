@@ -1,5 +1,7 @@
 package constants;
 
+import java.util.List;
+
 /**
  * This class offers methods to generate the Node-RED function nodes as JSON
  */
@@ -49,8 +51,24 @@ public class Nodes {
 	 * 
 	 * @return the node in JSON
 	 */
-	public static String getNotStatusCodeNode(String conditionValues) {
-		return "if (msg.statusCode == " + conditionValues + ") {\n  msg.payload = true;\n return msg;  \n} else {\n  msg.payload = false;\n return msg;\n}\n\nreturn null;";
+	public static String getNotEquals(String conditionValues) {
+		return "if (msg.statusCode != " + conditionValues + ") {\n  msg.payload = true;\n return msg;  \n} else {\n  msg.payload = false;\n return msg;\n}\n\nreturn null;";
+	}
+	
+	/**
+	 * Generates the JavaScript implementation of the "bewteen" node
+	 * 
+	 * @param conditionValues
+	 * 			 the status code to be checked
+	 * 
+	 * @return the node in JSON
+	 */
+	public static Object getBetween(List<String> conditionValues) {
+		
+		String condValue1 = conditionValues.get(0);
+		String condValue2 = conditionValues.get(1);
+		
+		return "if (" + condValue1 + " < msg.statusCode < " + condValue2 + ") {\n  msg.payload = true;\n return msg;  \n} else {\n  msg.payload = false;\n return msg;\n}\n\nreturn null;";
 	}
 	
 	/**

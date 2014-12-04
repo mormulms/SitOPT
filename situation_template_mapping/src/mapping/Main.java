@@ -29,9 +29,12 @@ public class Main {
 	 */
 	public static void main(String[] args) {
 		try {
+			
+			String url = args[0];
+			
 			// if no input is defined, we just define an exemplary situation
 			// template using JAXB
-			if (args.length == 0) {
+			if (args.length == 1) {
 				// we create an exemplary situation template using JAXB to test our code
 				TSituationTemplate situationTemplate = new TSituationTemplate();
 				situationTemplate.setId(NodeREDUtils.generateNodeREDId());
@@ -53,7 +56,7 @@ public class Main {
 				String gtId = NodeREDUtils.generateNodeREDId();
 				cpuGreatherThanNode.setId(gtId);
 				CondValue cond = new CondValue();
-				cond.setValue("90");
+				cond.getValue().add("90");
 				cpuGreatherThanNode.setCondValue(cond);
 				cpuGreatherThanNode.setMeasureName("Measure_CPU");
 				TParent parent = new TParent();
@@ -66,7 +69,7 @@ public class Main {
 				String ltId = NodeREDUtils.generateNodeREDId();
 				freeRAMLowerThanNode.setId(ltId);
 				CondValue condition = new CondValue();
-				condition.setValue("2000");
+				condition.getValue().add("2000");
 				freeRAMLowerThanNode.setCondValue(condition);
 				freeRAMLowerThanNode.setMeasureName("Measure_RAM");
 				TParent parent2 = new TParent();
@@ -98,18 +101,18 @@ public class Main {
 				situationTemplate.setSituation(situation);
 				
 				Mapper mapper = new Mapper(situationTemplate);
-				mapper.map(false);
+				mapper.map(false, url);
 			} else {
 				// input is defined, parse the XML model
 				JAXBContext jc = JAXBContext.newInstance(TSituationTemplate.class);
 				Unmarshaller u = jc.createUnmarshaller();
-				File file = new File(args[0]);
+				File file = new File(args[1]);
 				JAXBElement<TSituationTemplate> root = u.unmarshal(new StreamSource(file), TSituationTemplate.class);
 				
 				TSituationTemplate situationTemplate = root.getValue();
 				
 				Mapper mapper = new Mapper(situationTemplate);
-				mapper.map(false);
+				mapper.map(false, url);
 			}
 		} catch (JAXBException e) {
 			System.err.println("Could not parse JAXB object.");

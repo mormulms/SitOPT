@@ -22,10 +22,12 @@ public class Mapping implements MappingInterface {
 	 * @param situationTemplatePath
 	 * 				 the path to the situation template XML as string
 	 * @param doOverwrite
-	 * 				 determines whether the currently deployed flows shall be overwritten 
+	 * 				 determines whether the currently deployed flows shall be overwritten
+	 * @param url
+	 * 				 the URL of the machine 
 	 */
 	@Override
-	public void mapAndDeploy(String situationTemplatePath, boolean doOverwrite) {
+	public void mapAndDeploy(String situationTemplatePath, boolean doOverwrite, String url) {
 		try {
 			// input is defined, parse the XML model
 			JAXBContext jc;
@@ -38,7 +40,7 @@ public class Mapping implements MappingInterface {
 			TSituationTemplate situationTemplate = root.getValue();
 
 			Mapper mapper = new Mapper(situationTemplate);
-			mapper.map(doOverwrite);
+			mapper.map(doOverwrite, url);
 
 		} catch (JAXBException e) {
 			// TODO Auto-generated catch block

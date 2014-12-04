@@ -11,8 +11,10 @@ public interface MappingInterface {
 	 * @param situationTemplatePath
 	 * 				 the path to the situation template XML as string
 	 * @param doOverwrite
-	 * 				 determines whether the currently deployed flows shall be overwritten 
+	 * 				 determines whether the currently deployed flows shall be overwritten
+	 * @param url
+	 * 				 the URL of the machine 
 	 */
-	public void mapAndDeploy(String situationTemplatePath, boolean doOverwrite);
+	public void mapAndDeploy(String situationTemplatePath, boolean doOverwrite, String URL);
 	
 }

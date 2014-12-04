@@ -11,21 +11,27 @@
 			<type>type</type>
 			<measureName>measureName</measureName>
 			<opType>greaterThan</opType>
-			<condValue value="70"/>
+			<condValue>
+				<value>70</value>
+			</condValue>
 			<parent parentID="A3"/>
 		</node>
 		<node id="A8" name="MB RAM free">
 			<type>type</type>
 			<measureName>measureName</measureName>
 			<opType>lowerThan</opType>
-			<condValue value="10"/>
+			<condValue>
+				<value>10</value>
+			</condValue>
 			<parent parentID="A3"/>
 		</node>
 		<node id="A9" name="StatusCodeChecker">
 			<type>type</type>
 			<measureName>measureName</measureName>
-			<opType>notStatusCode</opType>
-			<condValue value="200"/>
+			<opType>notEquals</opType>
+			<condValue>
+				<value>200</value>
+			</condValue>
 			<parent parentID="A3"></parent>
 		</node>
 		<sensorNode id="A5" name="memorySensor">

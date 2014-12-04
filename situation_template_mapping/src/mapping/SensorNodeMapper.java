@@ -24,27 +24,34 @@ public class SensorNodeMapper {
 	/**
 	 * Maps the sensor nodes to corresponding NodeRED nodes
 	 * 
+	 * @param situationTemplate
+	 * 				 the situation template JAXB node
+	 * @param nodeREDModel
+	 * 				 the Node-RED flow as JSON
+	 * @param url
+	 * 				 the URL of the machine
+	 * 
 	 * @return the mapped JSON model
 	 */
 	@SuppressWarnings("unchecked")
-	public JSONArray mapSensorNodes(TSituationTemplate situationTemplate, JSONArray nodeREDModel) {
-
-		String url;
+	public JSONArray mapSensorNodes(TSituationTemplate situationTemplate, JSONArray nodeREDModel, String url) {
 
 		int xCoordinate = 300;
 		int yCoordinate = 50;
 		// the z coordinate is used to assign the nodes to a corresponding sheet
 		String zCoordinate = situationTemplate.getId();
-
+		
+		if (!url.endsWith("/")) url += "/";
+		
 		for (TSensorNode sensorNode : situationTemplate.getSituation().getSensorNode()) {
 
 			// TODO: create real Registry
-			url = MockUpRegistry.getURLForID(sensorNode.getName());
+			String sensorURL = url +  MockUpRegistry.getURLForID(sensorNode.getName());
 
 			// create the corresponding NodeRED JSON node
 			JSONObject nodeREDNode = NodeREDUtils.createNodeREDNode(situationTemplate.getId() + "." + sensorNode.getId(), sensorNode.getName(), TYPE, Integer.toString(xCoordinate), Integer.toString(yCoordinate), zCoordinate);
 			nodeREDNode.put("method", METHOD);
-			nodeREDNode.put("url", url);
+			nodeREDNode.put("url", sensorURL);
 
 			// now connect the node to the flow
 			JSONArray wiresNode = new JSONArray();

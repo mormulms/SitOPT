@@ -21,11 +21,11 @@ public class MockUpRegistry {
 	public static String getURLForID(String name) {
 
 		if (name.equals("memorySensor")) {
-			return "localhost:8080/memoryusage";
+			return "memoryusage";
 		} else if (name.equals("cpuSensor")) {
-			return "localhost:8080/cpuusage";
+			return "cpuusage";
 		} else if (name.equals("watchdogSensor")) {
-			return "localhost:8080/ping";
+			return "ping";
 		}
 
 		return null;
