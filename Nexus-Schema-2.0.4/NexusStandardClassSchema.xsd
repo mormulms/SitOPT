@@ -758,7 +758,7 @@
     </complexContent>
   </complexType>
   
-  <complexType name="SituationObject">
+  <complexType name="Situation">
 	 <annotation>
 		<documentation>object that represents a detected situation</documentation>
 		<appinfo>
