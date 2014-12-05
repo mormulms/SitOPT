@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema targetNamespace="http://www.nexus.uni-stuttgart.de/NexusRallyeECS" xmlns:rallyeas="http://www.nexus.uni-stuttgart.de/NexusRallyeAS" xmlns:rallyeecs="http://www.nexus.uni-stuttgart.de/NexusRallyeECS" xmlns:nscs="http://www.nexus.uni-stuttgart.de/1.0/NSCS" xmlns:nsas="http://www.nexus.uni-stuttgart.de/1.0/NSAS" xmlns="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<annotation>
+		<documentation>This is the extended class schema for the Nexus Rallye Application</documentation>
+	</annotation>
+	<import namespace="http://www.nexus.uni-stuttgart.de/1.0/NSAS" schemaLocation="NexusStandardAttributeSchema.xsd"/>
+	<import namespace="http://www.nexus.uni-stuttgart.de/1.0/NSCS" schemaLocation="NexusStandardClassSchema.xsd"/>
+	<import namespace="http://www.nexus.uni-stuttgart.de/NexusRallyeAS" schemaLocation="RallyeAttributeSchema.xsd"/>
+	<complexType name="RallyeObject">
+		<annotation>
+			<documentation>object that contains information for a rallye </documentation>
+			<appinfo>
+				<extension base="nscs:SpatialObject"/>
+			</appinfo>
+		</annotation>
+		<complexContent>
+			<extension base="nscs:SpatialObject">
+				<sequence>
+					<element ref="rallyeas:rallyeName" minOccurs="0"/>
+					<element ref="nsas:description" minOccurs="0"/>
+					<element ref="rallyeas:welcomeText" minOccurs="0"/>
+					<element ref="rallyeas:endText" minOccurs="0"/>
+					<element ref="rallyeas:startPosition" minOccurs="0"/>
+					<element ref="rallyeas:endPosition" minOccurs="0"/>
+					<element ref="rallyeas:RallyeImage" minOccurs="0"/>
+					<element ref="rallyeas:maxDuration" minOccurs="0"/>
+					<element ref="rallyeas:dependencies" minOccurs="0"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="VTC">
+		<annotation>
+			<documentation>object that binds rallye tasks to a spatial location</documentation>
+			<appinfo>
+				<extension base="nscs:SpatialObject"/>
+			</appinfo>
+		</annotation>
+		<complexContent>
+			<extension base="nscs:SpatialObject">
+				<sequence>
+					<element ref="rallyeas:taskList" minOccurs="0"/>
+					<element ref="rallyeas:messageReached" minOccurs="0"/>
+					<element ref="rallyeas:locationDescription" minOccurs="0"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="RallyeTask">
+		<annotation>
+			<documentation>a task in a rallye</documentation>
+			<appinfo>
+				<extension base="nscs:NexusDataObject"/>
+			</appinfo>
+		</annotation>
+		<complexContent>
+			<extension base="nscs:NexusDataObject">
+				<sequence>
+					<element ref="rallyeas:taskText" minOccurs="0"/>
+					<element ref="rallyeas:taskPoints" minOccurs="0"/>
+					<element ref="rallyeas:taskImage" minOccurs="0"/>
+					<element ref="rallyeas:processingTime" minOccurs="0"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="FreeTextTask">
+		<annotation>
+			<documentation>a task with a free text answer</documentation>
+			<appinfo>
+				<extension base="rallyeecs:RallyeTask"/>
+			</appinfo>
+		</annotation>
+		<complexContent>
+			<extension base="rallyeecs:RallyeTask">
+				<sequence>
+					<element ref="rallyeas:messageSkip" minOccurs="0"/>
+					<element ref="rallyeas:messageAnswer" minOccurs="0"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="MoveToTask">
+		<annotation>
+			<documentation>a task where the user has to move to a specific point</documentation>
+			<appinfo>
+				<extension base="rallyeecs:RallyeTask"/>
+			</appinfo>
+		</annotation>
+		<complexContent>
+			<extension base="rallyeecs:RallyeTask">
+				<sequence>
+					<element ref="nsas:pos" minOccurs="0"/>
+					<element ref="nsas:extent" minOccurs="0"/>
+					<element ref="rallyeas:messageReached" minOccurs="0"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="MultipleChoiceTask">
+		<annotation>
+			<documentation>a task with a multiple choice answer</documentation>
+			<appinfo>
+				<extension base="rallyeecs:RallyeTask"/>
+			</appinfo>
+		</annotation>
+		<complexContent>
+			<extension base="rallyeecs:RallyeTask">
+				<sequence>
+					<element ref="rallyeas:choices" minOccurs="0"/>
+					<element ref="rallyeas:messageCorrect" minOccurs="0"/>
+					<element ref="rallyeas:messageWrong" minOccurs="0"/>
+					<element ref="rallyeas:messageSkip" minOccurs="0"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="ValueTask">
+		<annotation>
+			<documentation>a task where the solution is a certain value</documentation>
+			<appinfo>
+				<extension base="rallyeecs:RallyeTask"/>
+			</appinfo>
+		</annotation>
+		<complexContent>
+			<extension base="rallyeecs:RallyeTask">
+				<sequence>
+					<element ref="rallyeas:correctAnswer" minOccurs="0"/>
+					<element ref="rallyeas:messageCorrect" minOccurs="0"/>
+					<element ref="rallyeas:messageWrong" minOccurs="0"/>
+					<element ref="rallyeas:messageSkip" minOccurs="0"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+</schema>

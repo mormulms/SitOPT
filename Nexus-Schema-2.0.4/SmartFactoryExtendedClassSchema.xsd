@@ -1,0 +1,1197 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema targetNamespace="http://www.nexus.uni-stuttgart.de/SmartFactoryExtendedClassSchema" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:nsas="http://www.nexus.uni-stuttgart.de/1.0/NSAS" xmlns:nscs="http://www.nexus.uni-stuttgart.de/1.0/NSCS" xmlns:sfcs="http://www.nexus.uni-stuttgart.de/SmartFactoryExtendedClassSchema" xmlns:sfas="http://www.nexus.uni-stuttgart.de/SmartFactoryExtendedAttributeSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<annotation>
+	 <documentation>This is the extended class schema for the Nexus Smart Factory</documentation>
+	</annotation>
+	<import namespace="http://www.nexus.uni-stuttgart.de/1.0/NSAS" schemaLocation="NexusStandardAttributeSchema.xsd"/>
+	<import namespace="http://www.nexus.uni-stuttgart.de/1.0/NSCS" schemaLocation="NexusStandardClassSchema.xsd"/>
+	<import namespace="http://www.nexus.uni-stuttgart.de/SmartFactoryExtendedAttributeSchema" schemaLocation="SmartFactoryExtendedAttributeSchema.xsd"/>
+	<complexType name="Inventory">
+	 <annotation>
+		<documentation>object that holds data for all inventory objects in a smart factory</documentation>
+		<appinfo>
+			<extension base="nscs:NexusDataObject"/>
+		</appinfo>
+	 </annotation>
+	 <complexContent>
+		<extension base="nscs:NexusDataObject">
+			<sequence>
+			 <element ref="sfas:nominalStock" minOccurs="0"/>
+			 <element ref="sfas:actualStock" minOccurs="0"/>
+			 <element ref="sfas:safetyStock" minOccurs="0"/>
+			 <element ref="sfas:orderPoint" minOccurs="0"/>
+			 <element ref="sfas:economicSizeOrder" minOccurs="0"/>
+			 <element ref="sfas:replacementDuration" minOccurs="0"/>
+			</sequence>
+		</extension>
+	 </complexContent>
+	</complexType>
+	<complexType name="SmartFactoryUniversalPayloadData">
+	 <annotation>
+		<documentation>object that contains information for mobile non-human Resources in a smart factory</documentation>
+		<appinfo>
+			<extension base="nscs:NexusDataObject"/>
+		</appinfo>
+	 </annotation>
+	 <complexContent>
+		<extension base="nscs:NexusDataObject">
+			<sequence>
+			 <element ref="sfas:status" minOccurs="0"/>
+			 <element ref="sfas:exemptionList" minOccurs="0" maxOccurs="unbounded"/>
+			 <element ref="sfas:classification" minOccurs="0"/>
+			 <element ref="sfas:costRate" minOccurs="0"/>
+			 <element ref="sfas:costRateType" minOccurs="0"/>
+			 <element ref="sfas:costCenterId" minOccurs="0"/>
+			 <element ref="sfas:groupId" minOccurs="0"/>
+			 <element ref="sfas:documentList" minOccurs="0" maxOccurs="unbounded"/>
+			 <element ref="sfas:alternativeIDList" minOccurs="0" maxOccurs="unbounded"/>
+		</sequence>
+		</extension>
+	 </complexContent>
+	</complexType>
+	<complexType name="Workflow">
+	 <annotation>
+		<documentation>object that represents a workflow in a smart factory</documentation>
+		<appinfo>
+			<extension base="nscs:NexusDataObject"/>
+		</appinfo>
+	 </annotation>
+	 <complexContent>
+		<extension base="nscs:NexusDataObject">
+			<sequence>
+			 <element ref="sfas:modelType" minOccurs="0"/>
+			 <element ref="sfas:workflowModelLink" minOccurs="0"/>
+			 <element ref="sfas:workflowDescription" minOccurs="0"/>
+			</sequence>
+		</extension>
+	 </complexContent>
+	</complexType>
+	<complexType name="MobileFactoryObject">
+	 <annotation>
+		<documentation>object that stands for all mobile objects in a smart factory environment</documentation>
+		<appinfo>
+			<extension base="nscs:MobileObject"/>
+			<extension base="sfcs:SmartFactoryUniversalPayloadData"/>
+		</appinfo>
+	 </annotation>
+	 <complexContent>
+		<extension base="nscs:MobileObject"/>
+	 </complexContent>
+	</complexType>
+	<complexType name="SmartFactory3DSpecification">
+	 <annotation>
+		<documentation>object that holds 3D specification data</documentation>
+		<appinfo>
+			<extension base="sfcs:SmartFactoryUniversalPayloadData"/>
+		</appinfo>
+	 </annotation>
+	 <complexContent>
+		<extension base="sfcs:SmartFactoryUniversalPayloadData">
+			<sequence>
+			 <element ref="sfas:_3DFileLink" minOccurs="0"/>
+			 <element ref="sfas:_3DBoundingBox" minOccurs="0"/>
+			</sequence>
+		</extension>
+	 </complexContent>
+	</complexType>
+	<complexType name="SpatialFactoryResource">
+	 <annotation>
+		<documentation>object that stands for all mobile objects in a smart factory environment maxOccurs="unbounded"</documentation>
+		<appinfo>
+			<extension base="nscs:SpatialObject"/>
+			<extension base="sfcs:SmartFactory3DSpecification"/>
+		</appinfo>
+	 </annotation>
+	 <complexContent>
+		<extension base="nscs:SpatialObject">
+			<sequence>
+			<element ref="sfas:orientation" minOccurs="0"/>
+			<element ref="sfas:transportInOutZoneList" minOccurs="0"/>
+		</sequence>
+		</extension>
+	 </complexContent>
+	</complexType>
+	<complexType name="FestoiTrame">
+		<annotation>
+		<documentation>superclass for Festo iTRAME modules</documentation>
+			<appinfo>
+				<extension base="nscs:NexusDataObject"/>
+			</appinfo>
+		</annotation>
+		<complexContent>
+			<extension base="nscs:NexusDataObject">
+				<sequence>
+					<element ref="sfas:previousModule" minOccurs="0"/>
+					<element ref="sfas:nextModule" minOccurs="0"/>
+					<element ref="sfas:branchModule" minOccurs="0"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="ITrameConveyorModule">
+		<annotation>
+			<documentation>Conveyor modules for transporting carriers</documentation>
+			<appinfo>
+				<extension base="sfcs:Conveyor"/>
+				<extension base="sfcs:FestoiTrame"/>
+			</appinfo>
+		</annotation>
+		<complexContent>
+			<extension base="sfcs:Conveyor"/>
+		</complexContent>
+	</complexType>
+	<complexType name="ITrameSwitchModule">
+		<annotation>
+			<documentation>Conveyor modules with a switch</documentation>
+			<appinfo>
+				<extension base="sfcs:ITrameConveyorModule"/>
+			</appinfo>
+		</annotation>
+		<complexContent>
+			<extension base="sfcs:ITrameConveyorModule" />
+		</complexContent>
+	</complexType>
+	<complexType name="Workstation">
+	 <annotation>
+		<documentation>object that contains information for mobile non-human Resources in a smart factory</documentation>
+		<appinfo>
+			<extension base="sfcs:SpatialFactoryResource"/>
+		</appinfo>
+	 </annotation>
+	 <complexContent>
+		<extension base="sfcs:SpatialFactoryResource">
+		<sequence>
+			 <element ref="sfas:capacityModel" minOccurs="0"/>
+			 <element ref="sfas:errorModel" minOccurs="0"/>
+			 <element ref="sfas:requiredElPower" minOccurs="0"/>
+			 <element ref="sfas:requiredCompressedAir" minOccurs="0"/>
+			 <element ref="sfas:requiredWater" minOccurs="0"/>
+			 <element ref="sfas:maintenanceCostRateFix" minOccurs="0"/>
+			 <element ref="sfas:maintenanceCostRateVar" minOccurs="0"/>
+			 <element ref="sfas:avgInterestRate" minOccurs="0"/>
+			 <element ref="sfas:efficiencyFactor" minOccurs="0"/>
+			 <element ref="sfas:machineLife" minOccurs="0"/>
+			 <element ref="sfas:price" minOccurs="0"/>
+			 <element ref="sfas:optimizedSetupTimeFactor" minOccurs="0"/>
+			 <element ref="sfas:optimizedCycleTimeFactor" minOccurs="0"/>
+			 <element ref="sfas:ptCapabilityList" minOccurs="0"/>
+			 <element ref="sfas:dispatchingType" minOccurs="0"/>
+			 <element ref="sfas:flussgrad" minOccurs="0"/>
+			 <element ref="sfas:shiftModelChangeTriggerValueUp" minOccurs="0"/>
+			 <element ref="sfas:shiftModelChangeTriggerValueDown" minOccurs="0"/>
+			 <element ref="sfas:smartFactorySensorActuatorNol" minOccurs="0" maxOccurs="unbounded"/>
+			 <element ref="sfas:qmStatus" minOccurs="0"/>
+			 <element ref="sfas:shiftModel" minOccurs="0"/>
+			 <element ref="sfas:jobFeedback" minOccurs="0"/>
+			 <element ref="sfas:executionDates" minOccurs="0"/>
+			 <element ref="sfas:maintenance" minOccurs="0"/>
+		<!--new complex attributes-->
+			</sequence>
+		</extension>
+	 </complexContent>
+	</complexType>
+	<complexType name="MobileFactoryResource">
+	 <annotation>
+		<documentation>object that contains information for mobile non-human Resources in a smart factory</documentation>
+		<appinfo>
+			<extension base="sfcs:MobileFactoryObject"/>
+			<extension base="sfcs:SmartFactory3DSpecification"/>
+		</appinfo>
+	 </annotation>
+	 <complexContent>
+		<extension base="sfcs:MobileFactoryObject">
+			<sequence>
+			 <element ref="sfas:storageLocation" minOccurs="0"/>
+			 <element ref="sfas:manufacturer" minOccurs="0"/>
+			 <element ref="sfas:vendor" minOccurs="0"/>
+			 <element ref="sfas:deliveryDate" minOccurs="0"/>
+			 <element ref="sfas:price" minOccurs="0"/>
+			 <element ref="sfas:weight" minOccurs="0"/>
+			 <element ref="sfas:material" minOccurs="0"/>
+			 <element ref="sfas:errorModel" minOccurs="0"/>
+			</sequence>
+		</extension>
+	 </complexContent>
+	</complexType>
+	<complexType name="CompanyEmployee">
+	 <annotation>
+		<documentation>object that contains information for an employee of the smart factory </documentation>
+		<appinfo>
+			<extension base="sfcs:MobileFactoryObject"/>
+		</appinfo>
+	 </annotation>
+	 <complexContent>
+		<extension base="sfcs:MobileFactoryObject">
+			<sequence>
+			 <element ref="sfas:shiftModel" minOccurs="0"/>
+			 <element ref="sfas:qualification" minOccurs="0"/>
+			 <element ref="sfas:extraHours" minOccurs="0"/>
+			 <element ref="sfas:personalData" minOccurs="0"/>
+			 <element ref="sfas:executionDates" minOccurs="0"/>
+			 <element ref="sfas:locationSpecification" minOccurs="0"/>
+			 <element ref="sfas:jobFeedback" minOccurs="0"/>
+			 <!--new complex attributes-->
+			</sequence>
+		</extension>
+	 </complexContent>
+	</complexType>
+	<complexType name="Tool">
+	 <annotation>
+		<documentation>object that represents tools in a smart factory</documentation>
+		<appinfo>
+			<extension base="sfcs:MobileFactoryResource"/>
+			<extension base="sfcs:Inventory"/>
+		</appinfo>
+	 </annotation>
+	 <complexContent>
+		<extension base="sfcs:MobileFactoryResource">
+			<sequence>
+			 <element ref="sfas:condition" minOccurs="0"/>
+			 <element ref="sfas:locationSpecification" minOccurs="0"/>
+			 <element ref="sfas:maintenance" minOccurs="0"/>
+			 <element ref="sfas:jobFeedback" minOccurs="0"/>
+			 <!--new complex attributes-->
+			</sequence>
+		</extension>
+	 </complexContent>
+	</complexType>
+	<complexType name="MeasuringEquipment">
+	 <annotation>
+		<documentation>object that represents tools in a smart factory</documentation>
+		<appinfo>
+			<extension base="sfcs:MobileFactoryResource"/>
+		</appinfo>
+	 </annotation>
+	 <complexContent>
+		<extension base="sfcs:MobileFactoryResource">
+			<sequence>
+			 <element ref="sfas:measureVariable" minOccurs="0"/>
+			 <element ref="sfas:resolution" minOccurs="0"/>
+			 <element ref="sfas:locationSpecification" minOccurs="0"/>
+			 <element ref="sfas:maintenance" minOccurs="0"/>
+			 <element ref="sfas:jobFeedback" minOccurs="0"/>
+			 <!--new complex attributes-->
+			</sequence>
+		</extension>
+	 </complexContent>
+	</complexType>
+	<complexType name="Machine">
+	 <annotation>
+		<documentation>object that represents tools in a smart factory</documentation>
+		<appinfo>
+			<extension base="sfcs:Workstation"/>
+		</appinfo>
+	 </annotation>
+	 <complexContent>
+		<extension base="sfcs:Workstation">
+			<sequence>
+			 <element ref="sfas:currentControlProgramLink" minOccurs="0"/>
+			 <element ref="sfas:currentToolNol" minOccurs="0"/>
+			</sequence>
+		</extension>
+	 </complexContent>
+	</complexType>
+	<complexType name="Part">
+	 <annotation>
+		<documentation>object that represents a part in a smart factory</documentation>
+		<appinfo>
+			<extension base="sfcs:MobileFactoryResource"/>
+			<extension base="sfcs:Inventory"/>
+		</appinfo>
+	 </annotation>
+	 <complexContent>
+		<extension base="sfcs:MobileFactoryResource">
+			<sequence>
+			 <element ref="sfas:dispatchingType" minOccurs="0"/>
+			 <element ref="sfas:requiredWaitTime" minOccurs="0"/>
+			 <element ref="sfas:customerAgreement" minOccurs="0"/>
+			 <element ref="sfas:minLotSize" minOccurs="0"/>
+			 <element ref="sfas:maxLotSize" minOccurs="0"/>
+			 <element ref="sfas:revisionNo" minOccurs="0"/>
+			 <element ref="sfas:projectName" minOccurs="0"/>
+			 <element ref="sfas:designedBy" minOccurs="0"/>
+			 <element ref="sfas:designControlledBy" minOccurs="0"/>
+			 <element ref="sfas:designApprovedBy" minOccurs="0"/>
+			 <element ref="sfas:productionGoBy" minOccurs="0"/>
+			 <element ref="sfas:plannedDefectComponents" minOccurs="0"/>
+			 <element ref="sfas:change" minOccurs="0"/>
+			 <element ref="sfas:changeStatus" minOccurs="0"/>
+			 <element ref="sfas:bestBefore" minOccurs="0"/>
+			 <element ref="sfas:vendorPart" minOccurs="0"/>
+			 <element ref="sfas:qmStatus" minOccurs="0"/>
+			</sequence>
+		</extension>
+	 </complexContent>
+	</complexType>
+	<complexType name="AlternativeIDItem">
+	 <annotation>
+		<documentation>Wie feststellen, welche Kardinalit㲠erlaubt ist? TEST</documentation>
+		<appinfo>
+			<extension base="nscs:NexusDataObject"/>
+		</appinfo>
+	 </annotation>
+	 <complexContent>
+		<extension base="nscs:NexusDataObject">
+			<sequence>
+			 <element ref="sfas:alternativeID" minOccurs="0"/>
+			 <element ref="sfas:type" minOccurs="0"/>
+			</sequence>
+		</extension>
+	 </complexContent>
+	</complexType>
+	<complexType name="BOMItem">
+	 <annotation>
+		<documentation>?</documentation>
+		<appinfo>
+			<extension base="nscs:NexusDataObject"/>
+		</appinfo>
+	 </annotation>
+	 <complexContent>
+		<extension base="nscs:NexusDataObject">
+			<sequence>
+			 <element ref="sfas:partNol" minOccurs="0"/>
+			 <element ref="sfas:parentPartAssemblyNol" minOccurs="0"/>
+			 <element ref="sfas:quantity" minOccurs="0"/>
+			</sequence>
+		</extension>
+	 </complexContent>
+	</complexType>
+	<complexType name="BOM">
+	 <annotation>
+		<documentation>?</documentation>
+		<appinfo>
+			<extension base="nscs:NexusDataObject"/>
+		</appinfo>
+	 </annotation>
+	 <complexContent>
+		<extension base="nscs:NexusDataObject">
+			<sequence>
+			 <element ref="sfas:BOMItemListNols" minOccurs="0"/>
+			</sequence>
+		</extension>
+	 </complexContent>
+	</complexType>
+	<complexType name="ResourcelistItem">
+	 <annotation>
+		<documentation>?</documentation>
+		<appinfo>
+			<extension base="nscs:NexusDataObject"/>
+		</appinfo>
+	 </annotation>
+	 <complexContent>
+		<extension base="nscs:NexusDataObject">
+			<sequence>
+			 <element ref="sfas:resourceNol" minOccurs="0"/>
+			 <element ref="sfas:quantity" minOccurs="0"/>
+			 <element ref="sfas:unit" minOccurs="0"/>
+			</sequence>
+		</extension>
+	 </complexContent>
+	</complexType>
+	<complexType name="DocumentListItem">
+	 <annotation>
+		<documentation>?</documentation>
+		<appinfo>
+			<extension base="nscs:NexusDataObject"/>
+		</appinfo>
+	 </annotation>
+	 <complexContent>
+		<extension base="nscs:NexusDataObject">
+			<sequence>
+			 <element ref="sfas:documentType" minOccurs="0"/>
+			 <element ref="sfas:documentFileLink" minOccurs="0"/>
+			</sequence>
+		</extension>
+	 </complexContent>
+	</complexType>
+	<complexType name="CustomerAgreement">
+	 <annotation>
+		<documentation>Tippfehler: WendsdayStartTime statt WenddayStartTime TEST</documentation>
+		<appinfo>
+			<extension base="nscs:NexusDataObject"/>
+		</appinfo>
+	 </annotation>
+	 <complexContent>
+		<extension base="nscs:NexusDataObject">
+			<sequence>
+			 <element ref="sfas:contractPenalty" minOccurs="0"/>
+			 <element ref="sfas:fictiveBadDeliveryCost" minOccurs="0"/>
+			 <element ref="sfas:minDeliveryWindow" minOccurs="0"/>
+			 <element ref="sfas:maxDeliveryWindow" minOccurs="0"/>
+			 <element ref="sfas:minOrderPeriod" minOccurs="0"/>
+			</sequence>
+		</extension>
+	 </complexContent>
+	</complexType>
+	<complexType name="Errormodel">
+	 <annotation>
+		<documentation>?</documentation>
+		<appinfo>
+			<extension base="nscs:NexusDataObject"/>
+		</appinfo>
+	 </annotation>
+	 <complexContent>
+		<extension base="nscs:NexusDataObject">
+			<sequence>
+			 <element ref="sfas:start" minOccurs="0"/>
+			 <element ref="sfas:end" minOccurs="0"/>
+			 <element ref="sfas:probability" minOccurs="0"/>
+			 <element ref="sfas:minDuration" minOccurs="0"/>
+			 <element ref="sfas:maxDuration" minOccurs="0"/>
+			 <element ref="sfas:probabilityDistribution" minOccurs="0"/>
+			 <element ref="sfas:meanMu" minOccurs="0"/>
+			 <element ref="sfas:standardDeviationSigma" minOccurs="0"/>
+			</sequence>
+		</extension>
+	 </complexContent>
+	</complexType>
+	<complexType name="CapacityModel">
+	 <annotation>
+		<documentation>?</documentation>
+		<appinfo>
+			<extension base="nscs:NexusDataObject"/>
+		</appinfo>
+	 </annotation>
+	 <complexContent>
+		<extension base="nscs:NexusDataObject">
+			<sequence>
+			 <element ref="sfas:nominalCapacityLevel" minOccurs="0"/>
+			 <element ref="sfas:shiftingModelNol" minOccurs="0"/>
+			 <element ref="sfas:noOfInvolveldObjects" minOccurs="0"/>
+			 <element ref="sfas:warmUpDuration" minOccurs="0"/>
+			 <element ref="sfas:minDuration" minOccurs="0"/>
+			 <element ref="sfas:maxDuration" minOccurs="0"/>
+			 <element ref="sfas:default" minOccurs="0"/>
+			</sequence>
+		</extension>
+	 </complexContent>
+	</complexType>
+	<complexType name="WorkflowInstance">
+	 <annotation>
+		<documentation>Concrete instance of an workflow</documentation>
+		<appinfo>
+			<extension base="nscs:NexusDataObject"/>
+		</appinfo>
+	 </annotation>
+	 <complexContent>
+		<extension base="nscs:NexusDataObject">
+			<sequence>
+			 <element ref="sfas:exeutionPeriode" minOccurs="0"/>
+			 <element ref="sfas:workflowModel" minOccurs="0"/>
+			 <element ref="sfas:taskList" minOccurs="0"/>
+			 <element ref="sfas:workflowInstanceID" minOccurs="0"/>
+			 <element ref="sfas:workflowInstanceLink" minOccurs="0"/>
+			 <!-- NOL of workflow model -->
+			 <!-- NOLs der zug. Tasks -->
+			 <!-- Web link zum WfMS -->
+			</sequence>
+		</extension>
+	 </complexContent>
+	</complexType>
+	<complexType name="Vendor">
+	 <annotation>
+		<documentation>Im Source-Code: public ; ?</documentation>
+		<appinfo>
+			<extension base="nscs:SpatialObject"/>
+		</appinfo>
+	 </annotation>
+	 <complexContent>
+		<extension base="nscs:SpatialObject">
+			<sequence>
+			 <element ref="sfas:contact" minOccurs="0"/>
+			 <element ref="sfas:billingAddress" minOccurs="0"/>
+			 <element ref="sfas:classification" minOccurs="0"/>
+			</sequence>
+		</extension>
+	 </complexContent>
+	</complexType>
+	<complexType name="Customer">
+	 <annotation>
+		<documentation>?</documentation>
+		<appinfo>
+			<extension base="nscs:SpatialObject"/>
+		</appinfo>
+	 </annotation>
+	 <complexContent>
+		<extension base="nscs:SpatialObject">
+			<sequence>
+			 <element ref="sfas:deliveryAddress" minOccurs="0"/>
+			 <element ref="sfas:billingAddress" minOccurs="0"/>
+			 <element ref="sfas:contact" minOccurs="0"/>
+			</sequence>
+		</extension>
+	 </complexContent>
+	</complexType>
+	<complexType name="SmartFactorySensorActuatorObject">
+	 <annotation>
+		<documentation>? TEST</documentation>
+		<appinfo>
+			<extension base="nscs:SensorObject"/>
+		</appinfo>
+	 </annotation>
+	 <complexContent>
+		<extension base="nscs:SensorObject">
+			<sequence>
+			 <element ref="sfas:reading" minOccurs="0"/>
+			 <element ref="sfas:unit" minOccurs="0"/>
+			 <element ref="sfas:sampleRate" minOccurs="0"/>
+			 <element ref="sfas:parentObjectNol" minOccurs="0"/>
+			 <element ref="sfas:isActuator" minOccurs="0"/>
+			</sequence>
+		</extension>
+	 </complexContent>
+	</complexType>
+	<complexType name="TemperatureSensor">
+	 <annotation>
+		<documentation>?</documentation>
+		<appinfo>
+			<extension base="sfcs:SmartFactorySensorActuatorObject"/>
+		</appinfo>
+	 </annotation>
+	 <complexContent>
+		<extension base="sfcs:SmartFactorySensorActuatorObject"/>
+	 </complexContent>
+	</complexType>
+	<complexType name="Hygrometer">
+	 <annotation>
+		<documentation>?</documentation>
+		<appinfo>
+			<extension base="sfcs:SmartFactorySensorActuatorObject"/>
+		</appinfo>
+	 </annotation>
+	 <complexContent>
+		<extension base="sfcs:SmartFactorySensorActuatorObject"/>
+	 </complexContent>
+	</complexType>
+	<complexType name="Wattmeter">
+	 <annotation>
+		<documentation>?</documentation>
+		<appinfo>
+			<extension base="sfcs:SmartFactorySensorActuatorObject"/>
+		</appinfo>
+	 </annotation>
+	 <complexContent>
+		<extension base="sfcs:SmartFactorySensorActuatorObject"/>
+	 </complexContent>
+	</complexType>
+	<complexType name="Voltmeter">
+	 <annotation>
+		<documentation>?</documentation>
+		<appinfo>
+			<extension base="sfcs:SmartFactorySensorActuatorObject"/>
+		</appinfo>
+	 </annotation>
+	 <complexContent>
+		<extension base="sfcs:SmartFactorySensorActuatorObject"/>
+	 </complexContent>
+	</complexType>
+	<complexType name="Amperemeter">
+	 <annotation>
+		<documentation>?</documentation>
+		<appinfo>
+			<extension base="sfcs:SmartFactorySensorActuatorObject"/>
+		</appinfo>
+	 </annotation>
+	 <complexContent>
+		<extension base="sfcs:SmartFactorySensorActuatorObject"/>
+	 </complexContent>
+	</complexType>
+	<complexType name="FactoryBuilding">
+	 <annotation>
+		<documentation>?</documentation>
+		<appinfo>
+			<extension base="sfcs:SpatialFactoryResource"/>
+		</appinfo>
+	 </annotation>
+	 <complexContent>
+		<extension base="sfcs:SpatialFactoryResource">
+			<sequence>
+			 <element ref="sfas:constructionDate" minOccurs="0"/>
+			</sequence>
+		</extension>
+	 </complexContent>
+	</complexType>
+	<complexType name="Storage">
+	 <annotation>
+		<documentation>?</documentation>
+		<appinfo>
+			<extension base="sfcs:SpatialFactoryResource"/>
+		</appinfo>
+	 </annotation>
+	 <complexContent>
+		<extension base="sfcs:SpatialFactoryResource">
+			<sequence>
+			 <element ref="sfas:storageContent" minOccurs="0"/>
+			 <element ref="sfas:currentStorageContent" minOccurs="0"/>
+			 <element ref="sfas:costForOneTask" minOccurs="0"/>
+			 <element ref="sfas:storageCosts" minOccurs="0"/>
+			 <element ref="sfas:interestRateForStoredObjects" minOccurs="0"/>
+			 <element ref="sfas:reservedItemsListNols" minOccurs="0"/>
+			</sequence>
+		</extension>
+	 </complexContent>
+	</complexType>
+	<complexType name="Stockyard">
+	 <annotation>
+		<documentation>?</documentation>
+		<appinfo>
+			<extension base="sfcs:SpatialFactoryResource"/>
+		</appinfo>
+	 </annotation>
+	 <complexContent>
+		<extension base="sfcs:SpatialFactoryResource">
+			<sequence>
+			 <element ref="sfas:weightRestrictions" minOccurs="0"/>
+			 <element ref="sfas:content" minOccurs="0"/>
+			 <element ref="sfas:packageItemRestrictions" minOccurs="0"/>
+			</sequence>
+		</extension>
+	 </complexContent>
+	</complexType>
+	<complexType name="ManualAssemblyWorkStation">
+	 <annotation>
+		<documentation>?</documentation>
+		<appinfo>
+			<extension base="sfcs:Workstation"/>
+		</appinfo>
+	 </annotation>
+	 <complexContent>
+		<extension base="sfcs:Workstation"/>
+	 </complexContent>
+	</complexType>
+	<complexType name="Millingmachine">
+	 <annotation>
+		<documentation>?</documentation>
+		<appinfo>
+			<extension base="sfcs:Machine"/>
+		</appinfo>
+	 </annotation>
+	 <complexContent>
+		<extension base="sfcs:Machine"/>
+	 </complexContent>
+	</complexType>
+	<complexType name="Lathe">
+	 <annotation>
+		<documentation>?</documentation>
+		<appinfo>
+			<extension base="sfcs:Machine"/>
+		</appinfo>
+	 </annotation>
+	 <complexContent>
+		<extension base="sfcs:Machine"/>
+	 </complexContent>
+	</complexType>
+	<complexType name="RoboticAssemblyWorkStation">
+	 <annotation>
+		<documentation>? TEST</documentation>
+		<appinfo>
+			<extension base="sfcs:Machine"/>
+		</appinfo>
+	 </annotation>
+	 <complexContent>
+		<extension base="sfcs:Machine"/>
+	 </complexContent>
+	</complexType>
+	<complexType name="RawMaterial">
+	 <annotation>
+		<documentation>?</documentation>
+		<appinfo>
+			<extension base="sfcs:Part"/>
+		</appinfo>
+	 </annotation>
+	 <complexContent>
+		<extension base="sfcs:Part">
+			<sequence>
+			 <element ref="sfas:partNol" minOccurs="0"/>
+			</sequence>
+		</extension>
+	 </complexContent>
+	</complexType>
+	<complexType name="ResourceTransport">
+	 <annotation>
+		<documentation>?</documentation>
+		<appinfo>
+			<extension base="sfcs:MobileFactoryResource"/>
+		</appinfo>
+	 </annotation>
+	 <complexContent>
+		<extension base="sfcs:MobileFactoryResource">
+			<sequence>
+			 <element ref="sfas:locationSpecification" minOccurs="0"/>
+			 <element ref="sfas:executionDates" minOccurs="0"/>
+			 <element ref="sfas:jobFeedback" minOccurs="0"/>
+			</sequence>
+		</extension>
+	 </complexContent>
+	</complexType>
+	<complexType name="Transportbox">
+	 <annotation>
+		<documentation>?</documentation>
+		<appinfo>
+			<extension base="sfcs:ResourceTransport"/>
+		</appinfo>
+	 </annotation>
+	 <complexContent>
+		<extension base="sfcs:ResourceTransport">
+			<sequence>
+			 <element ref="sfas:_3DBoundingBox" minOccurs="0"/>
+			 <element ref="sfas:content" minOccurs="0"/>
+			</sequence>
+		</extension>
+	 </complexContent>
+	</complexType>
+	<complexType name="Toolbox">
+	 <annotation>
+		<documentation>?</documentation>
+		<appinfo>
+			<extension base="sfcs:ResourceTransport"/>
+		</appinfo>
+	 </annotation>
+	 <complexContent>
+		<extension base="sfcs:ResourceTransport">
+			<sequence>
+			 <element ref="sfas:capacity" minOccurs="0"/>
+			 <element ref="sfas:currentToolList" minOccurs="0"/>
+			 <element ref="sfas:currentNoofTools" minOccurs="0"/>
+			 <element ref="sfas:currentOrderList" minOccurs="0"/>
+			</sequence>
+		</extension>
+	 </complexContent>
+	</complexType>
+	<complexType name="Carrier">
+	 <annotation>
+		<documentation>?</documentation>
+		<appinfo>
+			<extension base="sfcs:ResourceTransport"/>
+		</appinfo>
+	 </annotation>
+	 <complexContent>
+		<extension base="sfcs:ResourceTransport">
+			<sequence>
+				<element ref="sfas:content" minOccurs="0"/>
+				<element ref="sfas:operation" minOccurs="0" />
+				<element ref="sfas:stampedMES" minOccurs="0" />
+			</sequence>
+		</extension>
+	 </complexContent>
+	</complexType>
+	<complexType name="MillingCutter">
+	 <annotation>
+		<documentation>?</documentation>
+		<appinfo>
+			<extension base="sfcs:Tool"/>
+		</appinfo>
+	 </annotation>
+	 <complexContent>
+		<extension base="sfcs:Tool">
+			<sequence>
+			 <element ref="sfas:diameter" minOccurs="0"/>
+			 <element ref="sfas:minDiameter" minOccurs="0"/>
+			 <element ref="sfas:maxDiameter" minOccurs="0"/>
+			 <element ref="sfas:currentDiameter" minOccurs="0"/>
+			 <element ref="sfas:referenceLength" minOccurs="0"/>
+			</sequence>
+		</extension>
+	 </complexContent>
+	</complexType>
+	<complexType name="TurningSteel">
+	 <annotation>
+		<documentation>?</documentation>
+		<appinfo>
+			<extension base="sfcs:Tool"/>
+		</appinfo>
+	 </annotation>
+	 <complexContent>
+		<extension base="sfcs:Tool">
+			<sequence>
+			 <element ref="sfas:minLength" minOccurs="0"/>
+			 <element ref="sfas:maxLength" minOccurs="0"/>
+			 <element ref="sfas:currentLength" minOccurs="0"/>
+			</sequence>
+		</extension>
+	 </complexContent>
+	</complexType>
+	<complexType name="Task">
+	 <annotation>
+		<documentation>?</documentation>
+		<appinfo>
+			<extension base="sfcs:SmartFactoryUniversalPayloadData"/>
+			<extension base="nscs:SpatialObject"/>
+		</appinfo>
+	 </annotation>
+	 <complexContent>
+		<extension base="nscs:NexusDataObject">
+			<sequence>
+			 <element ref="sfas:action" minOccurs="0"/>
+			 <element ref="sfas:resourceListNols" minOccurs="0"/>
+			 <element ref="sfas:duration" minOccurs="0"/>
+			 <element ref="sfas:priority" minOccurs="0"/>
+			 <element ref="sfas:workflowStandardData" minOccurs="0"/>
+			 <element ref="sfas:taskLink" minOccurs="0"/>
+			 <element ref="sfas:taskOwnerNol" minOccurs="0"/>
+			 <element ref="sfas:workflowInstance" minOccurs="0"/>
+			 <element ref="sfas:locationSpecification" minOccurs="0"/>
+			 <element ref="sfas:executionDates" minOccurs="0"/>
+			 <element ref="sfas:jobFeedback" minOccurs="0"/>
+			 <!-- *NEU* - Link zum WfMS -->
+			 <!-- *NEU* - NOL des zug. Workflows -->
+			 <!--new complex attributes-->
+			</sequence>
+		</extension>
+	 </complexContent>
+	</complexType>
+	<complexType name="ActionTask">
+	 <annotation>
+		<documentation>?</documentation>
+		<appinfo>
+			<extension base="sfcs:Task"/>
+			<extension base="sfcs:MobileFactoryObject"/>
+		</appinfo>
+	 </annotation>
+	 <complexContent>
+		<extension base="sfcs:Task">
+			<sequence>
+			 <element ref="sfas:taskItem" minOccurs="0"/>
+			 <element ref="sfas:taskOrigin" minOccurs="0"/>
+			 <element ref="sfas:taskTargetItem" minOccurs="0"/>
+			 <element ref="sfas:taskDestination" minOccurs="0"/>
+			 <element ref="sfas:taskAction" minOccurs="0"/>
+			 <!-- NOL des zu transportierenden Objekt -->
+			 <!-- Start-Ort (Koordinaten) -->
+			 <!-- *NEU* - NOL des Zielobjekts -->
+			 <!-- Ziel-Ort (Koordinaten) -->
+			</sequence>
+		</extension>
+	 </complexContent>
+	</complexType>
+	<complexType name="QuestionTask">
+	 <annotation>
+		<documentation>?</documentation>
+		<appinfo>
+			<extension base="sfcs:Task"/>
+		</appinfo>
+	 </annotation>
+	 <complexContent>
+		<extension base="sfcs:Task">
+			<sequence>
+			 <element ref="sfas:taskQuestion" minOccurs="0"/>
+			 <element ref="sfas:taskAnswer" minOccurs="0"/>
+			 <!-- Strings with questions-->
+			 <!-- Strings with answers to questions-->
+			</sequence>
+		</extension>
+	 </complexContent>
+	</complexType>
+	<complexType name="ManufacturingTask">
+	 <annotation>
+		<documentation>?</documentation>
+		<appinfo>
+			<extension base="sfcs:Task"/>
+		</appinfo>
+	 </annotation>
+	 <complexContent>
+		<extension base="sfcs:Task">
+			<sequence>
+			 <element ref="sfas:setupDuration" minOccurs="0"/>
+			 <element ref="sfas:failureRate" minOccurs="0"/>
+			 <element ref="sfas:qmStatus" minOccurs="0"/>
+			</sequence>
+		</extension>
+	 </complexContent>
+	</complexType>
+	<complexType name="Fixture">
+	 <annotation>
+		<documentation>?</documentation>
+		<appinfo>
+			<extension base="sfcs:MobileFactoryResource"/>
+			<extension base="sfcs:Inventory"/>
+		</appinfo>
+	 </annotation>
+	 <complexContent>
+		<extension base="sfcs:MobileFactoryResource">
+			<sequence>
+			 <element ref="sfas:maintenance" minOccurs="0"/>
+			 <element ref="sfas:jobFeedback" minOccurs="0"/>
+			 <element ref="sfas:locationSpecification" minOccurs="0"/>
+			</sequence>
+		</extension>
+	 </complexContent>
+	</complexType>
+	<complexType name="ProductionOrder">
+	 <annotation>
+		<documentation>?</documentation>
+		<appinfo>
+			<extension base="sfcs:MobileFactoryObject"/>
+		</appinfo>
+	 </annotation>
+	 <complexContent>
+		<extension base="sfcs:MobileFactoryObject">
+			<sequence>
+			 <element ref="sfas:LOTSize" minOccurs="0"/>
+			 <element ref="sfas:dueDate" minOccurs="0"/>
+			 <element ref="sfas:workflowNol" minOccurs="0"/>
+			 <element ref="sfas:jobProgress" minOccurs="0"/>
+			 <element ref="sfas:jobInTime" minOccurs="0"/>
+			 <element ref="sfas:currentTaskNol" minOccurs="0"/>
+			 <element ref="sfas:currentTaskProgress" minOccurs="0"/>
+			 <element ref="sfas:currentTaskDueDate" minOccurs="0"/>
+			 <element ref="sfas:currentTaskInTime" minOccurs="0"/>
+			 <element ref="sfas:nextTask" minOccurs="0"/>
+			 <element ref="sfas:producerNol" minOccurs="0"/>
+			 <element ref="sfas:productNol" minOccurs="0"/>
+			 <element ref="sfas:customerAgreementNol" minOccurs="0"/>
+			 <element ref="sfas:priority" minOccurs="0"/>
+			 <element ref="sfas:qmStatus" minOccurs="0"/>
+			 <element ref="sfas:customerNol" minOccurs="0"/>
+			 <element ref="sfas:executionDates" minOccurs="0"/>
+			 <!--new complex attribute-->
+			</sequence>
+		</extension>
+	 </complexContent>
+	</complexType>
+	<complexType name="Partassembly">
+	 <annotation>
+		<documentation>?</documentation>
+		<appinfo>
+			<extension base="sfcs:Part"/>
+		</appinfo>
+	 </annotation>
+	 <complexContent>
+		<extension base="sfcs:Part">
+			<sequence>
+			 <element ref="sfas:bomNol" minOccurs="0"/>
+			</sequence>
+		</extension>
+	 </complexContent>
+	</complexType>
+	<complexType name="ToolAssembly">
+	 <annotation>
+		<documentation>Hier wurde im UML-Diagramm gleich zweimal von Tool geerbt??</documentation>
+		<appinfo>
+			<extension base="sfcs:Tool"/>
+		</appinfo>
+	 </annotation>
+	 <complexContent>
+		<extension base="sfcs:Tool">
+			<sequence>
+			 <element ref="sfas:correctionX" minOccurs="0"/>
+			 <element ref="sfas:correctionY" minOccurs="0"/>
+			 <element ref="sfas:correctionZ" minOccurs="0"/>
+			 <element ref="sfas:bomNol" minOccurs="0"/>
+			 <!--new bomNol instead of sfcs:Assembly-->
+			</sequence>
+		</extension>
+	 </complexContent>
+	</complexType>
+	<complexType name="TransportTask">
+	 <annotation>
+		<documentation>?</documentation>
+		<appinfo>
+			<extension base="sfcs:ActionTask"/>
+		</appinfo>
+	 </annotation>
+	 <complexContent>
+		<extension base="nscs:MobileObject">
+			<sequence>
+			 <element ref="sfas:startLocation" minOccurs="0"/>
+			 <element ref="sfas:transportType" minOccurs="0"/>
+			 <element ref="sfas:onDemand" minOccurs="0"/>
+			 <element ref="sfas:transportCostRateFix" minOccurs="0"/>
+			 <element ref="sfas:transportCostrateVar" minOccurs="0"/>
+			 <element ref="sfas:errorModelNol" minOccurs="0"/>
+			 <element ref="sfas:resourceListNols" minOccurs="0"/>
+			 <element ref="sfas:capacityModelNol" minOccurs="0"/>
+			</sequence>
+		</extension>
+	 </complexContent>
+	</complexType>
+	<complexType name="FixtureAssembly">
+	 <annotation>
+		<documentation>?</documentation>
+		<appinfo>
+			<extension base="sfcs:Fixture"/>
+		</appinfo>
+	 </annotation>
+	 <complexContent>
+		<extension base="sfcs:Fixture">
+			<sequence>
+			 <element ref="sfas:bomNol" minOccurs="0"/>
+			</sequence>
+		</extension>
+	 </complexContent>
+	</complexType>
+	<complexType name="SmartFactorySensorList">
+	 <annotation>
+		<documentation>?</documentation>
+		<appinfo>
+			<extension base="nscs:NexusDataObject"/>
+		</appinfo>
+	 </annotation>
+	 <complexContent>
+		<extension base="nscs:NexusDataObject">
+			<sequence>
+			 <element ref="sfas:parentObjects" minOccurs="0"/>
+			 <element ref="sfas:sensorListNols" minOccurs="0"/>
+			</sequence>
+		</extension>
+	 </complexContent>
+	</complexType>
+	<complexType name="MobileSmartFactorySensor">
+	 <annotation>
+		<documentation>?</documentation>
+		<appinfo>
+			<extension base="nscs:MobileObject"/>
+			<extension base="sfcs:SmartFactorySensorActuatorObject"/>
+		</appinfo>
+	 </annotation>
+	 <complexContent>
+		<extension base="nscs:MobileObject"/>
+	 </complexContent>
+	</complexType>
+	<complexType name="SpatialWorkflow">
+	 <annotation>
+		<documentation>Workflow model that can be belongs to an location</documentation>
+		<appinfo>
+			<extension base="sfcs:Workflow"/>
+			<extension base="nscs:SpatialObject"/>
+		</appinfo>
+	 </annotation>
+	 <complexContent>
+		<extension base="sfcs:Workflow"/>
+	 </complexContent>
+	</complexType>
+	<complexType name="SpatialWorkflowInstance">
+	 <annotation>
+		<documentation>Workflow instance that can be belongs to an location</documentation>
+		<appinfo>
+			<extension base="sfcs:WorkflowInstance"/>
+			<extension base="nscs:SpatialObject"/>
+		</appinfo>
+	 </annotation>
+	 <complexContent>
+		<extension base="sfcs:WorkflowInstance"/>
+	 </complexContent>
+	</complexType>
+	<complexType name="ITrameManualAssemblyWorkStation">
+	 <annotation>
+		<documentation>?</documentation>
+		<appinfo>
+			<extension base="sfcs:ManualAssemblyWorkStation"/>
+			<extension base="sfcs:FestoiTrame" />
+		</appinfo>
+	 </annotation>
+	 <complexContent>
+		<extension base="sfcs:ManualAssemblyWorkStation"/>
+	 </complexContent>
+	</complexType>
+	<complexType name="ITrameStorage">
+	 <annotation>
+		<documentation>?</documentation>
+		<appinfo>
+			<extension base="sfcs:Storage"/>
+			<extension base="sfcs:FestoiTrame" />
+		</appinfo>
+	 </annotation>
+	 <complexContent>
+		<extension base="sfcs:Storage"/>
+	 </complexContent>
+	</complexType>
+	<complexType name="ITrameRoboticAssemblyWorkStation">
+	 <annotation>
+		<documentation>? TEST</documentation>
+		<appinfo>
+			<extension base="sfcs:RoboticAssemblyWorkStation"/>
+			<extension base="sfcs:FestoiTrame" />
+		</appinfo>
+	 </annotation>
+	 <complexContent>
+		<extension base="sfcs:RoboticAssemblyWorkStation"/>
+	 </complexContent>
+	</complexType>
+	<complexType name="Conveyor">
+	 <annotation>
+		<documentation>Conveyor modules for transporting carriers</documentation>
+		<appinfo>
+			<extension base="sfcs:SpatialFactoryResource"/>
+		</appinfo>
+	 </annotation>
+	 <complexContent>
+		<extension base="sfcs:SpatialFactoryResource"/>
+	 </complexContent>
+	</complexType>
+	<complexType name="ShopFloorSegment">
+	 <annotation>
+		<documentation>?</documentation>
+		<appinfo>
+			<extension base="sfcs:SpatialFactoryResource"/>
+		</appinfo>
+	 </annotation>
+	 <complexContent>
+		<extension base="sfcs:SpatialFactoryResource"/>
+	 </complexContent>
+	</complexType>
+	<complexType name="TransportInZone">
+	 <annotation>
+		<documentation>?</documentation>
+		<appinfo>
+			<extension base="sfcs:SpatialFactoryResource"/>
+		</appinfo>
+	 </annotation>
+	 <complexContent>
+		<extension base="sfcs:SpatialFactoryResource"/>
+	 </complexContent>
+	</complexType>
+	<complexType name="TransportOutZone">
+	 <annotation>
+		<documentation>?</documentation>
+		<appinfo>
+			<extension base="sfcs:SpatialFactoryResource"/>
+		</appinfo>
+	 </annotation>
+	 <complexContent>
+		<extension base="sfcs:SpatialFactoryResource"/>
+	 </complexContent>
+	</complexType>
+	<complexType name="TransportInOutZone">
+	 <annotation>
+		<documentation>?</documentation>
+		<appinfo>
+			<extension base="sfcs:TransportInZone"/>
+			<extension base="sfcs:TransportOutZone"/>
+		</appinfo>
+	 </annotation>
+	 <complexContent>
+		<extension base="sfcs:TransportInZone"/>
+	 </complexContent>
+	</complexType>
+	<complexType name="FailureDocumentationObject">
+	 <annotation>
+		<documentation>object that contains information for mobile non-human Resources in a smart factory</documentation>
+		<appinfo>
+			<extension base="nscs:SpatialObject"/>
+		</appinfo>
+	 </annotation>
+	 <complexContent>
+		<extension base="nscs:SpatialObject">
+		<sequence>
+			 <element ref="sfas:status" minOccurs="0"/>
+			 <element ref="sfas:errorClassification" minOccurs="0"/>
+			 <element ref="sfas:machineSpecificErrorCode" minOccurs="0"/>
+			 <element ref="sfas:machineNolList" minOccurs="0"/>
+			 <element ref="sfas:productOccurredFailureNolList" minOccurs="0"/>
+			 <element ref="sfas:productionOrderOccurredFailureNolList" minOccurs="0"/>
+			 <element ref="sfas:meanTimeToRepair" minOccurs="0"/>
+			 <element ref="sfas:timeToRepairHistory" minOccurs="0"/>
+			 <element ref="sfas:documentList" minOccurs="0"/>
+			 <element ref="sfas:sparePartsList" minOccurs="0"/>
+			 <element ref="sfas:toolList" minOccurs="0"/>
+			 <element ref="sfas:necessaryHumanResourcesList" minOccurs="0"/>
+			 <element ref="sfas:costRate" minOccurs="0"/>
+			 <element ref="sfas:costRateType" minOccurs="0"/>
+			 <element ref="sfas:costCenterId" minOccurs="0"/>
+		</sequence>
+		</extension>
+	 </complexContent>
+	</complexType>
+
+	</schema>

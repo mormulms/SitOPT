@@ -1,0 +1,780 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema targetNamespace="http://www.nexus.uni-stuttgart.de/1.0/NSCS" xmlns:nscs="http://www.nexus.uni-stuttgart.de/1.0/NSCS" xmlns:nsas="http://www.nexus.uni-stuttgart.de/1.0/NSAS" xmlns="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+  <annotation>
+    <documentation>This is the Nexus Standard Class Schema. It defines which Nexus Objects can have which Nexus Attributes and the "is - a" relation ship between Nexus Objects. Nexus Object Classes are represented as ComplexTypes. The is-a-relationship is coded into the &lt;nsat:isa/&gt;-Tag in the &lt;appinfo/&gt;-Element. Since Nexus Objects are generic XML Objects, AWML can not be validated against this schema.</documentation>
+  </annotation>
+  <import namespace="http://www.nexus.uni-stuttgart.de/1.0/NSAS" schemaLocation="NexusStandardAttributeSchema.xsd"/>
+  <complexType name="NexusObject">
+    <annotation>
+      <documentation>root class of AWS</documentation>
+    </annotation>
+    <sequence>
+      <element ref="nsas:type"/>
+      <element ref="nsas:meta" minOccurs="0"/>
+    </sequence>
+  </complexType>
+  <complexType name="NexusDataObject">
+    <annotation>
+      <documentation>object with a NOL</documentation>
+      <appinfo>
+        <extension base="nscs:NexusObject"/>
+      </appinfo>
+    </annotation>
+    <complexContent>
+      <extension base="nscs:NexusObject">
+        <sequence>
+          <element ref="nsas:nol"/>
+          <element ref="nsas:kind"/>
+          <element ref="nsas:name" minOccurs="0"/>
+          <element ref="nsas:description" minOccurs="0"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="WebSituatedObject">
+    <annotation>
+      <appinfo>
+        <extension base="nscs:NexusObject"/>
+      </appinfo>
+      <documentation>digital obect that is addressable with an URI</documentation>
+    </annotation>
+    <complexContent>
+      <extension base="nscs:NexusObject">
+        <sequence>
+          <element ref="nsas:uri" minOccurs="0"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="WebPage">
+    <annotation>
+      <appinfo>
+        <extension base="nscs:WebSituatedObject"/>
+      </appinfo>
+      <documentation>web page</documentation>
+    </annotation>
+    <complexContent>
+      <extension base="nscs:WebSituatedObject">
+        <sequence>
+          <element ref="nsas:dcCreator" minOccurs="0"/>
+          <element ref="nsas:dcDate" minOccurs="0"/>
+          <element ref="nsas:dcDescription" minOccurs="0"/>
+          <element ref="nsas:dcPublisher" minOccurs="0"/>
+          <element ref="nsas:dcSubject" minOccurs="0"/>
+          <element ref="nsas:dcTitle" minOccurs="0"/>
+          <element ref="nsas:lastModified" minOccurs="0"/>
+          <element ref="nsas:lastUpdated" minOccurs="0"/>
+          <element ref="nsas:unreachable" minOccurs="0"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="SpatialObject">
+    <annotation>
+      <appinfo>
+        <extension base="nscs:NexusDataObject"/>
+      </appinfo>
+      <documentation>object in space</documentation>
+    </annotation>
+    <complexContent>
+      <extension base="nscs:NexusDataObject">
+        <sequence>
+          <element ref="nsas:pos"/>
+          <element ref="nsas:extent"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="MobileObject">
+    <annotation>
+      <appinfo>
+        <extension base="nscs:SpatialObject"/>
+      </appinfo>
+      <documentation>object with often changing position attribute</documentation>
+    </annotation>
+    <complexContent>
+      <extension base="nscs:SpatialObject">
+        <sequence>
+          <element ref="nsas:direction" minOccurs="0"/>
+          <element ref="nsas:orientation" minOccurs="0"/>
+          <element ref="nsas:speed" minOccurs="0"/>
+          <element ref="nsas:maxSpeed" minOccurs="0"/>
+          <element ref="nsas:avgSpeed" minOccurs="0"/>
+          <element ref="nsas:residenceArea" minOccurs="0"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="VirtualWebPortal">
+    <annotation>
+      <appinfo>
+        <extension base="nscs:SpatialObject"/>
+      </appinfo>
+      <documentation>anchor for web pages in space</documentation>
+    </annotation>
+    <complexContent>
+      <extension base="nscs:SpatialObject"/>
+    </complexContent>
+  </complexType>
+  <complexType name="ParkingSite">
+    <annotation>
+      <appinfo>
+        <extension base="nscs:SpatialObject"/>
+      </appinfo>
+      <documentation>a parking site</documentation>
+    </annotation>
+    <complexContent>
+      <extension base="nscs:SpatialObject">
+        <sequence>
+          <element ref="nsas:spotQuantity" minOccurs="0"/>
+          <element ref="nsas:freeSpotQuantity" minOccurs="0"/>
+          <element ref="nsas:forHandicapped" minOccurs="0"/>
+          <element ref="nsas:forWomen" minOccurs="0"/>
+          <element ref="nsas:surveillance" minOccurs="0"/>
+          <element ref="nsas:roofed" minOccurs="0"/>
+          <element ref="nsas:prices" minOccurs="0"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="VIT">
+    <annotation>
+      <appinfo>
+        <extension base="nscs:SpatialObject"/>
+      </appinfo>
+      <documentation>Virtual Information Tower</documentation>
+    </annotation>
+    <complexContent>
+      <extension base="nscs:SpatialObject">
+        <sequence>
+          <element ref="nsas:activePListAddress" minOccurs="0"/>
+          <element ref="nsas:address" minOccurs="0"/>
+          <element ref="nsas:owner" minOccurs="0"/>
+          <element ref="nsas:pHierarchyAddress" minOccurs="0"/>
+          <element ref="nsas:startPageAddress" minOccurs="0"/>
+          <element ref="nsas:keywords" minOccurs="0"/>
+          <element ref="nsas:visibility" minOccurs="0"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="SightseeingObject">
+    <annotation>
+      <appinfo>
+        <extension base="nscs:SpatialObject"/>
+      </appinfo>
+      <documentation>object that is of interest for tourists</documentation>
+    </annotation>
+    <complexContent>
+      <extension base="nscs:SpatialObject">
+        <sequence>
+          <element ref="nsas:typeOfSightseeing" minOccurs="0"/>
+          <element ref="nsas:visitingHours" minOccurs="0"/>
+          <element ref="nsas:guidedTours" minOccurs="0"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="Emitter">
+    <annotation>
+      <appinfo>
+        <extension base="nscs:SpatialObject"/>
+      </appinfo>
+      <documentation>object that emits an ID (e.g. infrared beacon)</documentation>
+    </annotation>
+    <complexContent>
+      <extension base="nscs:SpatialObject">
+        <sequence>
+          <element ref="nsas:emitterID" minOccurs="0"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="Doorplate">
+    <annotation>
+      <appinfo>
+        <extension base="nscs:SpatialObject"/>
+      </appinfo>
+      <documentation>(electronic) doorplate</documentation>
+    </annotation>
+    <complexContent>
+      <extension base="nscs:SpatialObject">
+        <sequence>
+          <element ref="nsas:roomNumber" minOccurs="0"/>
+          <element ref="nsas:personName" minOccurs="0"/>
+          <element ref="nsas:personPos" minOccurs="0"/>
+          <element ref="nsas:place" minOccurs="0"/>
+          <element ref="nsas:altPlace" minOccurs="0"/>
+          <element ref="nsas:infoText" minOccurs="0"/>
+          <element ref="nsas:status" minOccurs="0"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="BuildingObject">
+    <annotation>
+      <appinfo>
+        <extension base="nscs:SpatialObject"/>
+      </appinfo>
+      <documentation>building or part of a building</documentation>
+    </annotation>
+    <complexContent>
+      <extension base="nscs:SpatialObject">
+        <sequence>
+          <element ref="nsas:constructionDate" minOccurs="0"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="Wall">
+    <annotation>
+      <appinfo>
+        <extension base="nscs:BuildingObject"/>
+      </appinfo>
+      <documentation>a wall</documentation>
+    </annotation>
+    <complexContent>
+      <extension base="nscs:BuildingObject">
+        <sequence>
+          <element ref="nsas:color" minOccurs="0"/>
+          <element ref="nsas:material" minOccurs="0"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="Room">
+    <annotation>
+      <appinfo>
+        <extension base="nscs:BuildingObject"/>
+      </appinfo>
+      <documentation>a room</documentation>
+    </annotation>
+    <complexContent>
+      <extension base="nscs:BuildingObject">
+        <sequence>
+          <element ref="nsas:number" minOccurs="0"/>
+          <element ref="nsas:contact" minOccurs="0"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="Apartment">
+    <annotation>
+      <appinfo>
+        <extension base="nscs:BuildingObject"/>
+      </appinfo>
+      <documentation>a set of rooms</documentation>
+    </annotation>
+    <complexContent>
+      <extension base="nscs:BuildingObject">
+        <sequence>
+          <element ref="nsas:levelNumbers" minOccurs="0"/>
+          <element ref="nsas:number" minOccurs="0"/>
+          <element ref="nsas:contact" minOccurs="0"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="Building">
+    <annotation>
+      <appinfo>
+        <extension base="nscs:BuildingObject"/>
+      </appinfo>
+      <documentation>a building</documentation>
+    </annotation>
+    <complexContent>
+      <extension base="nscs:BuildingObject">
+        <sequence>
+          <element ref="nsas:address" minOccurs="0"/>
+          <element ref="nsas:contact" minOccurs="0"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="Level">
+    <annotation>
+      <appinfo>
+        <extension base="nscs:BuildingObject"/>
+      </appinfo>
+      <documentation>a level in a building</documentation>
+    </annotation>
+    <complexContent>
+      <extension base="nscs:BuildingObject">
+        <sequence>
+          <element ref="nsas:number" minOccurs="0"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="Bar">
+    <annotation>
+      <appinfo>
+        <extension base="nscs:Apartment"/>
+      </appinfo>
+      <documentation>a bar</documentation>
+    </annotation>
+    <complexContent>
+      <extension base="nscs:Apartment">
+        <sequence>
+          <element ref="nsas:menu" minOccurs="0"/>
+          <element ref="nsas:happyHour" minOccurs="0"/>
+          <element ref="nsas:openingHours" minOccurs="0"/>
+          <element ref="nsas:danceFloor" minOccurs="0"/>
+          <element ref="nsas:program" minOccurs="0"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="PoliceStation">
+    <annotation>
+      <appinfo>
+        <extension base="nscs:Apartment"/>
+      </appinfo>
+      <documentation>a police station</documentation>
+    </annotation>
+    <complexContent>
+      <extension base="nscs:Apartment"/>
+    </complexContent>
+  </complexType>
+  <complexType name="FireDepartment">
+    <annotation>
+      <appinfo>
+        <extension base="nscs:Apartment"/>
+      </appinfo>
+      <documentation>a fire department</documentation>
+    </annotation>
+    <complexContent>
+      <extension base="nscs:Apartment">
+        <sequence>
+          <element ref="nsas:professional" minOccurs="0"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="Hospital">
+    <annotation>
+      <appinfo>
+        <extension base="nscs:Apartment"/>
+      </appinfo>
+      <documentation>a hospital</documentation>
+    </annotation>
+    <complexContent>
+      <extension base="nscs:Apartment">
+        <sequence>
+          <element ref="nsas:emergencyNumber" minOccurs="0"/>
+          <element ref="nsas:bedQuantity" minOccurs="0"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="UniversityBuilding">
+    <annotation>
+      <appinfo>
+        <extension base="nscs:Apartment"/>
+      </appinfo>
+      <documentation>an university building</documentation>
+    </annotation>
+    <complexContent>
+      <extension base="nscs:Apartment">
+        <sequence>
+          <element ref="nsas:publicUniversity" minOccurs="0"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="Mall">
+    <annotation>
+      <appinfo>
+        <extension base="nscs:Apartment"/>
+      </appinfo>
+      <documentation>a large building hosting shops</documentation>
+    </annotation>
+    <complexContent>
+      <extension base="nscs:Apartment">
+        <sequence>
+          <element ref="nsas:openingHours" minOccurs="0"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="StationBuilding">
+    <annotation>
+      <appinfo>
+        <extension base="nscs:Apartment"/>
+      </appinfo>
+      <documentation>a train station building</documentation>
+    </annotation>
+    <complexContent>
+      <extension base="nscs:Apartment"/>
+    </complexContent>
+  </complexType>
+  <complexType name="GasStation">
+    <annotation>
+      <appinfo>
+        <extension base="nscs:Apartment"/>
+      </appinfo>
+      <documentation>a gas station</documentation>
+    </annotation>
+    <complexContent>
+      <extension base="nscs:Apartment">
+        <sequence>
+          <element ref="nsas:gasPrices" minOccurs="0"/>
+          <element ref="nsas:gasTypes" minOccurs="0"/>
+          <element ref="nsas:garage" minOccurs="0"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="EventBuilding">
+    <annotation>
+      <appinfo>
+        <extension base="nscs:Apartment"/>
+      </appinfo>
+      <documentation>a building hosting events (e.g. theater, ...)</documentation>
+    </annotation>
+    <complexContent>
+      <extension base="nscs:Apartment">
+        <sequence>
+          <element ref="nsas:program" minOccurs="0"/>
+          <element ref="nsas:seatQuantity" minOccurs="0"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="Restaurant">
+    <annotation>
+      <appinfo>
+        <extension base="nscs:Apartment"/>
+      </appinfo>
+      <documentation>a restaurant</documentation>
+    </annotation>
+    <complexContent>
+      <extension base="nscs:Apartment">
+        <sequence>
+          <element ref="nsas:style" minOccurs="0"/>
+          <element ref="nsas:menu" minOccurs="0"/>
+          <element ref="nsas:foodToGo" minOccurs="0"/>
+          <element ref="nsas:dailyLunch" minOccurs="0"/>
+          <element ref="nsas:happyHour" minOccurs="0"/>
+          <element ref="nsas:openingHours" minOccurs="0"/>
+          <element ref="nsas:seatQuantity" minOccurs="0"/>
+          <element ref="nsas:adjoiningRoom" minOccurs="0"/>
+          <element ref="nsas:deliveryService" minOccurs="0"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="Hotel">
+    <annotation>
+      <appinfo>
+        <extension base="nscs:Apartment"/>
+      </appinfo>
+      <documentation>a hotel</documentation>
+    </annotation>
+    <complexContent>
+      <extension base="nscs:Apartment">
+        <sequence>
+          <element ref="nsas:hotelType" minOccurs="0"/>
+          <element ref="nsas:roomTypes" minOccurs="0"/>
+          <element ref="nsas:prices" minOccurs="0"/>
+          <element ref="nsas:roomQuantity" minOccurs="0"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="Shop">
+    <annotation>
+      <appinfo>
+        <extension base="nscs:Apartment"/>
+      </appinfo>
+      <documentation>a shop</documentation>
+    </annotation>
+    <complexContent>
+      <extension base="nscs:Apartment">
+        <sequence>
+          <element ref="nsas:onlineShopping" minOccurs="0"/>
+          <element ref="nsas:openingHours" minOccurs="0"/>
+          <element ref="nsas:offerings" minOccurs="0"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="School">
+    <annotation>
+      <appinfo>
+        <extension base="nscs:Apartment"/>
+      </appinfo>
+      <documentation>a school</documentation>
+    </annotation>
+    <complexContent>
+      <extension base="nscs:Apartment">
+        <sequence>
+          <element ref="nsas:schoolType" minOccurs="0"/>
+          <element ref="nsas:publicSchool" minOccurs="0"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="Theater">
+    <annotation>
+      <appinfo>
+        <extension base="nscs:EventBuilding"/>
+      </appinfo>
+      <documentation>a theater</documentation>
+    </annotation>
+    <complexContent>
+      <extension base="nscs:EventBuilding"/>
+    </complexContent>
+  </complexType>
+  <complexType name="Opera">
+    <annotation>
+      <appinfo>
+        <extension base="nscs:EventBuilding"/>
+      </appinfo>
+      <documentation>an opera</documentation>
+    </annotation>
+    <complexContent>
+      <extension base="nscs:EventBuilding"/>
+    </complexContent>
+  </complexType>
+  <complexType name="Cinema">
+    <annotation>
+      <appinfo>
+        <extension base="nscs:EventBuilding"/>
+      </appinfo>
+      <documentation>a cinema</documentation>
+    </annotation>
+    <complexContent>
+      <extension base="nscs:EventBuilding"/>
+    </complexContent>
+  </complexType>
+  <complexType name="SportsArena">
+    <annotation>
+      <appinfo>
+        <extension base="nscs:EventBuilding"/>
+      </appinfo>
+      <documentation>a building hosting sports events</documentation>
+    </annotation>
+    <complexContent>
+      <extension base="nscs:EventBuilding"/>
+    </complexContent>
+  </complexType>
+  <complexType name="CongressCenter">
+    <annotation>
+      <appinfo>
+        <extension base="nscs:EventBuilding"/>
+      </appinfo>
+      <documentation>a congress center</documentation>
+    </annotation>
+    <complexContent>
+      <extension base="nscs:EventBuilding"/>
+    </complexContent>
+  </complexType>
+  <complexType name="Church">
+    <annotation>
+      <appinfo>
+        <extension base="nscs:EventBuilding"/>
+      </appinfo>
+      <documentation>a church</documentation>
+    </annotation>
+    <complexContent>
+      <extension base="nscs:EventBuilding">
+        <sequence>
+          <element ref="nsas:denomination" minOccurs="0"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="Bakery">
+    <annotation>
+      <appinfo>
+        <extension base="nscs:Shop"/>
+      </appinfo>
+      <documentation>a bakery</documentation>
+    </annotation>
+    <complexContent>
+      <extension base="nscs:Shop">
+        <sequence>
+          <element ref="nsas:sideWalkCafe" minOccurs="0"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="DressShop">
+    <annotation>
+      <appinfo>
+        <extension base="nscs:Shop"/>
+      </appinfo>
+      <documentation>a shop selling dresses</documentation>
+    </annotation>
+    <complexContent>
+      <extension base="nscs:Shop">
+        <sequence>
+          <element ref="nsas:dressTypes" minOccurs="0"/>
+          <element ref="nsas:dressesFor" minOccurs="0"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="BookShop">
+    <annotation>
+      <appinfo>
+        <extension base="nscs:Shop"/>
+      </appinfo>
+      <documentation>a shop selling books</documentation>
+    </annotation>
+    <complexContent>
+      <extension base="nscs:Shop">
+        <sequence>
+          <element ref="nsas:bookCategories" minOccurs="0"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="Greengrocery">
+    <annotation>
+      <appinfo>
+        <extension base="nscs:Shop"/>
+      </appinfo>
+      <documentation>a shop selling greens</documentation>
+    </annotation>
+    <complexContent>
+      <extension base="nscs:Shop"/>
+    </complexContent>
+  </complexType>
+  <complexType name="Supermarket">
+    <annotation>
+      <appinfo>
+        <extension base="nscs:Shop"/>
+      </appinfo>
+      <documentation>a supermarket</documentation>
+    </annotation>
+    <complexContent>
+      <extension base="nscs:Shop"/>
+    </complexContent>
+  </complexType>
+  <complexType name="ButchersShop">
+    <annotation>
+      <appinfo>
+        <extension base="nscs:Shop"/>
+      </appinfo>
+      <documentation>a shop selling meat</documentation>
+    </annotation>
+    <complexContent>
+      <extension base="nscs:Shop"/>
+    </complexContent>
+  </complexType>
+  <complexType name="AirportTerminal">
+    <annotation>
+      <appinfo>
+        <extension base="nscs:StationBuilding"/>
+      </appinfo>
+      <documentation>an airport terminal</documentation>
+    </annotation>
+    <complexContent>
+      <extension base="nscs:StationBuilding">
+        <sequence>
+          <element ref="nsas:international" minOccurs="0"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="SensorObject">
+    <annotation>
+      <appinfo>
+        <extension base="nscs:SpatialObject"/>
+      </appinfo>
+      <documentation>a sensor</documentation>
+    </annotation>
+    <complexContent>
+      <extension base="nscs:SpatialObject">
+        <sequence>
+          <element ref="nsas:longName" minOccurs="0"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="IDSensor">
+    <annotation>
+      <appinfo>
+        <extension base="nscs:SensorObject"/>
+      </appinfo>
+      <documentation>a sensor that reads an ID</documentation>
+    </annotation>
+    <complexContent>
+      <extension base="nscs:SensorObject"/>
+    </complexContent>
+  </complexType>
+  <complexType name="RFIDReader">
+    <annotation>
+      <appinfo>
+        <extension base="nscs:IDSensor"/>
+      </appinfo>
+      <documentation>a sensor that reads a radio frequency identification tag</documentation>
+    </annotation>
+    <complexContent>
+      <extension base="nscs:IDSensor">
+        <sequence>
+          <element ref="nsas:epc" minOccurs="0"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="IRBeaconReader">
+    <annotation>
+      <appinfo>
+        <extension base="nscs:IDSensor"/>
+      </appinfo>
+      <documentation>a sensor that reads a radio frequency identification tag</documentation>
+    </annotation>
+    <complexContent>
+      <extension base="nscs:IDSensor">
+        <sequence>
+          <element ref="nsas:beaconID" minOccurs="0"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="MobilIrBeaconReader">
+    <annotation>
+      <appinfo>
+        <extension base="nscs:IRBeaconReader"/>
+        <extension base="nscs:MobileObject"/></appinfo>
+      <documentation>a mobile IR beacon reader</documentation>
+    </annotation>
+    <complexContent>
+      <extension base="nscs:IRBeaconReader"/>
+    </complexContent>
+  </complexType>
+  <complexType name="NexusRelation">
+    <annotation>
+      <appinfo>
+        <extension base="nscs:NexusDataObject"/>
+      </appinfo>
+      <documentation>base class for all relations</documentation>
+    </annotation>
+    <complexContent>
+      <extension base="nscs:NexusDataObject"/>
+    </complexContent>
+  </complexType>
+  
+  <complexType name="SituationObject">
+	 <annotation>
+		<documentation>object that represents a detected situation</documentation>
+		<appinfo>
+			<extension base="nscs:SpatialObject"/>
+		</appinfo>
+	 </annotation>
+	 <complexContent>
+		<extension base="nscs:SpatialObject">
+		<sequence>
+			 <element ref="nsas:observedObject" minOccurs="0"/>
+			 <element ref="nsas:situationDescription" minOccurs="0"/>
+			 <element ref="nsas:situationTemplate" minOccurs="0"/>
+			 <element ref="nsas:recognitionSystem" minOccurs="0"/>
+			 <element ref="nsas:recognitionQuality" minOccurs="0"/>
+		</sequence>
+		</extension>
+	 </complexContent>
+	 </complexType>
+</schema>

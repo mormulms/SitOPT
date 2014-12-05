@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns:parcelas="http://www.nexus.uni-stuttgart.de/ParcelDeliveryAttributeSchema" xmlns:parcelecs="http://www.nexus.uni-stuttgart.de/ParcelDeliveryExtendedClassSchema" xmlns:nscs="http://www.nexus.uni-stuttgart.de/1.0/NSCS" xmlns:nsas="http://www.nexus.uni-stuttgart.de/1.0/NSAS" xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.nexus.uni-stuttgart.de/ParcelDeliveryExtendedClassSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<annotation>
+		<documentation>This is the extended class schema for the Nexus Rallye Application</documentation>
+	</annotation>
+	<import namespace="http://www.nexus.uni-stuttgart.de/1.0/NSAS" schemaLocation="NexusStandardAttributeSchema.xsd"/>
+	<import namespace="http://www.nexus.uni-stuttgart.de/1.0/NSCS" schemaLocation="NexusStandardClassSchema.xsd"/>
+	<import namespace="http://www.nexus.uni-stuttgart.de/ParcelDeliveryAttributeSchema" schemaLocation="ParcelDeliveryAttributeSchema.xsd"/>
+	<complexType name="Parcel">
+		<annotation>
+			<documentation>object that contains information for a parcel </documentation>
+			<appinfo>
+				<extension base="nscs:MobileObject"/>
+			</appinfo>
+		</annotation>
+		<complexContent>
+			<extension base="nscs:MobileObject">
+				<sequence>
+					<element ref="parcelas:parcelId"/>
+					<element ref="parcelas:deliveryDescription" minOccurs="0"/>
+					<element ref="parcelas:pickupAddress" minOccurs="0"/>
+					<element ref="parcelas:receiverAddress" minOccurs="0"/>
+					<element ref="parcelas:pickupPoint" minOccurs="0"/>
+					<element ref="parcelas:receiverPoint" minOccurs="0"/>
+					<element ref="parcelas:parcelWeight" minOccurs="0"/>
+					<element ref="parcelas:parcelDimensions" minOccurs="0"/>
+					<element ref="parcelas:parcelInDelivery" minOccurs="0"/>
+					<element ref="parcelas:pickupUntil" minOccurs="0"/>
+					<element ref="parcelas:deliverUntil" minOccurs="0"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="Postman">
+		<annotation>
+			<documentation>object that binds rallye tasks to a spatial location</documentation>
+			<appinfo>
+				<extension base="nscs:MobileObject"/>
+			</appinfo>
+		</annotation>
+		<complexContent>
+			<extension base="nscs:MobileObject">
+				<sequence>
+					<element ref="parcelas:postmanId"/>
+					<element ref="parcelas:postmanMaxLoad" minOccurs="0"/>
+					<element ref="parcelas:postmanCurrentLoad" minOccurs="0"/>
+					<element ref="parcelas:postmanMaxParcelDimensions" minOccurs="0"/>
+					<element ref="parcelas:postmanInDuty" minOccurs="0"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<!--<complexType name="RallyeTask">
+		<annotation>
+			<documentation>a task in a rallye</documentation>
+			<appinfo>
+				<extension base="nscs:NexusDataObject"/>
+			</appinfo>
+		</annotation>
+		<complexContent>
+			<extension base="nscs:NexusDataObject">
+				<sequence>
+					<element ref="rallyeas:taskText" minOccurs="0"/>
+					<element ref="rallyeas:taskPoints" minOccurs="0"/>
+					<element ref="rallyeas:taskImage" minOccurs="0"/>
+					<element ref="rallyeas:processingTime" minOccurs="0"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="FreeTextTask">
+		<annotation>
+			<documentation>a task with a free text answer</documentation>
+			<appinfo>
+				<extension base="rallyeecs:RallyeTask"/>
+			</appinfo>
+		</annotation>
+		<complexContent>
+			<extension base="rallyeecs:RallyeTask">
+				<sequence>
+					<element ref="rallyeas:messageSkip" minOccurs="0"/>
+					<element ref="rallyeas:messageAnswer" minOccurs="0"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="MoveToTask">
+		<annotation>
+			<documentation>a task where the user has to move to a specific point</documentation>
+			<appinfo>
+				<extension base="rallyeecs:RallyeTask"/>
+			</appinfo>
+		</annotation>
+		<complexContent>
+			<extension base="rallyeecs:RallyeTask">
+				<sequence>
+					<element ref="nsas:pos" minOccurs="0"/>
+					<element ref="nsas:extent" minOccurs="0"/>
+					<element ref="rallyeas:messageReached" minOccurs="0"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="MultipleChoiceTask">
+		<annotation>
+			<documentation>a task with a multiple choice answer</documentation>
+			<appinfo>
+				<extension base="rallyeecs:RallyeTask"/>
+			</appinfo>
+		</annotation>
+		<complexContent>
+			<extension base="rallyeecs:RallyeTask">
+				<sequence>
+					<element ref="rallyeas:choices" minOccurs="0"/>
+					<element ref="rallyeas:messageCorrect" minOccurs="0"/>
+					<element ref="rallyeas:messageWrong" minOccurs="0"/>
+					<element ref="rallyeas:messageSkip" minOccurs="0"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="ValueTask">
+		<annotation>
+			<documentation>a task where the solution is a certain value</documentation>
+			<appinfo>
+				<extension base="rallyeecs:RallyeTask"/>
+			</appinfo>
+		</annotation>
+		<complexContent>
+			<extension base="rallyeecs:RallyeTask">
+				<sequence>
+					<element ref="rallyeas:correctAnswer" minOccurs="0"/>
+					<element ref="rallyeas:messageCorrect" minOccurs="0"/>
+					<element ref="rallyeas:messageWrong" minOccurs="0"/>
+					<element ref="rallyeas:messageSkip" minOccurs="0"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>-->
+</schema>

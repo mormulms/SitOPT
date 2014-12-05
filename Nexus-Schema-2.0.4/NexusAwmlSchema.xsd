@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema targetNamespace="http://www.nexus.uni-stuttgart.de/2.0/AWML" xmlns:nsas="http://www.nexus.uni-stuttgart.de/1.0/NSAS" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:awml="http://www.nexus.uni-stuttgart.de/2.0/AWML" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<annotation>
+		<documentation>This is the schema for AWML  (Augmented World Modeling Language). It defines, how a generic nexusobject is build. It does /not/ define, which elements are allowed in which nexusobject (since XML is not capable of that).  For this information, see the Nexus Standard Class Schema (nscs)			</documentation>
+	</annotation>
+	<import namespace="http://www.nexus.uni-stuttgart.de/1.0/NSAS" schemaLocation="NexusStandardAttributeSchema.xsd"/>
+	<element name="awml">
+		<complexType>
+			<sequence>
+				<element name="nexusobject" minOccurs="0" maxOccurs="unbounded">
+					<complexType>
+						<sequence>
+							<element ref="nsas:NexusAttribute" minOccurs="0" maxOccurs="unbounded">
+								<annotation>
+									<documentation>unordered list of arbitrary Nexus attributes</documentation>
+								</annotation>
+							</element>
+							<element name="reverseRefs" type="nsas:NexusReverseReferencesType" minOccurs="0">
+								<annotation>
+									<documentation>a list of reverse references. This is only a preview how reverse references could look like in the next version of AWML!</documentation>
+								</annotation>
+							</element>
+						</sequence>
+					</complexType>
+				</element>
+			</sequence>
+		</complexType>
+	</element>
+</schema>

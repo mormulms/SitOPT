@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="US-ASCII"?>
+<schema targetNamespace="http://www.nexus.uni-stuttgart.de/2.0/AWQL" xmlns:awql="http://www.nexus.uni-stuttgart.de/2.0/AWQL" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:nsat="http://www.nexus.uni-stuttgart.de/1.0/NSAT" xmlns:nsas="http://www.nexus.uni-stuttgart.de/1.0/NSAS" elementFormDefault="qualified" attributeFormDefault="unqualified">
+  <import namespace="http://www.nexus.uni-stuttgart.de/1.0/NSAT" schemaLocation="NexusStandardAttributeTypes.xsd"/>
+  <import namespace="http://www.nexus.uni-stuttgart.de/1.0/NSAS" schemaLocation="NexusStandardAttributeSchema.xsd"/>
+  <!-- ========================= AWQL definition ============================= -->
+  <element name="awql">
+    <annotation>
+      <documentation>structure of a AWQL query</documentation>
+    </annotation>
+    <complexType>
+      <sequence>
+        <element ref="awql:aa" minOccurs="0" maxOccurs="unbounded"/>
+        <element ref="awql:ecs" minOccurs="0" maxOccurs="unbounded"/>
+        <element ref="awql:srs" minOccurs="0" maxOccurs="unbounded"/>
+        <element ref="awql:geoDataFormat" minOccurs="0" maxOccurs="unbounded"/>
+        <element ref="awql:restriction" minOccurs="0"/>
+        <element ref="awql:nearestNeighbor" minOccurs="0"/>
+        <choice>
+          <element ref="awql:include" minOccurs="0" maxOccurs="unbounded"/>
+          <element ref="awql:exclude" minOccurs="0" maxOccurs="unbounded"/>
+          <element ref="awql:update"/>
+          <element ref="awql:append"></element>
+          <element ref="awql:delete"/>
+        </choice>
+      </sequence>
+    </complexType>
+  </element>
+  <!-- ========================= Parts of AWQL ============================ -->
+  <element name="aa" type="nsat:NexusObjectLocatorType">
+    <annotation>
+      <documentation>bypass ASR resolution, send query to specific AAs</documentation>
+    </annotation>
+  </element>
+  <element name="ecs" type="nsat:NexusObjectLocatorType">
+    <annotation>
+      <documentation>list of ECS understood by the client </documentation>
+    </annotation>
+  </element>
+  <element name="srs" type="nsat:NexusSrscodeType">
+    <annotation>
+      <documentation> list of spatial reference systems acceptable for the sender </documentation>
+    </annotation>
+  </element>
+  <element name="geoDataFormat">
+    <annotation>
+      <documentation>list of geodata formats acceptable for the sender</documentation>
+    </annotation>
+    <simpleType>
+      <restriction base="string">
+        <enumeration value="WKT"/>
+        <enumeration value="GML"/>
+      </restriction>
+    </simpleType>
+  </element>
+  <element name="nearestNeighbor">
+    <annotation>
+      <documentation>specify the number of nearest neighbors, the target attribute for the spatial ordering and the referencePoint for "near"</documentation>
+    </annotation>
+    <complexType>
+      <sequence>
+        <element ref="awql:target"/>
+	<element ref="awql:restriction" minOccurs="0"/>
+        <element name="referencePoint" type="nsat:NexusPointType"/>
+      </sequence>
+      <attribute name="num" type="nonNegativeInteger" use="optional" default="1"/>
+    </complexType>
+  </element>
+  <element name="update">
+    <annotation>
+      <documentation>specify the update in the query</documentation>
+    </annotation>
+    <complexType>
+      <sequence>
+        <element ref="nsas:NexusAttribute" maxOccurs="unbounded"/>
+      </sequence>
+    </complexType>
+  </element>
+  <element name="append">
+    <annotation >
+      <documentation>specify attribute instances to append</documentation>
+    </annotation>
+    <complexType> 
+      <sequence>
+        <element ref="nsas:NexusAttribute" maxOccurs="unbounded"></element>
+      </sequence>
+    </complexType>
+  </element>
+  <element name="delete">
+    <annotation>
+      <documentation>delete the resulting objects of the query</documentation>
+    </annotation>
+    <complexType/>
+  </element>
+  <element name="restriction">
+    <annotation>
+      <documentation>choose with objects have to be in the result set</documentation>
+    </annotation>
+    <complexType>
+      <group ref="awql:BoolExpr"/>
+    </complexType>
+  </element>
+  <group name="BoolExpr">
+    <choice>
+      <element name="and" type="awql:BoolConjunct"/>
+      <element name="or" type="awql:BoolConjunct"/>
+      <element name="not">
+        <complexType>
+          <group ref="awql:BoolExpr"/>
+        </complexType>
+      </element>
+      <element name="equal" type="awql:Comparison"/>
+      <element name="like" type="awql:Comparison"/>
+      <element name="greater" type="awql:Comparison"/>
+      <element name="less" type="awql:Comparison"/>
+      <element name="within" type="awql:Comparison">
+        <annotation>
+          <documentation>former: inside</documentation>
+        </annotation>
+      </element>
+      <element name="intersects" type="awql:Comparison">
+        <annotation>
+          <documentation>former: overlaps</documentation>
+        </annotation>
+      </element>
+      <element name="temporalBefore" type="awql:Comparison"/>
+      <element name="temporalBeforeBegin" type="awql:Comparison"/>
+      <element name="temporalAfter" type="awql:Comparison"/>
+      <element name="temporalAfterEnd" type="awql:Comparison"/>
+      <element name="temporalEqual" type="awql:Comparison"/>
+      <element name="temporalEqualBegin" type="awql:Comparison"/>
+      <element name="temporalEqualAfter" type="awql:Comparison"/>
+      <element name="temporalIntersects" type="awql:Comparison"/>
+    </choice>
+  </group>
+  <complexType name="BoolConjunct">
+    <sequence>
+      <group ref="awql:BoolExpr" maxOccurs="unbounded"/>
+    </sequence>
+  </complexType>
+  <element name="target" type="string">
+    <annotation>
+      <documentation>a "path" to the part of a Nexus Attribute to be compared in dot notation - i.e. pos.value or pos.meta.validTime. In comparsons, it must be the complete path, in filters it can be a subtree (pos.meta). </documentation>
+    </annotation>
+  </element>
+  <complexType name="Comparison">
+    <annotation>
+      <documentation>a comparison operator</documentation>
+    </annotation>
+    <sequence>
+      <element ref="awql:target"/>
+      <element name="referenceValue"/>
+    </sequence>
+  </complexType>
+  <element name="include">
+    <annotation>
+      <documentation>filter which attributes (and part of attributes) the objects in the result set should have</documentation>
+    </annotation>
+    <complexType>
+      <sequence>
+        <element ref="awql:target" minOccurs="0"/>
+        <element name="include" minOccurs="0">
+          <complexType>
+            <sequence>
+              <element ref="awql:target" minOccurs="0" maxOccurs="unbounded"/>
+            </sequence>
+          </complexType>
+        </element>
+        <element ref="awql:restriction" minOccurs="0"/>
+      </sequence>
+    </complexType>
+  </element>
+  <element name="exclude">
+    <annotation>
+      <documentation>filter which attributes (and part of attributes) the objects in the result must not have</documentation>
+    </annotation>
+    <complexType>
+      <sequence>
+        <element ref="awql:target" minOccurs="0"/>
+      </sequence>
+    </complexType>
+  </element>
+</schema>

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema targetNamespace="http://www.nexus.uni-stuttgart.de/1.0/NSAT" xmlns:gml="http://www.opengis.net/gml" xmlns:nsat="http://www.nexus.uni-stuttgart.de/1.0/NSAT" xmlns="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+  <import namespace="http://www.opengis.net/gml" schemaLocation="gml/3.0.0/base/gml.xsd"/>
+  <simpleType name="NexusObjectLocatorType">
+    <restriction base="string">
+      <pattern value="nexus:.*"/>
+    </restriction>
+  </simpleType>
+  <simpleType name="NexusSrscodeType">
+    <restriction base="nonNegativeInteger"/>
+  </simpleType>
+  <complexType name="NexusWktType">
+    <simpleContent>
+      <extension base="string">
+        <attribute name="srscode" type="nsat:NexusSrscodeType" use="required"/>
+      </extension>
+    </simpleContent>
+  </complexType>
+  <complexType name="NexusGeometryType">
+    <choice>
+      <element name="WKT" type="nsat:NexusWktType"/>
+      <element ref="gml:_Geometry"/>
+    </choice>
+  </complexType>
+  <complexType name="NexusPointType">
+    <choice>
+      <element name="WKT" type="nsat:NexusWktType"/>
+      <element ref="gml:Point"/>
+    </choice>
+  </complexType>
+  <simpleType name="NexusTypeType">
+    <restriction base="string"/>
+  </simpleType>
+  <simpleType name="NexusKindType">
+    <restriction base="string">
+      <enumeration value="real"/>
+      <enumeration value="virtual"/>
+    </restriction>
+  </simpleType>
+  <simpleType name="NexusStringType">
+    <restriction base="string"/>
+  </simpleType>
+  <simpleType name="NexusBooleanType">
+    <restriction base="boolean"/>
+  </simpleType>
+  <simpleType name="NexusIntegerType">
+    <restriction base="integer"/>
+  </simpleType>
+  <simpleType name="NexusFloatType">
+    <restriction base="float"/>
+  </simpleType>
+  <simpleType name="NexusListType">
+    <restriction base="string"/>
+  </simpleType>
+  <complexType name="NexusTimeType">
+    <sequence>
+      <element ref="gml:_TimePrimitive"/>
+    </sequence>
+  </complexType>
+  <simpleType name="NexusByteType">
+    <restriction base="byte"/>
+  </simpleType>
+  <simpleType name="NexusUriType">
+    <restriction base="string"/>
+  </simpleType>
+  <simpleType name="NexusSpeedType">
+    <annotation>
+      <documentation>the speed of an object in m/sec</documentation>
+    </annotation>
+    <restriction base="double"/>
+  </simpleType>
+  <simpleType name="NexusDirectionType">
+    <annotation>
+      <documentation>the direction of an object in degree: 0 = North, 90 = East, 180 = South, 270=West</documentation>
+    </annotation>
+    <restriction base="double">
+      <minInclusive value="0"/>
+      <maxExclusive value="360"/>
+    </restriction>
+  </simpleType>
+</schema>

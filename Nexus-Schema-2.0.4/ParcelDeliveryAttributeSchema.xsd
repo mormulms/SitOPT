@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns:parcelas="http://www.nexus.uni-stuttgart.de/ParcelDeliveryAttributeSchema" xmlns:nsat="http://www.nexus.uni-stuttgart.de/1.0/NSAT" xmlns:nsas="http://www.nexus.uni-stuttgart.de/1.0/NSAS" xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.nexus.uni-stuttgart.de/ParcelDeliveryAttributeSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<import namespace="http://www.nexus.uni-stuttgart.de/1.0/NSAT" schemaLocation="NexusStandardAttributeTypes.xsd"/>
+	<import namespace="http://www.nexus.uni-stuttgart.de/1.0/NSAS" schemaLocation="NexusStandardAttributeSchema.xsd"/>
+	<element name="parcelId" type="nsas:NexusIntegerAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="pickupAddress" type="nsas:NexusAddressAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="pickupPoint" type="nsas:NexusGeometryAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="receiverAddress" type="nsas:NexusAddressAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="receiverPoint" type="nsas:NexusGeometryAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="deliveryDescription" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="parcelWeight" type="nsas:NexusIntegerAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="parcelDimensions" type="parcelas:ParcelDimensionsAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="pickupUntil" type="nsas:NexusTimeAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="deliverUntil" type="nsas:NexusTimeAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="parcelInDelivery" type="nsas:NexusBooleanAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="postmanId" type="nsas:NexusIntegerAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="postmanMaxLoad" type="nsas:NexusIntegerAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="postmanCurrentLoad" type="nsas:NexusIntegerAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="postmanMaxParcelDimensions" type="parcelas:ParcelDimensionsAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="postmanInDuty" type="nsas:NexusBooleanAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<complexType name="ParcelDimensionsAttributeType">
+		<annotation>
+			<documentation>a complex Nexus Attribute Type that contains the street address of an entity</documentation>
+		</annotation>
+		<sequence>
+			<element name="value">
+				<complexType>
+					<sequence>
+						<element name="length" type="nsat:NexusIntegerType" minOccurs="0"/>
+						<element name="width" type="nsat:NexusIntegerType" minOccurs="0"/>
+						<element name="height" type="nsat:NexusIntegerType" minOccurs="0"/>
+					</sequence>
+				</complexType>
+			</element>
+			<element ref="nsas:meta" minOccurs="0"/>
+		</sequence>
+	</complexType>
+</schema>

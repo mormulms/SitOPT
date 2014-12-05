@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema
+ targetNamespace="http://www.nexus.uni-stuttgart.de/MRepECS"
+ xmlns:mrepas="http://www.nexus.uni-stuttgart.de/MRepAS"
+ xmlns:mrepecs="http://www.nexus.uni-stuttgart.de/MRepECS"
+ xmlns:nscs="http://www.nexus.uni-stuttgart.de/1.0/NSCS"
+ xmlns:nsas="http://www.nexus.uni-stuttgart.de/1.0/NSAS"
+ xmlns="http://www.w3.org/2001/XMLSchema"
+ elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<annotation>
+		<documentation>This is the extended class schema to represent relations between multiple representations (MRepRelations)</documentation>
+	</annotation>
+	<import namespace="http://www.nexus.uni-stuttgart.de/1.0/NSAS" schemaLocation="NexusStandardAttributeSchema.xsd"/>
+	<import namespace="http://www.nexus.uni-stuttgart.de/1.0/NSCS" schemaLocation="NexusStandardClassSchema.xsd"/>
+	<import namespace="http://www.nexus.uni-stuttgart.de/MRepAS" schemaLocation="MRepAttributeSchema.xsd"/>
+	<complexType name="MultirepresentationalRelation">
+		<annotation>
+			<documentation>Abstract super class for objects that store information about the relation of two multiple representations </documentation>
+			<appinfo>
+				<extension base="nscs:NexusRelation"/>
+			</appinfo>
+		</annotation>
+		<complexContent>
+			<extension base="nscs:NexusRelation">
+				<sequence>
+					<element ref="nsas:pos"/>
+					<element ref="mrepas:spatialObjectsA"/>
+					<element ref="mrepas:spatialObjectsB"/>
+					<element ref="mrepas:reftargettype" minOccurs="0"/>
+					<element ref="mrepas:cardinality" minOccurs="0"/>
+					<element ref="mrepas:geometricTypeA" minOccurs="0"/>
+					<element ref="mrepas:geometricTypeB" minOccurs="0"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="MultirepresentationalNodeRelation">
+		<annotation>
+			<documentation>Object that stores information about the relation of two multiply represented nodes </documentation>
+			<appinfo>
+				<extension base="mrepecs:MultirepresentationalRelation"/>
+			</appinfo>
+		</annotation>
+		<complexContent>
+			<extension base="nscs:NexusRelation">
+				<sequence>
+					<element ref="mrepas:nodeDistance"/>
+					<element ref="mrepas:nodeAIncidents"/>
+					<element ref="mrepas:nodeBIncidents"/>
+					<element ref="mrepas:nodeDegreeDiff"/>
+					<element ref="mrepas:incidentAngleDiffs" minOccurs="0"/>
+					<element ref="mrepas:totalNodeSimilarity"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="MultirepresentationalEdgeRelation">
+		<annotation>
+			<documentation>Object that stores information about the relation of two multiply represented edges </documentation>
+			<appinfo>
+				<extension base="mrepecs:MultirepresentationalRelation"/>
+			</appinfo>
+		</annotation>
+		<complexContent>
+			<extension base="mrepecs:MultirepresentationalRelation">
+				<sequence>
+					<element ref="mrepas:startNodeDegreeDiff"/>
+					<element ref="mrepas:endNodeDegreeDiff"/>
+					<element ref="mrepas:topologicalEdgeInterrupts"/>
+					<element ref="mrepas:lengthDifference"/>
+					<element ref="mrepas:angleDifference"/>
+					<element ref="mrepas:vertexHausdorffDistance"/>
+					<element ref="mrepas:averageLineDistance"/>
+					<element ref="mrepas:edgeMatchType" minOccurs="0"/>
+					<element ref="mrepas:totalEdgeSimilarity"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+</schema>

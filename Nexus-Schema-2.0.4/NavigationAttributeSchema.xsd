@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema
+ targetNamespace="http://www.nexus.uni-stuttgart.de/1.0/NavigationalObjects/EAS"
+ xmlns="http://www.w3.org/2001/XMLSchema"
+ xmlns:navas="http://www.nexus.uni-stuttgart.de/1.0/NavigationalObjects/EAS"
+ xmlns:nsas="http://www.nexus.uni-stuttgart.de/1.0/NSAS"
+ xmlns:nsat="http://www.nexus.uni-stuttgart.de/1.0/NSAT"
+ elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<import namespace="http://www.nexus.uni-stuttgart.de/1.0/NSAS" schemaLocation="NexusStandardAttributeSchema.xsd"/>
+	<!-- ====== enumeration types for RoadTraffic objects ====== -->
+	<complexType name="NexusTypeOfRoadAttributeType">
+		<annotation>
+			<documentation>Describes different types of roads. values should be: gemeindestrasse, kreisstrasse, bundesstrasse, europastrasse, autobahn</documentation>
+		</annotation>
+		<sequence>
+			<element name="value" type="nsat:NexusStringType"/>
+			<element ref="nsas:meta" minOccurs="0"/>
+		</sequence>
+	</complexType>
+
+	<element name="walkable" type="nsas:NexusBooleanAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="faceType" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="fromJunction" type="nsas:NexusNolAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="toJunction" type="nsas:NexusNolAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="roadWidth" type="nsas:NexusFloatAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="roadName" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="roadType" type="navas:NexusTypeOfRoadAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="incidentRoadCnt" type="nsas:NexusIntegerAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+</schema>

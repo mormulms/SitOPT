@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema
+ targetNamespace="http://www.nexus.uni-stuttgart.de/1.0/NavigationalObjects/ECS"
+ xmlns:nsas="http://www.nexus.uni-stuttgart.de/1.0/NSAS"
+ xmlns:nscs="http://www.nexus.uni-stuttgart.de/1.0/NSCS"
+ xmlns:navas="http://www.nexus.uni-stuttgart.de/1.0/NavigationalObjects/EAS"
+ xmlns:navecs="http://www.nexus.uni-stuttgart.de/1.0/NavigationalObjects/ECS"
+ xmlns="http://www.w3.org/2001/XMLSchema"
+ elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<import namespace="http://www.nexus.uni-stuttgart.de/1.0/NSCS" schemaLocation="NexusStandardClassSchema.xsd"/>
+	<import namespace="http://www.nexus.uni-stuttgart.de/1.0/NSAS" schemaLocation="NexusStandardAttributeSchema.xsd"/>
+	<import namespace="http://www.nexus.uni-stuttgart.de/1.0/NavigationalObjects/EAS" schemaLocation="NavigationAttributeSchema.xsd"/>
+	<complexType name="GeographicalObject">
+		<annotation>
+			<documentation>base class for geographical objects</documentation>
+			<appinfo>
+				<extension base="nscs:SpatialObject"/>
+			</appinfo>
+		</annotation>
+		<complexContent>
+			<extension base="nscs:SpatialObject">
+				<sequence>
+					<element ref="navas:walkable" minOccurs="0"/>
+					<element ref="navas:faceType" minOccurs="0"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="TrafficObject">
+		<annotation>
+			<documentation>base class for geographical objects related to any kind of traffic</documentation>
+			<appinfo>
+				<extension base="navecs:GeographicalObject"/>
+			</appinfo>
+		</annotation>
+		<complexContent>
+			<extension base="navecs:GeographicalObject"/>
+		</complexContent>
+	</complexType>
+	<complexType name="FootTrafficObject">
+		<annotation>
+			<documentation>base class for geographical objects related to foot traffic</documentation>
+			<appinfo>
+				<extension base="navecs:TrafficObject"/>
+			</appinfo>
+		</annotation>
+		<complexContent>
+			<extension base="navecs:TrafficObject"/>
+		</complexContent>
+	</complexType>
+	<complexType name="RoadTrafficObject">
+		<annotation>
+			<documentation>base class for geographical objects related to road traffic</documentation>
+			<appinfo>
+				<extension base="navecs:TrafficObject"/>
+			</appinfo>
+		</annotation>
+		<complexContent>
+			<extension base="navecs:TrafficObject"/>
+		</complexContent>
+	</complexType>
+	<complexType name="RoadElement">
+		<annotation>
+			<documentation>a road element of the road network</documentation>
+			<appinfo>
+				<extension base="navecs:RoadTrafficObject"/>
+			</appinfo>
+		</annotation>
+		<complexContent>
+			<extension base="navecs:RoadTrafficObject">
+				<sequence>
+					<element ref="navas:fromJunction" minOccurs="0"/>
+					<element ref="navas:toJunction" minOccurs="0"/>
+					<element ref="navas:roadWidth" minOccurs="0"/>
+					<element ref="navas:roadName" minOccurs="0"/>
+					<element ref="navas:roadType" minOccurs="0"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="JunctionElement">
+		<annotation>
+			<documentation>a junction element represents the end/connection of one or multiple road elements</documentation>
+			<appinfo>
+				<extension base="navecs:RoadTrafficObject"/>
+			</appinfo>
+		</annotation>
+		<complexContent>
+			<extension base="navecs:RoadTrafficObject">
+				<sequence>
+					<element ref="navas:incidentRoadCnt" minOccurs="0"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+</schema>

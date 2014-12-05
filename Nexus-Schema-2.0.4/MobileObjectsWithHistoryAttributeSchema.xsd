@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema targetNamespace="http://www.nexus.uni-stuttgart.de/1.0/MobileObjectsWithHistory/EAS" xmlns:nsat="http://www.nexus.uni-stuttgart.de/1.0/NSAT" xmlns:nsas="http://www.nexus.uni-stuttgart.de/1.0/NSAS" xmlns:eas="http://www.nexus.uni-stuttgart.de/1.0/MobileObjectsWithHistory/EAS" xmlns="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<annotation>
+		<documentation>An extended attribut schema for Mobile Objects with position histories.</documentation>
+	</annotation>
+	<import namespace="http://www.nexus.uni-stuttgart.de/1.0/NSAS" schemaLocation="NexusStandardAttributeSchema.xsd"/>
+	<import namespace="http://www.nexus.uni-stuttgart.de/1.0/NSAT" schemaLocation="NexusStandardAttributeTypes.xsd"/>
+	<!-- =============== Complex posCalculacionAttribute for Mobile Objects with a position history ================ -->
+	<complexType name="posCalculationDataType">
+		<sequence>
+			<element name="value">
+				<complexType>
+					<sequence>
+						<element name="pos" type="nsat:NexusPointType" minOccurs="1"/>
+						<element name="speedDirectionVecX" type="nsat:NexusFloatType" minOccurs="0"/>
+						<element name="speedDirectionVecY" type="nsat:NexusFloatType" minOccurs="0"/>
+					</sequence>
+				</complexType>
+			</element>
+			<element ref="nsas:meta" minOccurs="0"/>
+		</sequence>
+	</complexType>
+	<element name="posCalculationData" type="eas:posCalculationDataType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="posGridDirection" type="nsas:NexusIntegerAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<!-- =============== Meta attributes for the position history =========================================== -->
+	<element name="accuracy" type="nsat:NexusFloatType" substitutionGroup="nsas:NexusMetaAttribute"/>
+	<element name="calculatedByAlgorithm" type="nsat:NexusStringType" substitutionGroup="nsas:NexusMetaAttribute"/>
+	<element name="gridEdgeLength" type="nsat:NexusFloatType" substitutionGroup="nsas:NexusMetaAttribute"/>
+</schema>

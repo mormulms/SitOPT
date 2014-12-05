@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema targetNamespace="http://www.nexus.uni-stuttgart.de/1.0/NIAS"
+	xmlns:nsat="http://www.nexus.uni-stuttgart.de/1.0/NSAT"
+	xmlns:nsas="http://www.nexus.uni-stuttgart.de/1.0/NSAS"
+	xmlns:nias="http://www.nexus.uni-stuttgart.de/1.0/NIAS"
+	xmlns="http://www.w3.org/2001/XMLSchema"
+	elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<import namespace="http://www.nexus.uni-stuttgart.de/1.0/NSAT" schemaLocation="NexusStandardAttributeTypes.xsd"/>
+	<import namespace="http://www.nexus.uni-stuttgart.de/1.0/NSAS" schemaLocation="NexusStandardAttributeSchema.xsd"/>
+
+	<complexType name="NexusWlanEncryptionAttributeType">
+		<sequence>
+			<element name="value" type="nsat:NexusStringType"/>
+			<element ref="nsas:meta" minOccurs="0"/>
+		</sequence>
+	</complexType>
+
+	<complexType name="NexusNetworkStateAttributeType">
+		<sequence>
+			<element name="value" type="nsat:NexusStringType"/>
+			<element ref="nsas:meta" minOccurs="0"/>
+		</sequence>
+	</complexType>
+
+	<complexType name="NexusWlanModeAttributeType">
+		<sequence>
+			<element name="value" type="nsat:NexusStringType"/>
+			<element ref="nsas:meta" minOccurs="0"/>
+		</sequence>
+	</complexType>
+
+	<complexType name="NexusNetworkLoadAttributeType">
+		<sequence>
+			<element name="value" type="nsat:NexusStringType"/>
+			<element ref="nsas:meta" minOccurs="0"/>
+		</sequence>
+	</complexType>
+
+	<complexType name="NexusMacAddrAttributeType">
+		<sequence>
+			<element name="value" type="nsat:NexusStringType"/>
+			<element ref="nsas:meta" minOccurs="0"/>
+		</sequence>
+	</complexType>
+
+	<complexType name="NexusWlanStandardAttributeType">
+		<sequence>
+			<element name="value" type="nsat:NexusStringType"/>
+			<element ref="nsas:meta" minOccurs="0"/>
+		</sequence>
+	</complexType>
+
+	<complexType name="NexusCurrencyAttributeType">
+		<sequence>
+			<element name="value" type="nsat:NexusStringType"/>
+			<element ref="nsas:meta" minOccurs="0"/>
+		</sequence>
+	</complexType>
+
+
+	<element name="operatingState" type="nias:NexusNetworkStateAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="encryption" type="nias:NexusWlanEncryptionAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="wlanMode" type="nias:NexusWlanModeAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="ssid" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="accessNetwork" type="nsas:NexusNolAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="accessEntity" type="nsas:NexusNolAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+
+	<element name="numberUsers" type="nsas:NexusIntegerAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="maxNumberUsers" type="nsas:NexusIntegerAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="load" type="nias:NexusNetworkLoadAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+
+	<element name="ci" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="lac" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+
+	<element name="macAddr" type="nias:NexusMacAddrAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+                <annotation>
+                        <documentation>
+				A mac address used in 802.x local area networks.
+				It must be a string of 6 hexadecimal numbers betwenn 0 and 0x00 seperated by colons,
+				e.g. "01:02:03:04:05:06". Numbers less than 0x10 should have a leading 0.
+			</documentation>
+                </annotation>
+ 
+	<element name="wlanStandard" type="nias:NexusWlanStandardAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+
+	<element name="mnc" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="mcc" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+
+	<element name="description" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+
+	<element name="perTime" type="nsas:NexusFloatAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="perVolume" type="nsas:NexusFloatAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="perConnection" type="nsas:NexusFloatAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="currency" type="nias:NexusCurrencyAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+
+        <element name="networkServiceObject" type="nsas:NexusNolAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+        <element name="aaaInformation" type="nsas:NexusNolAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+        <element name="serviceCosts" type="nsas:NexusNolAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+</schema>

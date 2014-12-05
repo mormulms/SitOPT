@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XML Spy v4.4 U (http://www.xmlspy.com) by Martin Bauer (IPVR-Iniversität Stuttgart) -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:element name="predicate" type="PredicateType">
+		<xs:annotation>
+			<xs:documentation>This is the root element of the Event Registration Language.</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="PredicateType">
+		<xs:sequence>
+			<xs:element name="templateID" type="NOLType"/>
+			<xs:element name="name" type="xs:string" minOccurs="0"/>
+			<xs:element name="observerURI" type="xs:anyURI" minOccurs="0"/>
+			<xs:element name="predicateId" type="NOLType" minOccurs="0"/>
+			<xs:element name="thresholdProbability" type="xs:float"/>
+			<xs:element name="parameterList" type="ParameterListType"/>
+			<xs:element name="filterList" type="FilterListType" minOccurs="0"/>
+			<xs:element name="qosParameterList" type="QosParameterListType"/>
+			<xs:element name="predicateManagementParameterList" type="PredicateManagementParameterListType"/>
+			<xs:element name="predicateEvaluationParameterList" type="PredicateEvaluationParameterListType" minOccurs="0"/>
+			<xs:element name="eventNotificationParameterList" type="EventNotificationParameterListType" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ParameterListType">
+		<xs:sequence>
+			<xs:element name="Parameter" type="ParameterType" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ParameterType">
+		<xs:sequence>
+			<xs:element name="name" type="xs:string"/>
+			<xs:element name="type" type="xs:string"/>
+			<xs:element name="restriction" type="xs:string" minOccurs="0"/>
+			<xs:choice>
+				<xs:element name="value">
+					<xs:complexType>
+						<xs:complexContent>
+							<xs:extension base="xs:anyType">
+								<xs:attribute name="unit" type="xs:string" use="optional"/>
+							</xs:extension>
+						</xs:complexContent>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="predicate" type="PredicateType"/>
+			</xs:choice>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ValueType">
+		<xs:choice/>
+	</xs:complexType>
+	<xs:complexType name="FilterListType">
+		<xs:sequence>
+			<xs:element name="filter" type="FilterType" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="FilterType">
+		<xs:sequence>
+			<xs:element name="attributeReference1">
+				<xs:complexType>
+					<xs:simpleContent>
+						<xs:extension base="xs:string">
+							<xs:attribute name="unit" type="xs:string" use="optional"/>
+						</xs:extension>
+					</xs:simpleContent>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="compareFunction" type="CompareType"/>
+			<xs:element name="attributeReference2">
+				<xs:complexType>
+					<xs:simpleContent>
+						<xs:extension base="xs:string">
+							<xs:attribute name="unit" type="xs:string" use="optional"/>
+						</xs:extension>
+					</xs:simpleContent>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="CompareType">
+		<xs:restriction base="xs:string"/>
+	</xs:simpleType>
+	<xs:complexType name="QosParameterListType">
+		<xs:sequence>
+			<xs:element name="qosParameter" type="QoSParameterType" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="QoSParameterType">
+		<xs:sequence>
+			<xs:element name="name" type="xs:string"/>
+			<xs:element name="type" type="xs:string"/>
+			<xs:element name="value">
+				<xs:complexType>
+					<xs:complexContent>
+						<xs:extension base="xs:anyType">
+							<xs:attribute name="unit" type="xs:string" use="optional"/>
+						</xs:extension>
+					</xs:complexContent>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="ClockDriftValueType">
+		<xs:restriction base="xs:string"/>
+	</xs:simpleType>
+	<xs:simpleType name="DelayValueType">
+		<xs:restriction base="xs:string"/>
+	</xs:simpleType>
+	<xs:complexType name="PredicateManagementParameterListType">
+		<xs:sequence>
+			<xs:element name="predicateManagementParameter" type="PredicateManagementParameterType" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="HandoverType">
+		<xs:restriction base="xs:string"/>
+	</xs:simpleType>
+	<xs:simpleType name="DeregistrationIntervalType">
+		<xs:restriction base="xs:string"/>
+	</xs:simpleType>
+	<xs:complexType name="PredicateManagementParameterType">
+		<xs:sequence>
+			<xs:element name="name" type="xs:string"/>
+			<xs:element name="type" type="xs:string"/>
+			<xs:element name="value">
+				<xs:complexType>
+					<xs:complexContent>
+						<xs:extension base="xs:anyType">
+							<xs:attribute name="unit" type="xs:string" use="optional"/>
+						</xs:extension>
+					</xs:complexContent>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="PredicateEvaluationParameterListType">
+		<xs:sequence>
+			<xs:element name="predicateEvaluationParameter" type="PredicateEvaluationParameterType" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="notificationConsumptionPolicyType">
+		<xs:restriction base="xs:string"/>
+	</xs:simpleType>
+	<xs:complexType name="PredicateEvaluationParameterType">
+		<xs:sequence>
+			<xs:element name="name" type="xs:string"/>
+			<xs:element name="type" type="xs:string"/>
+			<xs:element name="value">
+				<xs:complexType>
+					<xs:complexContent>
+						<xs:extension base="xs:anyType">
+							<xs:attribute name="unit" type="xs:string" use="optional"/>
+						</xs:extension>
+					</xs:complexContent>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="EventNotificationParameterListType">
+		<xs:sequence>
+			<xs:element name="eventNotificationParameter" type="EventNotificationParameterType" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="EventNotificationParameterType">
+		<xs:sequence>
+			<xs:element name="name" type="xs:string"/>
+			<xs:element name="type" type="xs:string"/>
+			<xs:element name="value">
+				<xs:complexType>
+					<xs:complexContent>
+						<xs:extension base="xs:anyType">
+							<xs:attribute name="unit" type="xs:string" use="optional"/>
+						</xs:extension>
+					</xs:complexContent>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="NOLType">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="nexus://(.*(:.*)?@)?.*(:[1-9][0-9]{0,3})?/(.*|0x([0-9]|[A-F]|[a-f]){32}|\.home)/(.*|0x([0-9]|[A-F]|[a-f]){32})"/>
+		</xs:restriction>
+	</xs:simpleType>
+</xs:schema>

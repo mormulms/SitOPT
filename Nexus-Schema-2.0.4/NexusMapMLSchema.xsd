@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="US-ASCII"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+        xmlns:mappl="http://www.nexus.uni-stuttgart.de/2.0/MapPL"
+        targetNamespace="http://www.nexus.uni-stuttgart.de/2.0/MapML"
+        elementFormDefault="qualified"
+        attributeFormDefault="unqualified">
+
+ <import namespace="http://www.nexus.uni-stuttgart.de/2.0/MapPL" schemaLocation="NexusMapPLSchema.xsd"/>
+
+ <element name="mapml">
+  <complexType>
+   <choice>
+    <any namespace="http://www.w3.org/2000/svg" processContents="lax">
+     <annotation>
+      <documentation>In fact, this has to be a svg:svg. We use this hack, because there is currently no schema available for SVG.</documentation>
+     </annotation>
+    </any>
+    <element name="map">
+     <complexType>
+      <simpleContent>
+       <extension base="base64Binary">
+        <attribute name="format" type="mappl:NexusImageFormatType"/>
+       </extension>
+      </simpleContent>
+     </complexType>
+    </element>
+   </choice>
+  </complexType>
+ </element>
+</schema>

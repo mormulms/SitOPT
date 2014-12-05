@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="US-ASCII"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+        xmlns:mappl="http://www.nexus.uni-stuttgart.de/2.0/MapPL"
+        xmlns:nsat="http://www.nexus.uni-stuttgart.de/1.0/NSAT"
+        xmlns:awql="http://www.nexus.uni-stuttgart.de/2.0/AWQL"
+        xmlns:svg="http://www.w3.org/2000/svg"
+        targetNamespace="http://www.nexus.uni-stuttgart.de/2.0/MapPL"
+        elementFormDefault="qualified"
+        attributeFormDefault="unqualified">
+
+ <import namespace="http://www.nexus.uni-stuttgart.de/1.0/NSAT" schemaLocation="NexusStandardAttributeTypes.xsd"/>
+ <import namespace="http://www.nexus.uni-stuttgart.de/2.0/AWQL" schemaLocation="NexusAwqlSchema.xsd"/>
+
+ <element name="mappl">
+  <complexType>
+   <sequence>
+
+    <element name="imageSize">
+     <annotation>
+      <documentation>Size of the map in pixels</documentation>
+     </annotation>
+     <complexType>
+      <attribute name="width" type="nonNegativeInteger"/>
+      <attribute name="height" type="nonNegativeInteger"/>
+     </complexType>
+    </element>
+
+    <element name="imageEncoding">
+     <annotation>
+      <documentation>Desired graphics format for the map</documentation>
+     </annotation>
+     <complexType>
+      <attribute name="bits" type="nonNegativeInteger" use="optional"/>
+      <attribute name="format" type="mappl:NexusImageFormatType"/>
+     </complexType>
+    </element>
+
+    <element name="clippingRectangle">
+     <annotation>
+      <documentation>Corner points of the clipping rectangle as Nexus-style coordinates</documentation>
+     </annotation>
+     <complexType>
+      <sequence>
+       <element name="bottomLeftCorner" type="nsat:NexusPointType"/>
+       <element name="topRightCorner" type="nsat:NexusPointType"/>
+      </sequence>
+     </complexType>
+    </element>
+
+    <element name="drawingRule" minOccurs="0" maxOccurs="unbounded">
+     <annotation>
+      <documentation>Information on how to draw objects of the given type</documentation>
+     </annotation>
+     <complexType>
+      <sequence>
+       <element name="nexusType" type="nsat:NexusStringType">
+        <annotation>
+	 <documentation>Types this rule applies to. It also applies to subtypes.</documentation>
+	</annotation>
+       </element>  
+       <element name="geoElement" type="mappl:geoElementType" minOccurs="0" maxOccurs="unbounded">
+        <annotation>
+	 <documentation>The attribute(s) to be drawn</documentation>
+	</annotation>
+       </element>
+      </sequence>
+     </complexType>
+    </element>
+
+    <element name="css" minOccurs="0">
+     <annotation>
+      <documentation>A CSS defining colors, fonts, stroke widths, ... This will be directly embedded in the SVG document</documentation>
+     </annotation>
+     <complexType>
+      <simpleContent>
+       <extension base="string">
+        <attribute name="type" type="string"/>
+       </extension>
+      </simpleContent>
+     </complexType>
+    </element>
+
+    <any namespace="http://www.w3.org/2000/svg" minOccurs="0" processContents="lax">
+     <annotation>
+      <documentation>In fact, this has to be a svg:defs. We use this hack, because there is currently no schema available for SVG. It contains definitions of icons to be referenced by the icon attribute of the geoElements.</documentation>
+     </annotation>
+    </any>
+
+    <element ref="awql:awql"/>
+
+   </sequence>
+  </complexType>
+ </element>
+
+ <simpleType name="NexusImageFormatType">
+  <restriction base="token">
+   <enumeration value="SVG"/>
+   <enumeration value="PNG"/>
+   <enumeration value="JPEG"/>
+   <enumeration value="TIFF"/>
+  </restriction>
+ </simpleType>
+
+ <complexType name="genericElementType" abstract="true">
+  <sequence>
+   <element ref="awql:target"/>
+  </sequence>
+  <attribute name="styleClass" type="string" use="optional">
+   <annotation>
+    <documentation>This value will be used as the class attribute of the corresponding element in the SVG document, which can be referenced by the CSS</documentation>
+   </annotation>
+  </attribute>
+ </complexType>
+
+ <complexType name="geoElementType">
+  <complexContent>
+   <extension base="mappl:genericElementType">
+    <sequence>
+     <element name="textElement" type="mappl:textElementType" minOccurs="0" maxOccurs="unbounded">
+      <annotation>
+       <documentation>Textual attributes of the object which have to be positioned relative to this geographical attribute</documentation>
+      </annotation>
+     </element>
+    </sequence>
+    <attribute name="icon" type="anyURI" use="optional">
+     <annotation>
+      <documentation>URL of a SVG icon. Will only be used for CPoints</documentation>
+     </annotation>
+    </attribute>
+   </extension>
+  </complexContent>
+ </complexType>
+
+ <complexType name="textElementType">
+  <complexContent>
+   <extension base="mappl:genericElementType">
+    <sequence>
+     <element name="prefixText" type="string" minOccurs="0">
+      <annotation>
+       <documentation>Text to be prefixed to the attribute value</documentation>
+      </annotation>
+     </element>
+     <element name="postfixText" type="string" minOccurs="0">
+      <annotation>
+       <documentation>Text to be postfixed to the attribute value</documentation>
+      </annotation>
+     </element>
+    </sequence>
+   </extension>
+  </complexContent>
+ </complexType>
+</schema>

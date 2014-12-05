@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema
+ targetNamespace="http://www.nexus.uni-stuttgart.de/MRepAS"
+ xmlns:mrepas="http://www.nexus.uni-stuttgart.de/MRepAS"
+ xmlns:nsat="http://www.nexus.uni-stuttgart.de/1.0/NSAT"
+ xmlns:nsas="http://www.nexus.uni-stuttgart.de/1.0/NSAS"
+ xmlns="http://www.w3.org/2001/XMLSchema"
+ elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<import namespace="http://www.nexus.uni-stuttgart.de/1.0/NSAT" schemaLocation="NexusStandardAttributeTypes.xsd"/>
+	<import namespace="http://www.nexus.uni-stuttgart.de/1.0/NSAS" schemaLocation="NexusStandardAttributeSchema.xsd"/>
+	<element name="spatialObjectsA" type="nsas:NexusNolAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="spatialObjectsB" type="nsas:NexusNolAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="cardinality" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="geometricTypeA" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="geometricTypeB" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="reftargettype" type="nsas:NexusTypeAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="nodeDistance" type="nsas:NexusFloatAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="nodeAIncidents" type="nsas:NexusIntegerAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="nodeBIncidents" type="nsas:NexusIntegerAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="nodeDegreeDiff" type="nsas:NexusIntegerAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="incidentAngleDiffs" type="nsas:NexusFloatAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="totalNodeSimilarity" type="nsas:NexusFloatAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="startNodeDegreeDiff" type="nsas:NexusIntegerAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="endNodeDegreeDiff" type="nsas:NexusIntegerAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="topologicalEdgeInterrupts" type="nsas:NexusIntegerAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="lengthDifference" type="nsas:NexusFloatAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="angleDifference" type="nsas:NexusFloatAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="vertexHausdorffDistance" type="nsas:NexusFloatAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="averageLineDistance" type="nsas:NexusFloatAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="edgeMatchType" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="totalEdgeSimilarity" type="nsas:NexusFloatAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+</schema>

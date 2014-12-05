@@ -1,0 +1,443 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema targetNamespace="http://www.nexus.uni-stuttgart.de/SmartFactoryExtendedAttributeSchema" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:nsas="http://www.nexus.uni-stuttgart.de/1.0/NSAS" xmlns:nsat="http://www.nexus.uni-stuttgart.de/1.0/NSAT" xmlns:sfas="http://www.nexus.uni-stuttgart.de/SmartFactoryExtendedAttributeSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<import namespace="http://www.nexus.uni-stuttgart.de/1.0/NSAT" schemaLocation="NexusStandardAttributeTypes.xsd"/>
+	<import namespace="http://www.nexus.uni-stuttgart.de/1.0/NSAS" schemaLocation="NexusStandardAttributeSchema.xsd"/>
+
+	<!-- URI -->
+	<element name="_3DFileLink" type="nsas:NexusUriAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="currentControlProgramLink" type="nsas:NexusUriAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="workflowModelLink" type="nsas:NexusUriAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="workflowInstanceLink" type="nsas:NexusUriAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="taskLink" type="nsas:NexusUriAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="documentFileLink" type="nsas:NexusUriAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+
+	<!-- NOL -->
+	<element name="capacityModelNol" type="nsas:NexusNolAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="currentOrder" type="nsas:NexusNolAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="currentTask" type="nsas:NexusNolAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="currentToolNol" type="nsas:NexusNolAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="nextJob" type="nsas:NexusNolAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="plannedMaintenanceNol" type="nsas:NexusNolAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="smartFactorySensorActuatorNol" type="nsas:NexusNolAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="currentTaskNol" type="nsas:NexusNolAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="customerAgreementNol" type="nsas:NexusNolAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="customerNol" type="nsas:NexusNolAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="workflowNextInspectionNol" type="nsas:NexusNolAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="errorModelNol" type="nsas:NexusNolAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="parentPartAssemblyNol" type="nsas:NexusNolAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="parentObjectNol" type="nsas:NexusNolAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="partListNols" type="nsas:NexusNolAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="partNol" type="nsas:NexusNolAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="producerNol" type="nsas:NexusNolAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="productNol" type="nsas:NexusNolAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="reservedItemsListNols" type="nsas:NexusNolAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="resourceNol" type="nsas:NexusNolAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="resourceListNols" type="nsas:NexusNolAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="sensorListNols" type="nsas:NexusNolAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="shiftingModelNol" type="nsas:NexusNolAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="taskOwnerNol" type="nsas:NexusNolAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="workflowNol" type="nsas:NexusNolAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="workflowModel" type="nsas:NexusNolAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="workflowInstance" type="nsas:NexusNolAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="taskItem" type="nsas:NexusNolAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="taskTargetItem" type="nsas:NexusNolAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="bomNol" type="nsas:NexusNolAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="altIDItemListNols" type="nsas:NexusNolAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<!-- bomNol instead of class Assembly -->
+
+	<!-- Date -->
+	<element name="constructionDate" type="nsas:NexusTimeAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="currentTaskDueDate" type="nsas:NexusTimeAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+
+	<!-- Time -->
+	<element name="bestBefore" type="nsas:NexusTimeAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="deliveryDate" type="nsas:NexusTimeAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="dueDate" type="nsas:NexusTimeAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="finishDate" type="nsas:NexusTimeAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+
+	<!-- Boolean -->
+	<element name="isActuator" type="nsas:NexusBooleanAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="stampedMES" type="nsas:NexusBooleanAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+
+	<!-- String -->
+	<element name="_3DBoundingBox" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="action" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="alternativeID" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="BOMItemListNols" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="classification" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="contact" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="currentTaskProgress" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="currentToolList" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="currentLength" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="default" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="deliveryAddress" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="documentType" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="end" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="change" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="changeStatus" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="condition" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="costCenterId" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="costRateType" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="correctionX" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="correctionY" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="correctionZ" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="billingAddress" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="onOff" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="content" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="contractPenalty" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="costForOneTask" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="currentDiameter" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="currentOrderList" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="currentNoofTools" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="currentStorageContent" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="designApprovedBy" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="designControlledBy" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="designedBy" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="dispatchingType" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="economicSizeOrder" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="exemptionList" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="groupId" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="inspectionIntervall" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="modelType" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="actualStock" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="manufacturer" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="material" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="measureVariable" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="orderPoint" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="orientation" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="projectName" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="ptCapabilityList" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="qmStatus" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="qualification" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="replacementDuration" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="shiftModelChangeTriggerValueDown" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="shiftModelChangeTriggerValueUp" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="status" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="nominalStock" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="resolution" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="safetyStock" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="workflowDescription" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="vendor" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="jobInTime" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="longName" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="nextTask" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="noOfInvolveldObjects" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="nominalCapacityLevel" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="onDemand" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="packageItemRestrictions" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="parentObjects" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="priority" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="reading" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="standardDeviationSigma" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="start" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="storageContent" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="taskList" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="transportType" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="type" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="unit" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="weightRestrictions" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="workflowInstanceID" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="workflowStandardData" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="taskOrigin" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="taskDestination" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="taskAction" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="taskQuestion" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="taskAnswer" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="operation" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="shiftModel" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="previousModule" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="nextModule" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="branchModule" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="transportInOutZoneList" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="machineSpecificErrorCode" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="errorClassification" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="machineNolList" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="productOccurredFailureNolList" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="productionOrderOccurredFailureNolList" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="meanTimeToRepair" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="sparePartsList" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="toolList" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+
+	<!-- Float -->
+	<element name="avgInterestRate" type="nsas:NexusFloatAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="capacityLevel" type="nsas:NexusFloatAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="costRate" type="nsas:NexusFloatAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="extraHours" type="nsas:NexusFloatAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="flussgrad" type="nsas:NexusFloatAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="machineLife" type="nsas:NexusFloatAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="maintenanceCostRateFix" type="nsas:NexusFloatAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="maintenanceCostRateVar" type="nsas:NexusFloatAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="efficiencyFactor" type="nsas:NexusFloatAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="requiredElPower" type="nsas:NexusFloatAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="requiredCompressedAir" type="nsas:NexusFloatAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="optimizedSetupTimeFactor" type="nsas:NexusFloatAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="optimizedCycleTimeFactor" type="nsas:NexusFloatAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="price" type="nsas:NexusFloatAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="weight" type="nsas:NexusFloatAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="diameter" type="nsas:NexusFloatAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="failureRate" type="nsas:NexusFloatAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="fictiveBadDeliveryCost" type="nsas:NexusFloatAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="interestRateForStoredObjects" type="nsas:NexusFloatAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="jobProgress" type="nsas:NexusFloatAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="maxDeliveryWindow" type="nsas:NexusFloatAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="maxDiameter" type="nsas:NexusFloatAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="maxDuration" type="nsas:NexusFloatAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="maxLength" type="nsas:NexusFloatAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="meanMu" type="nsas:NexusFloatAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="minDeliveryWindow" type="nsas:NexusFloatAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="minDiameter" type="nsas:NexusFloatAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="minDuration" type="nsas:NexusFloatAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="minLength" type="nsas:NexusFloatAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="minOrderPeriod" type="nsas:NexusFloatAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="probability" type="nsas:NexusFloatAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="probabilityDistribution" type="nsas:NexusFloatAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="quantity" type="nsas:NexusFloatAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="referenceLength" type="nsas:NexusFloatAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="rotarySpeed" type="nsas:NexusFloatAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="sampleRate" type="nsas:NexusFloatAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="setupDuration" type="nsas:NexusFloatAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="storageCosts" type="nsas:NexusFloatAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="transportCostRateFix" type="nsas:NexusFloatAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="transportCostrateVar" type="nsas:NexusFloatAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="warmUpDuration" type="nsas:NexusFloatAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+
+	<!-- Integer -->
+	<element name="capacity" type="nsas:NexusIntegerAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="maxLotSize" type="nsas:NexusIntegerAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="minLotSize" type="nsas:NexusIntegerAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="LOTSize" type="nsas:NexusIntegerAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="vendorPart" type="nsas:NexusIntegerAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="plannedDefectComponents" type="nsas:NexusIntegerAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="requiredWaitTime" type="nsas:NexusIntegerAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="revisionNo" type="nsas:NexusIntegerAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+
+	<!-- Time -->
+	<element name="currentTaskInTime" type="nsas:NexusTimeAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="nextInspectionDate" type="nsas:NexusTimeAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="duration" type="nsas:NexusTimeAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="requiredWater" type="nsas:NexusFloatAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="startDate" type="nsas:NexusTimeAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="productionGoBy" type="nsas:NexusTimeAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="targetFinishDate" type="nsas:NexusTimeAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="targetStartDate" type="nsas:NexusTimeAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="exeutionPeriode" type="nsas:NexusTimeAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+
+	<!-- Location -->
+	<element name="storageLocation" type="nsas:NexusPointAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="targetLocation" type="nsas:NexusPointAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="startLocation" type="nsas:NexusPointAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+
+	<!-- Complex types -->
+	<complexType name="PersonalDataAttributeType">
+	 <annotation>
+		<documentation>a complex type that contains personal data of an human ressource</documentation>
+	 </annotation>
+	 <sequence>
+		<element name="value">
+			<complexType>
+			 <sequence>
+				<element name="personnelNumber" type="nsat:NexusIntegerType" minOccurs="0"/>
+				<element name="roomNumber" type="nsat:NexusStringType" minOccurs="0"/>
+				<element name="telephone" type="nsat:NexusStringType" minOccurs="0"/>
+			 </sequence>
+			</complexType>
+		</element>
+		<element ref="nsas:meta" minOccurs="0"/>
+	 </sequence>
+	</complexType>
+	<complexType name="CustomerAgreementAttributeType">
+	 <annotation>
+		<documentation>a complex type that describes customer agreements</documentation>
+	 </annotation>
+	 <sequence>
+		<element name="value">
+			<complexType>
+			 <sequence>
+				<element name="contractPenalty" type="nsat:NexusFloatType" minOccurs="0"/>
+				<element name="fictiveBadDeliveryCost" type="nsat:NexusFloatType" minOccurs="0"/>
+				<element name="minDeliveryWindow" type="nsat:NexusTimeType" minOccurs="0"/>
+				<element name="maxDeliveryWindow" type="nsat:NexusTimeType" minOccurs="0"/>
+				<element name="minOrderPeriod" type="nsat:NexusIntegerType" minOccurs="0"/>
+			 </sequence>
+			</complexType>
+		</element>
+		<element ref="nsas:meta" minOccurs="0"/>
+	 </sequence>
+	</complexType>
+	<complexType name="DocumentAttributeType">
+	 <annotation>
+		<documentation>?</documentation>
+	 </annotation>
+	 <sequence>
+		<element name="value">
+			<complexType>
+			 <sequence>
+				<element name="documentType" type="nsat:NexusStringType" minOccurs="0"/>
+				<element name="documentFileLink" type="nsat:NexusUriType" minOccurs="0"/>
+			 </sequence>
+			</complexType>
+		</element>
+		<element ref="nsas:meta" minOccurs="0"/>
+	 </sequence>
+	</complexType>
+	<complexType name="ErrorModelAttributeType">
+	 <annotation>
+		<documentation>a complex type that describes errors</documentation>
+	 </annotation>
+	 <sequence>
+		<element name="value">
+			<complexType>
+			 <sequence>
+				<element name="start" type="nsat:NexusTimeType" minOccurs="0"/>
+				<element name="end" type="nsat:NexusTimeType" minOccurs="0"/>
+				<element name="probability" type="nsat:NexusFloatType" minOccurs="0"/>
+				<element name="minDuration" type="nsat:NexusIntegerType" minOccurs="0"/>
+				<element name="maxDuration" type="nsat:NexusIntegerType" minOccurs="0"/>
+				<element name="probabilityDistribution" type="nsat:NexusStringType" minOccurs="0"/>
+				<element name="meanMu" type="nsat:NexusFloatType" minOccurs="0"/>
+				<element name="standardDeviationSigma" type="nsat:NexusFloatType" minOccurs="0"/>
+			 </sequence>
+			</complexType>
+		</element>
+		<element ref="nsas:meta" minOccurs="0"/>
+	 </sequence>
+	</complexType>
+	<complexType name="CapacityModelAttributeType">
+	 <annotation>
+		<documentation>a complex type that describes work shifts</documentation>
+	 </annotation>
+	 <sequence>
+		<element name="value">
+			<complexType>
+			 <sequence>
+				<element name="nominalCapacityLevel" type="nsat:NexusFloatType" minOccurs="0"/>
+				<element name="shiftingModel" type="nsat:NexusStringType" minOccurs="0"/>
+				<element name="numberOfInvolvedObjects" type="nsat:NexusIntegerType" minOccurs="0"/>
+				<element name="warmUpDuration" type="nsat:NexusFloatType" minOccurs="0"/>
+				<element name="minDuration" type="nsat:NexusFloatType" minOccurs="0"/>
+				<element name="maxDuration" type="nsat:NexusFloatType" minOccurs="0"/>
+				<element name="defaultCapacity" type="nsat:NexusFloatType" minOccurs="0"/>
+			 </sequence>
+			</complexType>
+		</element>
+		<element ref="nsas:meta" minOccurs="0"/>
+	 </sequence>
+	</complexType>
+	<complexType name="executionDatesType">
+	 <annotation>
+		<documentation/>
+	 </annotation>
+	 <sequence>
+		<element name="value">
+			<complexType>
+			 <sequence>
+				<element name="targetStartDate" type="nsat:NexusTimeType" minOccurs="0"/>
+				<element name="targetFinishDate" type="nsat:NexusTimeType" minOccurs="0"/>
+				<element name="startDate" type="nsat:NexusTimeType" minOccurs="0"/>
+				<element name="finishDate" type="nsat:NexusTimeType" minOccurs="0"/>
+			 </sequence>
+			</complexType>
+		</element>
+		<element ref="nsas:meta" minOccurs="0"/>
+	 </sequence>
+	</complexType>
+	<complexType name="maintenanceType">
+	 <annotation>
+		<documentation/>
+	 </annotation>
+	 <sequence>
+		<element name="value">
+			<complexType>
+			 <sequence>
+				<element name="inspectionIntervall" type="nsat:NexusTimeType" minOccurs="0"/>
+				<element name="nextInspectionDate" type="nsat:NexusTimeType" minOccurs="0"/>
+				<element name="workflowNextInspectionNol" type="nsat:NexusObjectLocatorType" minOccurs="0"/>
+				<element name="plannedMaintenanceNol" type="nsat:NexusObjectLocatorType" minOccurs="0"/>
+			 </sequence>
+			</complexType>
+		</element>
+		<element ref="nsas:meta" minOccurs="0"/>
+	 </sequence>
+	</complexType>
+	<complexType name="jobFeedbackType">
+	 <annotation>
+		<documentation/>
+	 </annotation>
+	 <sequence>
+		<element name="value">
+			<complexType>
+			 <sequence>
+				<element name="currentOrder" type="nsat:NexusObjectLocatorType" minOccurs="0"/>
+				<element name="nextJob" type="nsat:NexusObjectLocatorType" minOccurs="0"/>
+				<element name="currentTask" type="nsat:NexusObjectLocatorType" minOccurs="0"/>
+				<element name="capacityLevel" type="nsat:NexusFloatType" minOccurs="0"/>
+			 </sequence>
+			</complexType>
+		</element>
+		<element ref="nsas:meta" minOccurs="0"/>
+	 </sequence>
+	</complexType>
+	<complexType name="locationSpecificationType">
+	 <annotation>
+		<documentation/>
+	 </annotation>
+	 <sequence>
+		<element name="value">
+			<complexType>
+			 <sequence>
+				<element name="targetLocation" type="nsat:NexusPointType" minOccurs="0"/>
+				<element name="dueDate" type="nsat:NexusTimeType" minOccurs="0"/>
+			 </sequence>
+			</complexType>
+		</element>
+		<element ref="nsas:meta" minOccurs="0"/>
+	 </sequence>
+	</complexType>
+	<complexType name="necessaryHumanResourceType">
+	 <annotation>
+		<documentation/>
+	 </annotation>
+	 <sequence>
+		<element name="value">
+			<complexType>
+			 <sequence>
+				<element name="humanResourceType" type="nsat:NexusStringType" minOccurs="0"/>
+				<element name="noOfNecessaryHumanResources" type="nsat:NexusIntegerType" minOccurs="0"/>
+			 </sequence>
+			</complexType>
+		</element>
+		<element ref="nsas:meta" minOccurs="0"/>
+	 </sequence>
+	</complexType>
+	<complexType name="timeToRepairType">
+	 <annotation>
+		<documentation/>
+	 </annotation>
+	 <sequence>
+		<element name="value">
+			<complexType>
+			 <sequence>
+				<element name="startPreperationRepairTime" type="nsat:NexusTimeType" minOccurs="0"/>
+				<element name="finishPreperationRepairTime" type="nsat:NexusTimeType" minOccurs="0"/>
+				<element name="startRepairTimeTime" type="nsat:NexusTimeType" minOccurs="0"/>
+				<element name="finishRepairTime" type="nsat:NexusTimeType" minOccurs="0"/>
+			 </sequence>
+			</complexType>
+		</element>
+		<element ref="nsas:meta" minOccurs="0"/>
+	 </sequence>
+	</complexType>	
+	<!-- Complex Attributes MUST BE AT END because definition of types has to be before! -->
+	<element name="executionDates" type="sfas:executionDatesType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="maintenance" type="sfas:maintenanceType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="jobFeedback" type="sfas:jobFeedbackType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="locationSpecification" type="sfas:locationSpecificationType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="capacityModel" type="sfas:CapacityModelAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="customerAgreement" type="sfas:CustomerAgreementAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="documentList" type="sfas:DocumentAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="alternativeIDList" type="sfas:DocumentAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="errorModel" type="sfas:ErrorModelAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="personalData" type="sfas:PersonalDataAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="timeToRepairHistory" type="sfas:timeToRepairType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="necessaryHumanResourcesList" type="sfas:necessaryHumanResourceType" substitutionGroup="nsas:NexusAttribute"/>
+</schema>

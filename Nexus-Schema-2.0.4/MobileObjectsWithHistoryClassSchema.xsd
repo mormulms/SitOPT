@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema targetNamespace="http://www.nexus.uni-stuttgart.de/1.0/MobileObjectsWithHistory/ECS" xmlns:nsas="http://www.nexus.uni-stuttgart.de/1.0/NSAS" xmlns:nscs="http://www.nexus.uni-stuttgart.de/1.0/NSCS" xmlns:eas="http://www.nexus.uni-stuttgart.de/1.0/MobileObjectsWithHistory/EAS" xmlns:ecs="http://www.nexus.uni-stuttgart.de/1.0/MobileObjectsWithHistory/ECS" xmlns="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<annotation>
+		<documentation>An extended class schema for Mobile Objects with position histories.</documentation>
+	</annotation>
+	<import namespace="http://www.nexus.uni-stuttgart.de/1.0/NSCS" schemaLocation="NexusStandardClassSchema.xsd"/>
+	<import namespace="http://www.nexus.uni-stuttgart.de/1.0/MobileObjectsWithHistory/EAS" schemaLocation="MobileObjectsWithHistoryAttributeSchema.xsd"/>
+	<complexType name="MOWithHistory">
+		<annotation>
+			<documentation>object with a position history</documentation>
+			<appinfo>
+				<extension base="nscs:MobileObject"/>
+			</appinfo>
+		</annotation>
+		<complexContent>
+			<extension base="nscs:MobileObject">
+				<sequence>
+					<element ref="eas:posCalculationData" minOccurs="0"/>
+					<element ref="eas:posGridDirection" minOccurs="0"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+</schema>

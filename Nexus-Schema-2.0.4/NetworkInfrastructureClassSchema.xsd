@@ -1,0 +1,392 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema targetNamespace="http://www.nexus.uni-stuttgart.de/1.0/NICS"
+	xmlns:nscs="http://www.nexus.uni-stuttgart.de/1.0/NSCS"
+	xmlns:nsas="http://www.nexus.uni-stuttgart.de/1.0/NSAS"
+	xmlns:nics="http://www.nexus.uni-stuttgart.de/1.0/NICS"
+	xmlns:nias="http://www.nexus.uni-stuttgart.de/1.0/NIAS"
+	xmlns="http://www.w3.org/2001/XMLSchema"
+	elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<import namespace="http://www.nexus.uni-stuttgart.de/1.0/NIAS" schemaLocation="NetworkInfrastructureAttributeSchema.xsd" />
+	<import namespace="http://www.nexus.uni-stuttgart.de/1.0/NSCS" schemaLocation="NexusStandardClassSchema.xsd" />
+
+	<annotation>
+		<documentation>Class schema for network infrastructure</documentation>
+	</annotation>
+
+	<complexType name="SpatialCommunicationNetworkObject">
+		<annotation>
+			<appinfo>
+				<extension base="nscs:SpatialObject"/>
+			</appinfo>
+			<documentation>
+				The base class of all classes, which describe those elements of the network infrastructure
+				that have a location.
+			</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="nscs:SpatialObject"/>
+		</complexContent>
+	</complexType>
+
+	<complexType name="AccessEntity">
+		<annotation>
+			<appinfo>
+				<extension base="nics:SpatialCommunicationNetworkObject"/>
+			</appinfo>
+			<documentation>
+				Technical equipment that provides a single point of connection to an access network.
+			</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="nics:SpatialCommunicationNetworkObject">
+				<sequence>
+					<element ref="nias:numberUsers" minOccurs="0"/>
+					<element ref="nias:operatingState" minOccurs="0"/>
+					<element ref="nias:load" minOccurs="0"/>
+					<element ref="nias:maxNumberUsers" minOccurs="0"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<complexType name="WallSocket">
+		<annotation>
+			<appinfo>
+				<extension base="nics:AccessEntity"/>
+			</appinfo>
+			<documentation>
+				A wall socket for wired Ethernet network access.
+				The attribute maxNumberUsers indicates the maximum number of Ethernet plugs that can be connected
+				to this socket. The attribute numberUsers indicates the number of connected plugs.
+			</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="nics:AccessEntity"/>
+		</complexContent>
+	</complexType>
+
+	<complexType name="RadioCell">
+		<annotation>
+			<appinfo>
+				<extension base="nics:AccessEntity"/>
+			</appinfo>
+			<documentation>
+				A generic radio cell
+			</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="nics:AccessEntity"/>
+		</complexContent>
+	</complexType>
+
+	<complexType name="UMTSCell">
+		<annotation>
+			<appinfo>
+				<extension base="nics:RadioCell"/>
+			</appinfo>
+			<documentation>
+				An UMTS cell.
+				The extent of this radio cell indicates the geographical
+				area where a terminal can use this radio cell.
+			</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="nics:RadioCell">
+				<sequence>
+					<element ref="nias:ci" minOccurs="0"/>
+					<element ref="nias:lac" minOccurs="0"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<complexType name="GPRSCell">
+		<annotation>
+			<appinfo>
+				<extension base="nics:RadioCell"/>
+			</appinfo>
+			<documentation>
+				A GPRS cell.
+				The extent of this radio cell indicates the geographical
+				area where a terminal can use this radio cell.
+			</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="nics:RadioCell">
+				<sequence>
+					<element ref="nias:ci" minOccurs="0"/>
+					<element ref="nias:lac" minOccurs="0"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<complexType name="WlanCell">
+		<annotation>
+			<appinfo>
+				<extension base="nics:RadioCell"/>
+			</appinfo>
+			<documentation>
+				A single Wireless LAN radio cell.
+				The extent of this radio cell indicates the geographical
+				area where a terminal can use this radio cell.
+			</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="nics:RadioCell">
+				<sequence>
+					<element ref="nias:macAddr" minOccurs="0"/>
+					<element ref="nias:wlanStandard" minOccurs="0"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<complexType name="AccessNetwork">
+		<annotation>
+			<appinfo>
+				<extension base="nics:SpatialCommunicationNetworkObject"/>
+			</appinfo>
+			<documentation>
+				A generic access network. An access network consists of a least one AccessEntity.
+				The NetworkEntityRelation is used to associate AccessEntity objects with their corresponding AccessNetworkObject.
+			</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="nics:SpatialCommunicationNetworkObject">
+				<sequence>
+					<element ref="nias:operatingState" minOccurs="1"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<complexType name="WLANExtendedServiceSet">
+		<annotation>
+			<appinfo>
+				<extension base="nics:AccessNetwork"/>
+			</appinfo>
+			<documentation>
+				A wireless LAN in infrastructure mode. A WLANExtendedService set has one ore more WLANCells.
+			</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="nics:AccessNetwork">
+				<sequence>
+					<element ref="nias:encryption" minOccurs="0"/>
+					<element ref="nias:wlanMode" minOccurs="1"/>
+					<element ref="nias:ssid" minOccurs="1"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<complexType name="GPRSNet">
+		<annotation>
+			<appinfo>
+				<extension base="nics:AccessNetwork"/>
+			</appinfo>
+			<documentation>
+				A GPRS network. A GPRSNet has one or more GPRSCells.
+			</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="nics:AccessNetwork">
+				<sequence>
+					<element ref="nias:mnc" minOccurs="0"/>
+					<element ref="nias:mcc" minOccurs="0"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+
+
+	<complexType name="NetworkServiceObject">
+		<annotation>
+			<appinfo>
+				<extension base="nscs:NexusDataObject"/>
+			</appinfo>
+			<documentation>
+				Describes a service available on a certain AccessNetwork
+			</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="nscs:NexusDataObject">
+				<sequence>
+					<element ref="nias:description" minOccurs="0"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<complexType name="ServiceCosts">
+		<annotation>
+			<appinfo>
+				<extension base="nscs:NexusDataObject"/>
+			</appinfo>
+			<documentation>
+				Describes costs of a service
+			</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="nscs:NexusDataObject"/>
+		</complexContent>
+	</complexType>
+
+	<complexType name="SimpleCosts">
+		<annotation>
+			<appinfo>
+				<extension base="nics:ServiceCosts"/>
+			</appinfo>
+			<documentation>
+				A simple costs description model, which is particularly useful to describe cots of the internet access
+				offered by a network. The costs can be specified in monetary units (as specified by the currency attribute)
+                                per time unit (hour) , per volume unit (kbit), and per
+				connection (i.e. per activation of the access by the terminal).
+			</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="nics:ServiceCosts">
+				<sequence>
+					<element ref="nias:perTime" minOccurs="0"/>
+					<element ref="nias:perVolume" minOccurs="0"/>
+					<element ref="nias:perConnection" minOccurs="0"/>
+					<element ref="nias:currency" minOccurs="0"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+
+
+	<complexType name="AAAInformation">
+		<annotation>
+			<appinfo>
+				<extension base="nscs:NexusDataObject"/>
+			</appinfo>
+			<documentation>obsolete</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="nscs:NexusDataObject"/>
+		</complexContent>
+	</complexType>
+
+
+	<complexType name="InternetAccess">
+		<annotation>
+			<appinfo>
+				<extension base="nics:NetworkServiceObject"/>
+			</appinfo>
+			<documentation>Access tho the global Internet</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="nics:NetworkServiceObject"/>
+		</complexContent>
+	</complexType>
+
+	<complexType name="NexusFederationNodeDiscover">
+		<annotation>
+			<appinfo>
+				<extension base="nics:NetworkServiceObject"/>
+			</appinfo>
+			<documentation>
+				Indicates that a service is available, which discovers the best-suited federation node to be used
+				in an access network.
+			</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="nics:NetworkServiceObject"/>
+		</complexContent>
+	</complexType>
+
+	<complexType name="WebAccess">
+		<annotation>
+			<appinfo>
+				<extension base="nics:NetworkServiceObject"/>
+			</appinfo>
+			<documentation>
+				Access to a WWW proxy
+			</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="nics:NetworkServiceObject"/>
+		</complexContent>
+	</complexType>
+
+	<complexType name="EmailAccess">
+		<annotation>
+			<appinfo>
+				<extension base="nics:NetworkServiceObject"/>
+			</appinfo>
+			<documentation>
+				Access to a email server
+			</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="nics:NetworkServiceObject"/>
+		</complexContent>
+	</complexType>
+
+	<complexType name="NetworkEntityRelation">
+		<annotation>
+			<appinfo>
+				<extension base="nscs:NexusRelation"/>
+			</appinfo>
+		</annotation>
+		<complexContent>
+			<extension base="nscs:NexusRelation">
+				<sequence>
+					<element ref="nias:accessNetwork" minOccurs="1"/>
+					<element ref="nias:accessEntity" minOccurs="1"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+
+        <complexType name="NetworkServiceRelation">
+                <annotation>
+                        <appinfo>
+                                <extension base="nscs:NexusRelation"/>
+                        </appinfo>
+                </annotation>
+                <complexContent>
+                        <extension base="nscs:NexusRelation">
+                                <sequence>
+                                        <element ref="nias:accessNetwork" minOccurs="1"/>
+                                        <element ref="nias:networkServiceObject" minOccurs="1"/>
+                                </sequence>
+                        </extension>
+                </complexContent>
+        </complexType>
+
+        <complexType name="NetworkServiceAAAInformationRelation">
+                <annotation>
+                        <appinfo>
+                                <extension base="nscs:NexusRelation"/>
+                        </appinfo>
+                </annotation>
+                <complexContent>
+                        <extension base="nscs:NexusRelation">
+                                <sequence>
+                                        <element ref="nias:networkServiceObject" minOccurs="1"/>
+                                        <element ref="nias:aaaInformation" minOccurs="1"/>
+                                </sequence>
+                        </extension>
+                </complexContent>
+        </complexType>
+
+        <complexType name="NetworkServiceCostsRelation">
+                <annotation>
+                        <appinfo>
+                                <extension base="nscs:NexusRelation"/>
+                        </appinfo>
+                </annotation>
+                <complexContent>
+                        <extension base="nscs:NexusRelation">
+                                <sequence>
+                                        <element ref="nias:networkServiceObject" minOccurs="1"/>
+                                        <element ref="nias:serviceCosts" minOccurs="1"/>
+                                </sequence>
+                        </extension>
+                </complexContent>
+        </complexType>
+</schema>

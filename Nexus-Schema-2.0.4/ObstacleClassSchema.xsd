@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema targetNamespace="http://www.nexus.uni-stuttgart.de/1.0/Obstacle/ECS" 
+        xmlns="http://www.w3.org/2001/XMLSchema" 
+        xmlns:ecs="http://www.nexus.uni-stuttgart.de/1.0/Obstacle/ECS" 
+        xmlns:nscs="http://www.nexus.uni-stuttgart.de/1.0/NSCS" 
+        elementFormDefault="qualified" attributeFormDefault="unqualified">
+
+	<complexType name="Obstacle">
+		<annotation>
+			<documentation>Obstacle for a mobile robot</documentation>
+			<appinfo>
+				<extension base="nscs:SpatialObject"/>
+			</appinfo>
+		</annotation>
+		<complexContent>
+			<extension base="nscs:SpatialObject"/>
+		</complexContent>
+	</complexType>
+
+	<complexType name="MobileObstacle">
+		<annotation>
+			<documentation>Mobile obstacle for a mobile robot</documentation>
+			<appinfo>
+				<extension base="nscs:MobileObject"/>
+				<extension base="ecs:Obstacle"/>
+			</appinfo>
+		</annotation>
+		<complexContent>
+			<extension base="nscs:MobileObject"/>
+		</complexContent>
+	</complexType>
+</schema>

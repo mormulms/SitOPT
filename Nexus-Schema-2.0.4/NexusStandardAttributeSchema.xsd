@@ -1,0 +1,325 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema targetNamespace="http://www.nexus.uni-stuttgart.de/1.0/NSAS" xmlns:nsat="http://www.nexus.uni-stuttgart.de/1.0/NSAT" xmlns:nsas="http://www.nexus.uni-stuttgart.de/1.0/NSAS" xmlns="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<import namespace="http://www.nexus.uni-stuttgart.de/1.0/NSAT" schemaLocation="NexusStandardAttributeTypes.xsd"/>
+	<!-- =============================   basic element definitions =============================   !-->
+	<element name="NexusAttribute" abstract="true"/>
+	<element name="NexusMetaAttribute" abstract="true">
+		<annotation>
+			<documentation>Substitution Class for all Meta Attributes</documentation>
+		</annotation>
+	</element>
+	<!-- ===================================  Meta Attributes ===================================   !-->
+	<element name="validTime" type="nsat:NexusTimeType" substitutionGroup="nsas:NexusMetaAttribute"/>
+	<complexType name="NexusMetaAttributeType">
+		<annotation>
+			<documentation>the type of meta data both for Nexus Object (in the Nexus Attribut "meta") and for Nexus Attributes (as part of the attribute definition). Note that the Nexus Attribute "meta" does not have a "value" and a "meta" part! (no meta data for the meta data)</documentation>
+		</annotation>
+		<sequence>
+			<element ref="nsas:NexusMetaAttribute" maxOccurs="unbounded"/>
+		</sequence>
+	</complexType>
+	<element name="meta" type="nsas:NexusMetaAttributeType" substitutionGroup="nsas:NexusAttribute">
+		<annotation>
+			<documentation>Meta Attribute of Nexus Objects </documentation>
+		</annotation>
+	</element>
+	<!-- =============================   Simple Nexus Attribute Types =============================   !-->
+	<complexType name="NexusPointAttributeType">
+		<sequence>
+			<element name="value" type="nsat:NexusPointType"/>
+			<element ref="nsas:meta" minOccurs="0"/>
+		</sequence>
+	</complexType>
+	<complexType name="NexusGeometryAttributeType">
+		<sequence>
+			<element name="value" type="nsat:NexusGeometryType"/>
+			<element ref="nsas:meta" minOccurs="0"/>
+		</sequence>
+	</complexType>
+	<complexType name="NexusTimeAttributeType">
+		<sequence>
+			<element name="value" type="nsat:NexusTimeType"/>
+			<element ref="nsas:meta" minOccurs="0"/>
+		</sequence>
+	</complexType>
+	<complexType name="NexusStringAttributeType">
+		<sequence>
+			<element name="value" type="nsat:NexusStringType"/>
+			<element ref="nsas:meta" minOccurs="0"/>
+		</sequence>
+	</complexType>
+	<complexType name="NexusBooleanAttributeType">
+		<sequence>
+			<element name="value" type="nsat:NexusBooleanType"/>
+			<element ref="nsas:meta" minOccurs="0"/>
+		</sequence>
+	</complexType>
+	<complexType name="NexusByteAttributeType">
+		<sequence>
+			<element name="value" type="nsat:NexusByteType"/>
+			<element ref="nsas:meta" minOccurs="0"/>
+		</sequence>
+	</complexType>
+	<complexType name="NexusFloatAttributeType">
+		<sequence>
+			<element name="value" type="nsat:NexusFloatType"/>
+			<element ref="nsas:meta" minOccurs="0"/>
+		</sequence>
+	</complexType>
+	<complexType name="NexusIntegerAttributeType">
+		<sequence>
+			<element name="value" type="nsat:NexusIntegerType"/>
+			<element ref="nsas:meta" minOccurs="0"/>
+		</sequence>
+	</complexType>
+	<complexType name="NexusTypeAttributeType">
+		<sequence>
+			<element name="value" type="nsat:NexusTypeType"/>
+			<element ref="nsas:meta" minOccurs="0"/>
+		</sequence>
+	</complexType>
+	<complexType name="NexusKindAttributeType">
+		<sequence>
+			<element name="value" type="nsat:NexusKindType"/>
+			<element ref="nsas:meta" minOccurs="0"/>
+		</sequence>
+	</complexType>
+	<complexType name="NexusListAttributeType">
+		<sequence>
+			<element name="value" type="nsat:NexusListType"/>
+			<element ref="nsas:meta" minOccurs="0"/>
+		</sequence>
+	</complexType>
+	<complexType name="NexusUriAttributeType">
+		<sequence>
+			<element name="value" type="nsat:NexusUriType"/>
+			<element ref="nsas:meta" minOccurs="0"/>
+		</sequence>
+	</complexType>
+	<complexType name="NexusNolAttributeType">
+		<sequence>
+			<element name="value" type="nsat:NexusObjectLocatorType"/>
+			<element ref="nsas:meta" minOccurs="0"/>
+		</sequence>
+	</complexType>
+	<complexType name="NexusDirectionAttributeType">
+		<sequence>
+			<element name="value" type="nsat:NexusDirectionType"/>
+			<element ref="nsas:meta" minOccurs="0"/>
+		</sequence>
+	</complexType>
+	<complexType name="NexusSpeedAttributeType">
+		<sequence>
+			<element name="value" type="nsat:NexusSpeedType"/>
+			<element ref="nsas:meta" minOccurs="0"/>
+		</sequence>
+	</complexType>
+	<!-- =============================   Complex Nexus Attribute Types =============================   !-->
+	<complexType name="NexusAddressAttributeType">
+		<annotation>
+			<documentation>a complex Nexus Attribute Type that contains the street address of an entity</documentation>
+		</annotation>
+		<sequence>
+			<element name="value">
+				<complexType>
+					<sequence>
+						<element name="street" type="nsat:NexusStringType" minOccurs="0"/>
+						<element name="number" type="nsat:NexusStringType" minOccurs="0"/>
+						<element name="city" type="nsat:NexusStringType" minOccurs="0"/>
+						<element name="zipCode" type="nsat:NexusIntegerType" minOccurs="0"/>
+					</sequence>
+				</complexType>
+			</element>
+			<element ref="nsas:meta" minOccurs="0"/>
+		</sequence>
+	</complexType>
+	<complexType name="NexusContactAttributeType">
+		<sequence>
+			<element name="value">
+				<complexType>
+					<sequence>
+						<element name="phoneNumber" type="nsat:NexusStringType" minOccurs="0"/>
+						<element name="phoneDescription" type="nsat:NexusStringType" minOccurs="0"/>
+						<element name="faxNumber" type="nsat:NexusStringType" minOccurs="0"/>
+						<element name="faxDescription" type="nsat:NexusStringType" minOccurs="0"/>
+						<element name="email" type="nsat:NexusStringType" minOccurs="0"/>
+						<element name="uri" type="nsat:NexusUriType" minOccurs="0"/>
+					</sequence>
+				</complexType>
+			</element>
+			<element ref="nsas:meta" minOccurs="0"/>
+		</sequence>
+	</complexType>
+	<complexType name="NexusColorAttributeType">
+		<sequence>
+			<element name="value">
+				<complexType>
+					<sequence>
+						<element name="name" type="nsat:NexusStringType" minOccurs="1"/>
+						<element name="secondname" type="nsat:NexusStringType" minOccurs="0"/>
+						<element name="lightness" type="nsat:NexusStringType" minOccurs="0"/>
+						<element name="saturation" type="nsat:NexusStringType" minOccurs="0"/>
+						<element name="rgbcode" type="nsat:NexusStringType" minOccurs="0"/>
+						<element name="ralname" type="nsat:NexusStringType" minOccurs="0"/>
+					</sequence>
+				</complexType>
+			</element>
+			<element ref="nsas:meta" minOccurs="0"/>
+		</sequence>
+	</complexType>
+	<!-- =============================   All Standard Nexus Attributes =============================   !-->
+	<element name="activePListAddress" type="nsas:NexusListAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="address" type="nsas:NexusAddressAttributeType" substitutionGroup="nsas:NexusAttribute">
+		<annotation>
+			<documentation>bundles the street adress information for an entity</documentation>
+		</annotation>
+	</element>
+	<element name="adjoiningRoom" type="nsas:NexusBooleanAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="altPlace" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="altitude" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="arrivals" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="avgSpeed" type="nsas:NexusSpeedAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="beaconID" type="nsas:NexusByteAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="bedQuantity" type="nsas:NexusIntegerAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="belongsTo" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="bookCategories" type="nsas:NexusListAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="capacity" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="cinemaHalls" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="color" type="nsas:NexusColorAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="congressRooms" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="contact" type="nsas:NexusContactAttributeType" substitutionGroup="nsas:NexusAttribute">
+		<annotation>
+			<documentation>bundles the contact information for an entity</documentation>
+		</annotation>
+	</element>
+	<element name="constructionDate" type="nsas:NexusTimeAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="dailyLunch" type="nsas:NexusBooleanAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="danceFloor" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="dcCreator" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="dcDate" type="nsas:NexusTimeAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="dcDescription" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="dcPublisher" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="dcSubject" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="dcTitle" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="deliveryService" type="nsas:NexusBooleanAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="denomination" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="departures" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="description" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="direction" type="nsas:NexusDirectionAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="dressTypes" type="nsas:NexusListAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="dressesFor" type="nsas:NexusListAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="emergencyNumber" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="emitterID" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="epc" type="nsas:NexusByteAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="extent" type="nsas:NexusGeometryAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="levelNumbers" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute">
+		<annotation>
+			<documentation>the numbers of levels an entity occupies (used by object appartment). Should maybe be modeled with a relation.</documentation>
+		</annotation>
+	</element>
+	<element name="foodToGo" type="nsas:NexusBooleanAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="forHandicapped" type="nsas:NexusBooleanAttributeType" substitutionGroup="nsas:NexusAttribute">
+		<annotation>
+			<documentation>is true if the entity is intended to be used by handicapped people</documentation>
+		</annotation>
+	</element>
+	<element name="forWomen" type="nsas:NexusBooleanAttributeType" substitutionGroup="nsas:NexusAttribute">
+		<annotation>
+			<documentation>is true if the entity is intended to be used by women</documentation>
+		</annotation>
+	</element>
+	<element name="freeSpotQuantity" type="nsas:NexusIntegerAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="garage" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="gasPrices" type="nsas:NexusListAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="gasTypes" type="nsas:NexusListAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="guidedTours" type="nsas:NexusBooleanAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="happyHour" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="height" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="hotelRoomNumbers" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="hotelType" type="nsas:NexusListAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="infoText" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="international" type="nsas:NexusBooleanAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="keywords" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="kind" type="nsas:NexusKindAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="lastModified" type="nsas:NexusTimeAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="lastUpdated" type="nsas:NexusTimeAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="longName" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="material" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="maxSpeed" type="nsas:NexusSpeedAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="menu" type="nsas:NexusListAttributeType" substitutionGroup="nsas:NexusAttribute">
+		<annotation>
+			<documentation>a menu is a list of meals and prices</documentation>
+		</annotation>
+	</element>
+	<element name="name" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="nol" type="nsas:NexusNolAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="number" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute">
+		<annotation>
+			<documentation>a number of the entity - given in a for the entity meaningful way. Since numbering schemes can contain letters, this is not a numerical type but a string (i.e. room.number 24)
+		</documentation>
+		</annotation>
+	</element>
+	<element name="offerings" type="nsas:NexusListAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="onlineShopping" type="nsas:NexusBooleanAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="openingHours" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="orientation" type="nsas:NexusDirectionAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="owner" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="pHierarchyAddress" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="personName" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="personPos" type="nsas:NexusPointAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="place" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="pos" type="nsas:NexusPointAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="residenceArea" type="nsas:NexusGeometryAttributeType" substitutionGroup="nsas:NexusAttribute">
+		<annotation>
+			<documentation>a geographical area in which an entity is located (can be derived when both pos and accuracy are given
+		</documentation>
+		</annotation>
+	</element>
+	<element name="prices" type="nsas:NexusListAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="professional" type="nsas:NexusBooleanAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="program" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="publicSchool" type="nsas:NexusBooleanAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="publicUniversity" type="nsas:NexusBooleanAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="roofed" type="nsas:NexusBooleanAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="roomNumber" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="roomQuantity" type="nsas:NexusIntegerAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="roomTypes" type="nsas:NexusListAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="schoolType" type="nsas:NexusListAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="seatQuantity" type="nsas:NexusIntegerAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="surveillance" type="nsas:NexusBooleanAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="serviceDescription" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="sideWalkCafe" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="speed" type="nsas:NexusSpeedAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="spotQuantity" type="nsas:NexusIntegerAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="startPageAddress" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="status" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="style" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="type" type="nsas:NexusTypeAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="typeOfSightseeing" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="unreachable" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="uri" type="nsas:NexusUriAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="visibility" type="nsas:NexusGeometryAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="visitingHours" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="zone" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	
+	<element name="observedObject" type="nsas:NexusNolAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="situationDescription" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="situationTemplate" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="recognitionSystem" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="recognitionQuality" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<!-- =============================   Reverse Reference Definition =============================   !-->
+	<complexType name="NexusReverseReferencesType">
+		<annotation>
+			<documentation>a list of reverse references. This is only a preview how reverse references could look like in the next version of AWML!</documentation>
+		</annotation>
+		<sequence>
+			<element name="reverseRef">
+				<complexType>
+					<attribute name="NOL" type="nsat:NexusObjectLocatorType"/>
+					<attribute name="type" type="nsat:NexusStringType"/>
+					<attribute name="role" type="nsat:NexusStringType"/>
+				</complexType>
+			</element>
+		</sequence>
+	</complexType>
+</schema>
