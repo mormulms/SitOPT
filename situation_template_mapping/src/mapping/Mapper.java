@@ -1,9 +1,12 @@
 package mapping;
 
+import javax.swing.tree.TreeNode;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 
+import situationtemplate.model.TSituationNode;
 import situationtemplate.model.TSituationTemplate;
 import utils.IOUtils;
 import utils.NodeREDUtils;
@@ -48,18 +51,18 @@ public class Mapper {
 			nodeREDModel.add(input);
 
 			// first, map all the logic patterns, then map the other nodes
-			LogicNodeMapper lnm = new LogicNodeMapper();
-			lnm.mapLogicNodes(situationTemplate, nodeREDModel);
+			OperationNodeMapper lnm = new OperationNodeMapper();
+			lnm.mapOperationNodes(situationTemplate, nodeREDModel);
 			
-			SensorNodeMapper snm = new SensorNodeMapper();
-			nodeREDModel = snm.mapSensorNodes(situationTemplate, nodeREDModel, url);
+			ContextNodeMapper snm = new ContextNodeMapper();
+			nodeREDModel = snm.mapContextNodes(situationTemplate, nodeREDModel, url);
 			
-			NodeMapper nm = new NodeMapper();
+			ConditionNodeMapper nm = new ConditionNodeMapper();
 			JSONArray finalModel = nm.mapNodes(situationTemplate, nodeREDModel);
 			
 			// write the JSON file (just for debug reasons), remember to change the path when using this method
 			//IOUtils.writeJSONFile(finalModel, situationTemplate);
-			
+						
 			// deploy the flow to NodeRED
 			IOUtils.deployToNodeRED(finalModel, situationTemplate, doOverwrite);
 			

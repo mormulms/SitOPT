@@ -16,15 +16,21 @@
 	
 	<xs:complexType name="tSituation">
 		<xs:sequence>
-			<xs:element name="logicNode" type="tLogicNode" maxOccurs="unbounded"/>
-			<xs:element name="node" type="tNode" maxOccurs="unbounded"/>
-			<xs:element name="sensorNode" type="tSensorNode" maxOccurs="unbounded"/>
+			<xs:element name="situationNode" type="tSituationNode"/>
+			<xs:element name="operationNode" type="tOperationNode" maxOccurs="unbounded"/>
+			<xs:element name="conditionNode" type="tConditionNode" maxOccurs="unbounded"/>
+			<xs:element name="contextNode" type="tContextNode" maxOccurs="unbounded"/>
 		</xs:sequence>
 		<xs:attribute name="id" type="xs:ID" use="required"/>
 		<xs:attribute name="name" type="xs:string"/>
 	</xs:complexType>
 	
-	<xs:complexType name="tLogicNode">
+	<xs:complexType name="tSituationNode">
+		<xs:attribute name="id" type="xs:ID" use="required"/>
+		<xs:attribute name="name" type="xs:string"/>
+	</xs:complexType>
+	
+	<xs:complexType name="tOperationNode">
 		<xs:sequence>
 			<xs:element name="parent" type="tParent" minOccurs="0" maxOccurs="unbounded"/>
 			<xs:element name="type">
@@ -38,9 +44,9 @@
 		<xs:attribute name="id" type="xs:ID" use="required"/>
 		<xs:attribute name="name" type="xs:string"/>
 	</xs:complexType>
-	
+		
 	<!-- TODO (?): set use="required" on parent element of sensor nodes, each sensor should be processed -->
-	<xs:complexType name="tSensorNode">
+	<xs:complexType name="tContextNode">
 		<xs:sequence>
 			<xs:element name="parent" type="tParent" minOccurs="0" maxOccurs="unbounded"/>
 		</xs:sequence>
@@ -49,7 +55,7 @@
 	</xs:complexType>
 	
 	<!-- main processing node. TODO: handle sub-situations -->
-	<xs:complexType name="tNode">
+	<xs:complexType name="tConditionNode">
 		<xs:sequence>
 			<xs:element name="type" type="xs:string"/> 
 			<xs:element name="measureName" type="xs:string"/>

@@ -5,11 +5,11 @@ import java.util.Random;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
-import situationtemplate.model.TSensorNode;
+import situationtemplate.model.TContextNode;
 import situationtemplate.model.TSituationTemplate;
 
 /**
- * This class contains util methods to be used to generate the NodeRED JSON
+ * This class contains utility methods to be used to generate the NodeRED JSON
  * model.
  */
 public class NodeREDUtils {
@@ -109,8 +109,8 @@ public class NodeREDUtils {
 		JSONArray connections = new JSONArray();
 
 		// TODO
-		for (TSensorNode sensorNode : situationTemplate.getSituation()
-				.getSensorNode()) {
+		for (TContextNode sensorNode : situationTemplate.getSituation()
+				.getContextNode()) {
 			String sensorNodeId = sensorNode.getId();
 			connections.add(situationTemplate.getId() + "." + sensorNodeId);
 		}

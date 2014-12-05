@@ -8,11 +8,11 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.transform.stream.StreamSource;
 
-import situationtemplate.model.TLogicNode;
-import situationtemplate.model.TNode;
-import situationtemplate.model.TNode.CondValue;
+import situationtemplate.model.TConditionNode;
+import situationtemplate.model.TConditionNode.CondValue;
+import situationtemplate.model.TContextNode;
+import situationtemplate.model.TOperationNode;
 import situationtemplate.model.TParent;
-import situationtemplate.model.TSensorNode;
 import situationtemplate.model.TSituation;
 import situationtemplate.model.TSituationTemplate;
 import utils.NodeREDUtils;
@@ -42,15 +42,15 @@ public class Main {
 				TSituation situation = new TSituation();
 				situation.setId(NodeREDUtils.generateNodeREDId());
 
-				TLogicNode myAND = new TLogicNode();
+				TOperationNode myAND = new TOperationNode();
 				String andId = NodeREDUtils.generateNodeREDId();
 				myAND.setId(andId);
 				myAND.setName("and");
 				myAND.setType("and");
-				situation.getLogicNode().add(myAND);
+				situation.getOperationNode().add(myAND);
 				
 				// Operational Nodes
-				TNode cpuGreatherThanNode = new TNode();
+				TConditionNode cpuGreatherThanNode = new TConditionNode();
 				cpuGreatherThanNode.setOpType("greaterThan");
 				cpuGreatherThanNode.setType("CPU");
 				String gtId = NodeREDUtils.generateNodeREDId();
@@ -63,7 +63,7 @@ public class Main {
 				parent.setParentID(myAND);
 				cpuGreatherThanNode.getParent().add(parent);
 				
-				TNode freeRAMLowerThanNode = new TNode();
+				TConditionNode freeRAMLowerThanNode = new TConditionNode();
 				freeRAMLowerThanNode.setOpType("lowerThan");
 				freeRAMLowerThanNode.setType("RAM");
 				String ltId = NodeREDUtils.generateNodeREDId();
@@ -77,7 +77,7 @@ public class Main {
 				freeRAMLowerThanNode.getParent().add(parent2);
 				
 				// Sensor Nodes
-				TSensorNode sensorNode = new TSensorNode();
+				TContextNode sensorNode = new TContextNode();
 				// this is necessary to map an ID to an URL due to a missing registry
 				sensorNode.setId(MockUpRegistry.getDataSourceIDs(0));
 				sensorNode.setName("memorySensor");
@@ -85,18 +85,18 @@ public class Main {
 				parent3.setParentID(freeRAMLowerThanNode);
 				sensorNode.getParent().add(parent3);
 
-				TSensorNode sensorNode1 = new TSensorNode();
+				TContextNode sensorNode1 = new TContextNode();
 				sensorNode1.setId(MockUpRegistry.getDataSourceIDs(1));
 				sensorNode1.setName("cpuSensor");
 				TParent parent4 = new TParent();
 				parent4.setParentID(cpuGreatherThanNode);
 				sensorNode1.getParent().add(parent4);
 
-				situation.getSensorNode().add(sensorNode);
-				situation.getSensorNode().add(sensorNode1);
+				situation.getContextNode().add(sensorNode);
+				situation.getContextNode().add(sensorNode1);
 
-				situation.getNode().add(freeRAMLowerThanNode);
-				situation.getNode().add(cpuGreatherThanNode);
+				situation.getConditionNode().add(freeRAMLowerThanNode);
+				situation.getConditionNode().add(cpuGreatherThanNode);
 
 				situationTemplate.setSituation(situation);
 				

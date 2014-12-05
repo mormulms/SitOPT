@@ -23,7 +23,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 /**
- * Utils class for input and output
+ * Utility class for input and output
  */
 public class IOUtils {
 

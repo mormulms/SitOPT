@@ -56,7 +56,7 @@ public class Nodes {
 	}
 	
 	/**
-	 * Generates the JavaScript implementation of the "bewteen" node
+	 * Generates the JavaScript implementation of the "between" node
 	 * 
 	 * @param conditionValues
 	 * 			 the status code to be checked

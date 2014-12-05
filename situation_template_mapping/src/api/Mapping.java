@@ -43,7 +43,7 @@ public class Mapping implements MappingInterface {
 			mapper.map(doOverwrite, url);
 
 		} catch (JAXBException e) {
-			// TODO Auto-generated catch block
+			System.err.println("Could not parse the XML file, an error occurred.");
 			e.printStackTrace();
 		}
 	}

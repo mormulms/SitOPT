@@ -3,17 +3,17 @@ package mapping;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
-import situationtemplate.model.TLogicNode;
-import situationtemplate.model.TNode;
+import situationtemplate.model.TConditionNode;
+import situationtemplate.model.TContextNode;
+import situationtemplate.model.TOperationNode;
 import situationtemplate.model.TParent;
-import situationtemplate.model.TSensorNode;
 import situationtemplate.model.TSituationTemplate;
 import utils.NodeREDUtils;
 
 /**
  * This class maps sensor nodes to HTTP nodes in NodeRED
  */
-public class SensorNodeMapper {
+public class ContextNodeMapper {
 
 	/**
 	 * constants
@@ -34,7 +34,7 @@ public class SensorNodeMapper {
 	 * @return the mapped JSON model
 	 */
 	@SuppressWarnings("unchecked")
-	public JSONArray mapSensorNodes(TSituationTemplate situationTemplate, JSONArray nodeREDModel, String url) {
+	public JSONArray mapContextNodes(TSituationTemplate situationTemplate, JSONArray nodeREDModel, String url) {
 
 		int xCoordinate = 300;
 		int yCoordinate = 50;
@@ -43,7 +43,7 @@ public class SensorNodeMapper {
 		
 		if (!url.endsWith("/")) url += "/";
 		
-		for (TSensorNode sensorNode : situationTemplate.getSituation().getSensorNode()) {
+		for (TContextNode sensorNode : situationTemplate.getSituation().getContextNode()) {
 
 			// TODO: create real Registry
 			String sensorURL = url +  MockUpRegistry.getURLForID(sensorNode.getName());
@@ -65,10 +65,10 @@ public class SensorNodeMapper {
 
 			// connect to the parents
 			for (TParent parent : sensorNode.getParent()) {
-				if (parent.getParentID() instanceof TNode) {
-					connections.add(situationTemplate.getId() + "." +((TNode) parent.getParentID()).getId());
-				} else if (parent.getParentID() instanceof TLogicNode) {
-					connections.add(situationTemplate.getId() + "." +((TLogicNode) parent.getParentID()).getId());
+				if (parent.getParentID() instanceof TConditionNode) {
+					connections.add(situationTemplate.getId() + "." +((TConditionNode) parent.getParentID()).getId());
+				} else if (parent.getParentID() instanceof TOperationNode) {
+					connections.add(situationTemplate.getId() + "." +((TOperationNode) parent.getParentID()).getId());
 				}
 			}
 

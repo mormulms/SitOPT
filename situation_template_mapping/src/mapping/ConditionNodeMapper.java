@@ -7,8 +7,8 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 
 import constants.Nodes;
-import situationtemplate.model.TLogicNode;
-import situationtemplate.model.TNode;
+import situationtemplate.model.TConditionNode;
+import situationtemplate.model.TOperationNode;
 import situationtemplate.model.TParent;
 import situationtemplate.model.TSituationTemplate;
 import utils.NodeREDUtils;
@@ -17,7 +17,7 @@ import utils.NodeREDUtils;
  * This class maps the operational nodes from the situation template to
  * corresponding Node-RED nodes.
  */
-public class NodeMapper {
+public class ConditionNodeMapper {
 
 	/**
 	 * This method processes the mapping of operational nodes.
@@ -38,7 +38,7 @@ public class NodeMapper {
 		String xCoordinate = "600";
 		int yCoordinate = 50;
 		
-		for (TNode node : situationTemplate.getSituation().getNode()) {
+		for (TConditionNode node : situationTemplate.getSituation().getConditionNode()) {
 			
 			List<String> conditionValues = node.getCondValue().getValue();
 			JSONObject nodeREDNode = NodeREDUtils.createNodeREDNode(situationTemplate.getId() + "." + node.getId(), node.getName(), "function", xCoordinate, Integer.toString(yCoordinate), situationTemplate.getId());
@@ -61,10 +61,10 @@ public class NodeMapper {
 
 			// add parents
 			for (TParent parent : node.getParent()) {
-				if (parent.getParentID() instanceof TNode) {
-					connections.add(situationTemplate.getId() + "." + ((TNode) parent.getParentID()).getId());
-				} else if (parent.getParentID() instanceof TLogicNode) {
-					connections.add(situationTemplate.getId() + "." +((TLogicNode) parent.getParentID()).getId());
+				if (parent.getParentID() instanceof TConditionNode) {
+					connections.add(situationTemplate.getId() + "." + ((TConditionNode) parent.getParentID()).getId());
+				} else if (parent.getParentID() instanceof TOperationNode) {
+					connections.add(situationTemplate.getId() + "." +((TOperationNode) parent.getParentID()).getId());
 				}
 			}
 

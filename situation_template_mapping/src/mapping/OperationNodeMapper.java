@@ -4,16 +4,17 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import constants.Nodes;
-import situationtemplate.model.TLogicNode;
-import situationtemplate.model.TNode;
+import situationtemplate.model.TConditionNode;
+import situationtemplate.model.TOperationNode;
 import situationtemplate.model.TParent;
+import situationtemplate.model.TSituationNode;
 import situationtemplate.model.TSituationTemplate;
 import utils.NodeREDUtils;
 
 /**
  * This class maps the logic nodes of the situation template to corresponding NodeRED implementations
  */
-public class LogicNodeMapper {
+public class OperationNodeMapper {
 
 	/**
 	 * This method processes the mapping of logic nodes
@@ -26,7 +27,7 @@ public class LogicNodeMapper {
 	 * @return the mapped model
 	 */
 	@SuppressWarnings("unchecked")
-	public JSONArray mapLogicNodes(TSituationTemplate situationTemplate, JSONArray nodeREDModel) {
+	public JSONArray mapOperationNodes(TSituationTemplate situationTemplate, JSONArray nodeREDModel) {
 		
 		// TODO those are just random values, write style function!
 		int xCoordinate = 900;
@@ -37,16 +38,16 @@ public class LogicNodeMapper {
 
 		// get the number of children of the logic node
 		int children = 0;
-		for (TLogicNode logicNode : situationTemplate.getSituation().getLogicNode()) {
-			for (TNode node: situationTemplate.getSituation().getNode()) {
+		for (TOperationNode logicNode : situationTemplate.getSituation().getOperationNode()) {
+			for (TConditionNode node: situationTemplate.getSituation().getConditionNode()) {
 				for (TParent parent: node.getParent()) {
 					
-					if (parent.getParentID() instanceof TNode) {
-						if (((TNode) parent.getParentID()).getId().equals(logicNode.getId())) {
+					if (parent.getParentID() instanceof TConditionNode) {
+						if (((TConditionNode) parent.getParentID()).getId().equals(logicNode.getId())) {
 							children++;
 						}
-					} else if (parent.getParentID() instanceof TLogicNode) {
-						if (((TLogicNode) parent.getParentID()).getId().equals(logicNode.getId())) {
+					} else if (parent.getParentID() instanceof TOperationNode) {
+						if (((TOperationNode) parent.getParentID()).getId().equals(logicNode.getId())) {
 							children++;
 						}
 					}
@@ -69,13 +70,17 @@ public class LogicNodeMapper {
 			
 			if (!logicNode.getParent().isEmpty()) {
 				for (TParent parent: logicNode.getParent()) {
-					if (parent.getParentID() instanceof TNode) {
-						String parentId = ((TNode) parent.getParentID()).getId();
+					if (parent.getParentID() instanceof TConditionNode) {
+						String parentId = ((TConditionNode) parent.getParentID()).getId();
 						connections.add(situationTemplate.getId() + "." + parentId);
-					} else if (parent.getParentID() instanceof TLogicNode) {
-						String parentId = ((TLogicNode) parent.getParentID()).getId();
+					} else if (parent.getParentID() instanceof TOperationNode) {
+						String parentId = ((TOperationNode) parent.getParentID()).getId();
 						connections.add(situationTemplate.getId() + "." + parentId);
-					}
+					} else if (parent.getParentID() instanceof TSituationNode) {
+						JSONObject debugNode = NodeREDUtils.generateDebugNode("600", "500", zCoordinate);
+						nodeREDModel.add(debugNode);
+						connections.add(debugNode.get("id"));
+					} 
 				}
 			} else {
 				JSONObject debugNode = NodeREDUtils.generateDebugNode("600", "500", zCoordinate);
