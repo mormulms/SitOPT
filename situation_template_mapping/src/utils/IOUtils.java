@@ -81,7 +81,7 @@ public class IOUtils {
 	 * @param situationTemplate
 	 * 			 the situation template as XML
 	 * @param doOverwrite
-	 * 			 boolean detemining whether the flow shall be overwritten or not
+	 * 			 boolean determining whether the flow shall be overwritten or not
 	 */
 	@SuppressWarnings("unchecked")
 	public static void deployToNodeRED(JSONArray nodeREDModel, TSituationTemplate situationTemplate, boolean doOverwrite) {
