@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema targetNamespace="http://www.nexus.uni-stuttgart.de/SituationECS" xmlns:situationeas="http://www.nexus.uni-stuttgart.de/SituationAS" xmlns:situationecs="http://www.nexus.uni-stuttgart.de/SituationECS" xmlns:nscs="http://www.nexus.uni-stuttgart.de/1.0/NSCS" xmlns:nsas="http://www.nexus.uni-stuttgart.de/1.0/NSAS" xmlns="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<annotation>
+		<documentation>This is the extended class schema for Situation-Recognition</documentation>
+	</annotation>
+	<import namespace="http://www.nexus.uni-stuttgart.de/1.0/NSAS" schemaLocation="NexusStandardAttributeSchema.xsd"/>
+	<import namespace="http://www.nexus.uni-stuttgart.de/1.0/NSCS" schemaLocation="NexusStandardClassSchema.xsd"/>
+	<import namespace="http://www.nexus.uni-stuttgart.de/SituationAS" schemaLocation="SituationAttributeSchema.xsd"/>
+	<complexType name="Situation">
+	 <annotation>
+		<documentation>object that represents a detected situation</documentation>
+		<appinfo>
+			<extension base="nscs:SpatialObject"/>
+		</appinfo>
+	 </annotation>
+	 <complexContent>
+		<extension base="nscs:SpatialObject">
+		<sequence>
+			 <element ref="situationeas:observedObject" minOccurs="0"/>
+			 <element ref="situationeas:situationDescription" minOccurs="0"/>
+			 <element ref="situationeas:situationTemplate" minOccurs="0"/>
+			 <element ref="situationeas:recognitionSystem" minOccurs="0"/>
+			 <element ref="situationeas:recognitionQuality" minOccurs="0"/>
+		</sequence>
+		</extension>
+	 </complexContent>
+</complexType>
+
+	<complexType name="SituationTemplate">
+	 <annotation>
+		<documentation>object that represents a detected situation</documentation>
+		<appinfo>
+			<extension base="nscs:SpatialObject"/>
+		</appinfo>
+	 </annotation>
+	 <complexContent>
+		<extension base="nscs:SpatialObject">
+		<sequence>
+			 <element ref="situationeas:templateDefinition" minOccurs="0"/>
+			 <element ref="situationeas:observableObjectTypes" minOccurs="0"/>
+		</sequence>
+		</extension>
+	 </complexContent>
+	 	 </complexType>
+	
+</schema>

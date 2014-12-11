@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema targetNamespace="http://www.nexus.uni-stuttgart.de/SituationAS" xmlns:situationas="http://www.nexus.uni-stuttgart.de/SituationAS" xmlns:nsat="http://www.nexus.uni-stuttgart.de/1.0/NSAT" xmlns:nsas="http://www.nexus.uni-stuttgart.de/1.0/NSAS" xmlns="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<import namespace="http://www.nexus.uni-stuttgart.de/1.0/NSAT" schemaLocation="NexusStandardAttributeTypes.xsd"/>
+	<import namespace="http://www.nexus.uni-stuttgart.de/1.0/NSAS" schemaLocation="NexusStandardAttributeSchema.xsd"/>
+	<element name="observedObject" type="nsas:NexusNolAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="situationDescription" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="situationTemplate" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="recognitionSystem" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="recognitionQuality" type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	 <element name="templateDefinition"  type="situationas:tSituationTemplate" substitutionGroup="nsas:NexusAttribute"/>
+	<element name="observableObjectTypes"  type="nsas:NexusStringAttributeType" substitutionGroup="nsas:NexusAttribute"/>
+	
+		<!-- root -->
+	<element name="SituationTemplate" type="situationas:tSituationTemplate"/>
+	
+	<!-- TODO: set maxOccurs="unbounded", a situation template could contain more than one situation -->
+	<complexType name="tSituationTemplate">
+		<sequence>
+			<element name="Situation" type="situationas:tSituation" maxOccurs="1"/>
+		</sequence>
+		<attribute name="id" type="ID" use="required"/>
+		<attribute name="name" type="string"/>
+	</complexType>
+	
+	<complexType name="tSituation">
+		<sequence>
+			<element name="situationNode" type="situationas:tSituationNode"/>
+			<element name="operationNode" type="situationas:tOperationNode" maxOccurs="unbounded"/>
+			<element name="conditionNode" type="situationas:tConditionNode" maxOccurs="unbounded"/>
+			<element name="contextNode" type="situationas:tContextNode" maxOccurs="unbounded"/>
+		</sequence>
+		<attribute name="id" type="ID" use="required"/>
+		<attribute name="name" type="string"/>
+	</complexType>
+	
+	<complexType name="tSituationNode">
+		<attribute name="id" type="ID" use="required"/>
+		<attribute name="name" type="string"/>
+	</complexType>
+	
+	<complexType name="tOperationNode">
+		<sequence>
+			<element name="parent" type="situationas:tParent" minOccurs="0" maxOccurs="unbounded"/>
+			<element name="type">
+				<simpleType>
+					<restriction base="string">
+						<pattern value="or|and"/>
+					</restriction>
+				</simpleType>
+			</element>
+		</sequence>
+		<attribute name="id" type="ID" use="required"/>
+		<attribute name="name" type="string"/>
+	</complexType>
+		
+	<!-- TODO (?): set use="required" on parent element of sensor nodes, each sensor should be processed -->
+	<complexType name="tContextNode">
+		<sequence>
+			<element name="parent" type="situationas:tParent" minOccurs="0" maxOccurs="unbounded"/>
+		</sequence>
+		<attribute name="id" type="ID" use="required"/>
+		<attribute name="name" type="string"/>
+	</complexType>
+	
+	<!-- main processing node. TODO: handle sub-situations -->
+	<complexType name="tConditionNode">
+		<sequence>
+			<element name="type" type="string"/> 
+			<element name="measureName" type="string"/>
+			<element name="opType" maxOccurs="1" minOccurs="1">
+				<simpleType>
+					<restriction base="string">
+						<pattern value="lowerThan|greaterThan|equals|notEquals|between"/>
+					</restriction>
+				</simpleType>
+			</element>
+			<element name="condValue">
+				<complexType>
+					<sequence>
+						<element name="value" type="string" maxOccurs="2"/>
+					</sequence>
+				</complexType>
+			</element>
+			<element name="parent" type="situationas:tParent" minOccurs="0" maxOccurs="unbounded"/>
+		</sequence>
+		<attribute name="id" type="ID" use="required"/>
+		<attribute name="name" type="string"/>
+	</complexType>
+
+	<complexType name="tParent">
+		<attribute name="parentID" type="IDREF"/>
+	</complexType>
+	
+</schema>
