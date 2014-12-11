@@ -55,6 +55,8 @@ public class ConditionNodeMapper {
 				nodeREDNode.put("func", Nodes.getBetween(conditionValues));
 			}
 		
+			nodeREDNode.put("outputs", "1");
+			
 			// connect node to the existing flow or to a debug node
 			JSONArray wiresNode = new JSONArray();
 			JSONArray connections = new JSONArray();
