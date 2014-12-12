@@ -12,12 +12,12 @@ import situationtemplate.model.TSituationTemplate;
 import utils.NodeREDUtils;
 
 /**
- * This class maps the logic nodes of the situation template to corresponding NodeRED implementations
+ * This class maps the operation nodes of the situation template to corresponding NodeRED implementations
  */
 public class OperationNodeMapper {
 
 	/**
-	 * This method processes the mapping of logic nodes
+	 * This method processes the mapping of operation nodes
 	 * 
 	 * @param situationTemplate
 	 * 			 the situation template to be mapped
@@ -36,7 +36,7 @@ public class OperationNodeMapper {
 		// the z coordinate is used to assign the nodes to a corresponding sheet
 		String zCoordinate = situationTemplate.getId();
 
-		// get the number of children of the logic node
+		// get the number of children of the operation node
 		int children = 0;
 		for (TOperationNode logicNode : situationTemplate.getSituation().getOperationNode()) {
 			for (TConditionNode node: situationTemplate.getSituation().getConditionNode()) {

@@ -20,7 +20,7 @@ import utils.NodeREDUtils;
 public class ConditionNodeMapper {
 
 	/**
-	 * This method processes the mapping of operational nodes.
+	 * This method processes the mapping of condition nodes.
 	 * 
 	 * @param situationTemplate
 	 *            the situation template to be mapped
@@ -33,7 +33,7 @@ public class ConditionNodeMapper {
 	 *             this exception occurs if the JSON can't be parsed
 	 */
 	@SuppressWarnings("unchecked")
-	public JSONArray mapNodes(TSituationTemplate situationTemplate, JSONArray nodeREDModel) throws ParseException {
+	public JSONArray mapConditionNodes(TSituationTemplate situationTemplate, JSONArray nodeREDModel) throws ParseException {
 
 		String xCoordinate = "600";
 		int yCoordinate = 50;
