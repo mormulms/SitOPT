@@ -11,7 +11,7 @@ import situationtemplate.model.TSituationTemplate;
 import utils.NodeREDUtils;
 
 /**
- * This class maps sensor nodes to HTTP nodes in NodeRED
+ * This class maps context nodes to HTTP nodes in NodeRED
  */
 public class ContextNodeMapper {
 
@@ -22,7 +22,7 @@ public class ContextNodeMapper {
 	public static final String METHOD = "GET";
 
 	/**
-	 * Maps the sensor nodes to corresponding NodeRED nodes
+	 * Maps the context nodes to corresponding NodeRED nodes
 	 * 
 	 * @param situationTemplate
 	 * 				 the situation template JAXB node
