@@ -2,6 +2,8 @@
 
 # Projects
 
+## ComputeSensor
+
 ComputeSensor for hardware monitoring
 
 ## Nexus Schema
