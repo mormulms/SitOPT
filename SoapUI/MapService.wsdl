@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:tns="http://www.nexus.uni-stuttgart.de/1.0/webmapservice/" xmlns:mapplns="http://www.nexus.uni-stuttgart.de/2.0/MapPL" xmlns:mapmlns="http://www.nexus.uni-stuttgart.de/2.0/MapML" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" name="webmapservice" targetNamespace="http://www.nexus.uni-stuttgart.de/1.0/webmapservice/" xmlns:plnk="http://schemas.xmlsoap.org/ws/2003/05/partner-link/">
+	<wsdl:types>
+		<xsd:schema targetNamespace="http://www.nexus.uni-stuttgart.de/1.0/webmapservice/" xmlns:mapplns="http://www.nexus.uni-stuttgart.de/2.0/MapPL">
+			<xsd:import namespace="http://www.nexus.uni-stuttgart.de/2.0/MapPL" schemaLocation="http://www.iaas.uni-stuttgart.de/nexus/2.0.2/NexusMapPLSchema.xsd"/>
+		</xsd:schema>
+		<xsd:schema targetNamespace="http://www.nexus.uni-stuttgart.de/1.0/webmapservice/" xmlns:mapmlns="http://www.nexus.uni-stuttgart.de/2.0/MapML">
+			<xsd:import namespace="http://www.nexus.uni-stuttgart.de/2.0/MapML" schemaLocation="http://www.iaas.uni-stuttgart.de/nexus/2.0.2/NexusMapMLSchema.xsd"/>
+		</xsd:schema>
+	</wsdl:types>
+	<wsdl:message name="mapplDocument">
+		<wsdl:part name="parameters" element="mapplns:mappl"/>
+	</wsdl:message>
+	<wsdl:message name="mapmlDocument">
+		<wsdl:part name="parameters" element="mapmlns:mapml"/>
+	</wsdl:message>
+	<wsdl:portType name="MapServiceInterface">
+		<wsdl:operation name="getVectorMap">
+			<wsdl:input message="tns:mapplDocument"/>
+			<wsdl:output message="tns:mapmlDocument"/>
+		</wsdl:operation>
+		<wsdl:operation name="getBinaryMap">
+			<wsdl:input message="tns:mapplDocument"/>
+			<wsdl:output message="tns:mapmlDocument"/>
+		</wsdl:operation>
+		<wsdl:operation name="getMap">
+			<wsdl:input message="tns:mapplDocument"/>
+			<wsdl:output message="tns:mapmlDocument"/>
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:binding name="MapServiceSoapBinding" type="tns:MapServiceInterface">
+		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+		<wsdl:operation name="getVectorMap">
+			<soap:operation soapAction="vectorMap" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="getBinaryMap">
+			<soap:operation soapAction="binaryMap" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="getMap">
+			<soap:operation soapAction="generalMap" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:service name="MapServiceService">
+		<wsdl:port name="MapServiceSoapPort" binding="tns:MapServiceSoapBinding">
+			<soap:address location="http://pcquaddmg.informatik.uni-stuttgart.de:8081/erspase/seife"/>
+		</wsdl:port>
+	</wsdl:service>
+	 <plnk:partnerLinkType name="MapService">
+    <plnk:role name="MapServiceProvider">
+      <plnk:portType name="tns:MapServiceInterface"/>
+    </plnk:role>
+    <!--<plnk:role name="FederationServiceRequester">
+      <plnk:portType name="tns:EventServiceCallbackPortType"/>
+    </plnk:role>-->
+  </plnk:partnerLinkType>
+</wsdl:definitions>

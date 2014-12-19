@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:tns="http://www.nexus.uni-stuttgart.de/1.0/webeventservice/" xmlns:erlns="http://nexus.informatik.uni-stuttgart.de/EventRegistrationLanguage" xmlns:enlns="http://nexus.informatik.uni-stuttgart.de/EventNotificationLanguage" xmlns:einfons="http://nexus.informatik.uni-stuttgart.de/EventInfo" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:wsa="http://schemas.xmlsoap.org/ws/2003/03/addressing" name="webeventservice" targetNamespace="http://www.nexus.uni-stuttgart.de/1.0/webeventservice/" xmlns:plnk="http://schemas.xmlsoap.org/ws/2003/05/partner-link/">
+  <wsdl:types>
+    <xsd:schema targetNamespace="http://www.nexus.uni-stuttgart.de/1.0/webeventservice/" xmlns:erlns="http://nexus.informatik.uni-stuttgart.de/EventRegistrationLanguage">
+      <xsd:import namespace="http://nexus.informatik.uni-stuttgart.de/EventRegistrationLanguage" schemaLocation="http://www.iaas.uni-stuttgart.de/nexus/2.0.2/EventRegistrationLanguage.xsd"/>
+    </xsd:schema>
+    <xsd:schema targetNamespace="http://www.nexus.uni-stuttgart.de/1.0/webeventservice/" xmlns:enlns="http://nexus.informatik.uni-stuttgart.de/EventNotificationLanguage">
+      <xsd:import namespace="http://nexus.informatik.uni-stuttgart.de/EventNotificationLanguage" schemaLocation="http://www.iaas.uni-stuttgart.de/nexus/2.0.2/EventNotificationLanguage.xsd"/>
+    </xsd:schema>
+    <xsd:schema targetNamespace="http://www.nexus.uni-stuttgart.de/1.0/webeventservice/" xmlns:einfons="http://nexus.informatik.uni-stuttgart.de/EventInfo">
+      <xsd:import namespace="http://nexus.informatik.uni-stuttgart.de/EventInfo" schemaLocation="http://www.iaas.uni-stuttgart.de/nexus/2.0.2/EventInfo.xsd"/>
+    </xsd:schema>
+    <!--	<xsd:schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.nexus.uni-stuttgart.de/1.0/webeventservice/">
+			<element name="voidType">
+				<complexType/>
+			</element>
+		</xsd:schema>-->
+    <xsd:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://schemas.xmlsoap.org/wsdl/">
+      <xsd:import namespace="http://schemas.xmlsoap.org/ws/2003/03/addressing" schemaLocation="http://schemas.xmlsoap.org/ws/2003/03/addressing/"/>
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="StartHeader">
+    <wsdl:part name="MessageID" element="wsa:MessageID"/>
+    <wsdl:part name="ReplyTo" element="wsa:ReplyTo"/>
+  </wsdl:message>
+  <wsdl:message name="ContinueHeader">
+    <wsdl:part name="RelatesTo" element="wsa:RelatesTo"/>
+  </wsdl:message>
+  <wsdl:message name="erlDocument">
+    <wsdl:part name="parameters" element="erlns:predicate"/>
+  </wsdl:message>
+  <wsdl:message name="enlDocument">
+    <wsdl:part name="parameters" element="enlns:notification"/>
+  </wsdl:message>
+  <wsdl:message name="eventInfoDocument">
+    <wsdl:part name="parameters" element="einfons:EventInfo"/>
+  </wsdl:message>
+  <!--<wsdl:message name="noDocument">
+		<wsdl:part name="parameters" element="tns:voidType"/>
+	</wsdl:message>-->
+  <wsdl:portType name="EventServiceInterface">
+    <wsdl:operation name="registerEventOperation">
+      <wsdl:input message="tns:erlDocument"/>
+      <wsdl:output message="tns:eventInfoDocument"/>
+    </wsdl:operation>
+    <!--<wsdl:operation name="registerEventAsyncOperation">
+			<wsdl:input message="tns:erlDocument"/>
+		</wsdl:operation>-->
+    <wsdl:operation name="deregisterEventOperation">
+      <wsdl:input message="tns:eventInfoDocument"/>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:portType name="EventServiceCallbackPortType">
+    <wsdl:operation name="receiveNotification">
+      <wsdl:input message="tns:enlDocument"/>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="EventServiceSoapBinding" type="tns:EventServiceInterface">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="registerEventOperation">
+      <soap:operation soapAction="register" style="document"/>
+      <wsdl:input>
+        <soap:header message="tns:StartHeader" part="MessageID" use="literal" wsdl:required="false"/>
+        <soap:header message="tns:StartHeader" part="ReplyTo" use="literal" wsdl:required="false"/>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <!--<wsdl:operation name="registerEventAsyncOperation">
+			<soap:operation soapAction="registerAsync" style="document"/>
+			<wsdl:input>
+				<soap:header message="tns:StartHeader" part="MessageID" use="literal" wsdl:required="false"/>
+				<soap:header message="tns:StartHeader" part="ReplyTo" use="literal" wsdl:required="false"/>
+				<soap:body use="literal"/>
+			</wsdl:input>
+		</wsdl:operation>-->
+    <wsdl:operation name="deregisterEventOperation">
+      <soap:operation soapAction="deregister" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="EventServiceCallbackSOAPBinding" type="tns:EventServiceCallbackPortType">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="receiveNotification">
+      <soap:operation soapAction="receiveNotification" style="document"/>
+      <wsdl:input>
+        <soap:header message="tns:ContinueHeader" part="RelatesTo" use="literal" wsdl:required="true"/>
+        <soap:body use="literal"/>
+      </wsdl:input>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="EventServiceService">
+    <wsdl:port name="EventServiceSoapPort" binding="tns:EventServiceSoapBinding">
+      <soap:address location="http://aspc22.informatik.uni-stuttgart.de:8084/axisNexus/services/WebEventService?wsdl"/>
+      <!--<soap:address location="http://129.69.214.121:8084/axisNexus/services/WebEventService?wsdl"/>-->
+    </wsdl:port>
+  </wsdl:service>
+  <wsdl:service name="EventServiceCallback">
+    <wsdl:port name="EventCallbackPort" binding="tns:EventServiceCallbackSOAPBinding"/>
+  </wsdl:service>
+  <plnk:partnerLinkType name="EventService">
+    <plnk:role name="EventServiceProvider">
+      <plnk:portType name="tns:EventServiceInterface"/>
+    </plnk:role>
+    <plnk:role name="EventServiceRequester">
+      <plnk:portType name="tns:EventServiceCallbackPortType"/>
+    </plnk:role>
+  </plnk:partnerLinkType>
+</wsdl:definitions>

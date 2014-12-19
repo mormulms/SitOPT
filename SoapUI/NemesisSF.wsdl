@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://www.nexus.uni-stuttgart.de/1.0/webfederationservice/" xmlns:awqlns="http://www.nexus.uni-stuttgart.de/2.0/AWQL" xmlns:awmlns="http://www.nexus.uni-stuttgart.de/2.0/AWML" xmlns:crlns="http://www.nexus.uni-stuttgart.de/2.0/CRL" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="webfederationservice" targetNamespace="http://www.nexus.uni-stuttgart.de/1.0/webfederationservice/" xmlns:plnk="http://schemas.xmlsoap.org/ws/2003/05/partner-link/">
+   
+   <plnk:partnerLinkType name="FederationService">
+    <plnk:role name="FederationServiceProvider">
+      <plnk:portType name="tns:FederationServiceInterface"/>
+    </plnk:role>
+  </plnk:partnerLinkType>
+ 
+  <wsdl:types>
+    <xsd:schema targetNamespace="http://www.nexus.uni-stuttgart.de/1.0/webfederationservice/" xmlns:awqlns="http://www.nexus.uni-stuttgart.de/2.0/AWQL">
+      <xsd:import namespace="http://www.nexus.uni-stuttgart.de/2.0/AWQL" schemaLocation="http://www.iaas.uni-stuttgart.de/nexus/2.0.2/NexusAwqlSchema.xsd"/>
+    </xsd:schema>
+    <xsd:schema targetNamespace="http://www.nexus.uni-stuttgart.de/1.0/webfederationservice/" xmlns:awmlns="http://www.nexus.uni-stuttgart.de/2.0/AWML">
+      <xsd:import namespace="http://www.nexus.uni-stuttgart.de/2.0/AWML" schemaLocation="http://www.iaas.uni-stuttgart.de/nexus/2.0.2/NexusAwmlSchema.xsd"/>
+    </xsd:schema>
+    <xsd:schema targetNamespace="http://www.nexus.uni-stuttgart.de/1.0/webfederationservice/" xmlns:crlns="http://www.nexus.uni-stuttgart.de/2.0/CRL">
+      <xsd:import namespace="http://www.nexus.uni-stuttgart.de/2.0/CRL" schemaLocation="http://www.iaas.uni-stuttgart.de/nexus/2.0.2/NexusCrlSchema.xsd"/>
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="awqlDocument">
+    <wsdl:part name="parameters" element="awqlns:awql"/>
+  </wsdl:message>
+  <wsdl:message name="awmlDocument">
+    <wsdl:part name="parameters" element="awmlns:awml"/>
+  </wsdl:message>
+  <wsdl:message name="crlDocument">
+    <wsdl:part name="parameters" element="crlns:changereport"/>
+  </wsdl:message>
+  <wsdl:portType name="FederationServiceInterface">
+    <wsdl:operation name="queryContextData">
+      <wsdl:input message="tns:awqlDocument"/>
+      <wsdl:output message="tns:awmlDocument"/>
+    </wsdl:operation>
+    <wsdl:operation name="insertContextData">
+      <wsdl:input message="tns:awmlDocument"/>
+      <wsdl:output message="tns:crlDocument"/>
+    </wsdl:operation>
+    <wsdl:operation name="modifyContextData">
+      <wsdl:input message="tns:awqlDocument"/>
+      <wsdl:output message="tns:crlDocument"/>
+    </wsdl:operation>
+  </wsdl:portType>
+
+  <wsdl:binding name="FederationServiceSoapBinding" type="tns:FederationServiceInterface">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="queryContextData">
+      <soap:operation soapAction="query" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="insertContextData">
+      <soap:operation soapAction="insert" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="modifyContextData">
+      <soap:operation soapAction="modify" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="FederationServiceService">
+    <wsdl:port name="FederationServiceSoapPort" binding="tns:FederationServiceSoapBinding">
+      <soap:address location="http://nemesis.informatik.uni-stuttgart.de:8080/smartfactory/seife"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
