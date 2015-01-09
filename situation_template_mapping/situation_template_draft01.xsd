@@ -49,6 +49,7 @@
 	<xs:complexType name="tContextNode">
 		<xs:sequence>
 			<xs:element name="parent" type="tParent" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="url" type="xs:string"/>
 		</xs:sequence>
 		<xs:attribute name="id" type="xs:ID" use="required"/>
 		<xs:attribute name="name" type="xs:string"/>
