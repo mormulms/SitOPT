@@ -59,9 +59,9 @@ public class ContextNodeMapper {
 
 			// map the sensor node to a debug node
 			// TODO X/Y coordinates
-			JSONObject debugNode = NodeREDUtils.generateDebugNode("600", "500", zCoordinate);
-			nodeREDModel.add(debugNode);
-			connections.add(debugNode.get("id"));
+//			JSONObject debugNode = NodeREDUtils.generateDebugNode("600", "500", zCoordinate);
+//			nodeREDModel.add(debugNode);
+//			connections.add(debugNode.get("id"));
 
 			// connect to the parents
 			for (TParent parent : sensorNode.getParent()) {

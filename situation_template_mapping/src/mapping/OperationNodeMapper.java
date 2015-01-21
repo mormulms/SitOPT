@@ -76,14 +76,17 @@ public class OperationNodeMapper {
 					} else if (parent.getParentID() instanceof TOperationNode) {
 						String parentId = ((TOperationNode) parent.getParentID()).getId();
 						connections.add(situationTemplate.getId() + "." + parentId);
-					} else if (parent.getParentID() instanceof TSituationNode) {
-						JSONObject debugNode = NodeREDUtils.generateDebugNode("600", "500", zCoordinate);
+					} else if (parent.getParentID() instanceof TSituationNode) {						
+						JSONObject debugNode = NodeREDUtils.generateDebugNode("500", "500", situationTemplate.getId());
+						debugNode.put("name", situationTemplate.getId());
+						debugNode.put("console", "true");
 						nodeREDModel.add(debugNode);
 						connections.add(debugNode.get("id"));
-					} 
+					}
 				}
 			} else {
 				JSONObject debugNode = NodeREDUtils.generateDebugNode("600", "500", zCoordinate);
+				debugNode.put("name", situationTemplate.getName());
 				nodeREDModel.add(debugNode);
 				connections.add(debugNode.get("id"));
 			}

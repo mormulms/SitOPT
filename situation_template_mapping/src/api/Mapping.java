@@ -1,6 +1,7 @@
 package api;
 
 import java.io.File;
+import java.util.Date;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
@@ -40,7 +41,8 @@ public class Mapping implements MappingInterface {
 			TSituationTemplate situationTemplate = root.getValue();
 
 			Mapper mapper = new Mapper(situationTemplate);
-			mapper.map(doOverwrite, url);
+			Date date = new Date();
+			mapper.map(doOverwrite, url, date.getTime());
 
 		} catch (JAXBException e) {
 			System.err.println("Could not parse the XML file, an error occurred.");

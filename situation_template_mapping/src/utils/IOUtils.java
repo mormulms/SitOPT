@@ -86,12 +86,13 @@ public class IOUtils {
 	@SuppressWarnings("unchecked")
 	public static void deployToNodeRED(JSONArray nodeREDModel, TSituationTemplate situationTemplate, boolean doOverwrite) {
 		try {
+						
 			JSONArray flow;
 			
 			if (doOverwrite) {
 				flow = new JSONArray();
 			} else {
-				String currentFlows = getHTML("http://localhost:1880/flows");
+				String currentFlows = getHTML("http://192.168.209.199:1880/flows");
 				JSONParser parser = new JSONParser();
 				flow = (JSONArray) parser.parse(currentFlows);
 				
@@ -141,7 +142,7 @@ public class IOUtils {
 
 			String body = flow.toJSONString();
 
-			URL url = new URL("http://localhost:1880/flows");
+			URL url = new URL("http://192.168.209.199:1880/flows");
 			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 			connection.setRequestMethod("POST");
 			connection.setDoInput(true);

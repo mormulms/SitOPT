@@ -1,6 +1,7 @@
 package mapping;
 
 import java.io.File;
+import java.sql.Timestamp;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
@@ -30,6 +31,9 @@ public class Main {
 	public static void main(String[] args) {
 		try {
 			
+			java.util.Date date= new java.util.Date();
+			long timestamp = date.getTime();
+			 
 			String url = args[0];
 			
 			// if no input is defined, we just define an exemplary situation
@@ -101,8 +105,9 @@ public class Main {
 				situationTemplate.setSituation(situation);
 				
 				Mapper mapper = new Mapper(situationTemplate);
-				mapper.map(false, url);
+				mapper.map(false, url, timestamp);
 			} else {
+				
 				// input is defined, parse the XML model
 				JAXBContext jc = JAXBContext.newInstance(TSituationTemplate.class);
 				Unmarshaller u = jc.createUnmarshaller();
@@ -110,9 +115,14 @@ public class Main {
 				JAXBElement<TSituationTemplate> root = u.unmarshal(new StreamSource(file), TSituationTemplate.class);
 				
 				TSituationTemplate situationTemplate = root.getValue();
+				// begin load test
 				
-				Mapper mapper = new Mapper(situationTemplate);
-				mapper.map(false, url);
+				for (int i = 0; i < 5; i++) {
+					situationTemplate.setId(Integer.toString(i));
+					
+					Mapper mapper = new Mapper(situationTemplate);
+					mapper.map(false, url, timestamp);
+				}
 			}
 		} catch (JAXBException e) {
 			System.err.println("Could not parse JAXB object.");

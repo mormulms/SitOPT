@@ -71,9 +71,9 @@ public class ConditionNodeMapper {
 			}
 
 			// also connect to a debug node
-			JSONObject debugNode = NodeREDUtils.generateDebugNode("600", "500", situationTemplate.getId());
-			nodeREDModel.add(debugNode);
-			connections.add(debugNode.get("id"));
+//			JSONObject debugNode = NodeREDUtils.generateDebugNode("600", "500", situationTemplate.getId());
+//			nodeREDModel.add(debugNode);
+//			connections.add(debugNode.get("id"));
 			wiresNode.add(connections);
 
 			nodeREDNode.put("wires", wiresNode);
