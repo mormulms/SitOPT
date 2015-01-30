@@ -28,7 +28,7 @@ public class Mapping implements MappingInterface {
 	 * 				 the URL of the machine 
 	 */
 	@Override
-	public void mapAndDeploy(String situationTemplatePath, boolean doOverwrite, String url) {
+	public void mapAndDeploy(String situationTemplatePath, boolean doOverwrite, String url, boolean debug) {
 		try {
 			// input is defined, parse the XML model
 			JAXBContext jc;
@@ -42,7 +42,7 @@ public class Mapping implements MappingInterface {
 
 			Mapper mapper = new Mapper(situationTemplate);
 			Date date = new Date();
-			mapper.map(doOverwrite, url, date.getTime());
+			mapper.map(doOverwrite, url, date.getTime(), debug);
 
 		} catch (JAXBException e) {
 			System.err.println("Could not parse the XML file, an error occurred.");

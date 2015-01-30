@@ -85,10 +85,11 @@ public class NodeREDUtils {
 	 * @param zCoordinate
 	 *            the sheet the node shall be used in
 	 * @param situationTemplate
+	 * @param debugNode
 	 * @return the inject node
 	 */
 	@SuppressWarnings("unchecked")
-	public static JSONObject generateInputNode(String zCoordinate, TSituationTemplate situationTemplate) {
+	public static JSONObject generateInputNode(String zCoordinate, TSituationTemplate situationTemplate, JSONObject debugNode) {
 
 		JSONObject input = new JSONObject();
 		input.put("id", generateNodeREDId());
@@ -97,7 +98,7 @@ public class NodeREDUtils {
 		input.put("topic", "");
 		input.put("payload", "");
 		input.put("payloadType", "date");
-		input.put("repeat", "1");
+		input.put("repeat", "5");
 		input.put("crontab", "");
 		input.put("once", false);
 		// TODO: this is hard coded
@@ -114,7 +115,9 @@ public class NodeREDUtils {
 			String sensorNodeId = sensorNode.getId();
 			connections.add(situationTemplate.getId() + "." + sensorNodeId);
 		}
-
+		
+		connections.add(debugNode.get("id"));
+		
 		wires.add(connections);
 		input.put("wires", wires);
 

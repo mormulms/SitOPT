@@ -42,15 +42,21 @@ public class Mapper {
 	 * 
 	 * @param url
 	 * 				 the URL of the machine 
+	 * @param debug 
 	 */
 	@SuppressWarnings("unchecked")
-	public void map(boolean doOverwrite, String url, long timestamp) {
+	public void map(boolean doOverwrite, String url, long timestamp, boolean debug) {
 		try {
 
 			JSONArray nodeREDModel = new JSONArray();
-
+			
+			JSONObject debugNode = NodeREDUtils.generateDebugNode("100", "100", situationTemplate.getId());
+			debugNode.put("name", "begin" + situationTemplate.getId());
+			
+			nodeREDModel.add(debugNode);
+			
 			// each NodeRED flow needs an inject input node, which is generated and added at this point
-			JSONObject input = NodeREDUtils.generateInputNode(situationTemplate.getId(), situationTemplate);
+			JSONObject input = NodeREDUtils.generateInputNode(situationTemplate.getId(), situationTemplate, debugNode);
 			nodeREDModel.add(input);
 
 			// first, map all the operation nodes, then map the other nodes
@@ -58,10 +64,10 @@ public class Mapper {
 			lnm.mapOperationNodes(situationTemplate, nodeREDModel);
 			
 			ContextNodeMapper snm = new ContextNodeMapper();
-			nodeREDModel = snm.mapContextNodes(situationTemplate, nodeREDModel, url);
+			nodeREDModel = snm.mapContextNodes(situationTemplate, nodeREDModel, url, debug);
 			
 			ConditionNodeMapper nm = new ConditionNodeMapper();
-			JSONArray finalModel = nm.mapConditionNodes(situationTemplate, nodeREDModel);
+			JSONArray finalModel = nm.mapConditionNodes(situationTemplate, nodeREDModel, debug);
 						
 			// write the JSON file (just for debug reasons), remember to change the path when using this method
 			//IOUtils.writeJSONFile(finalModel, situationTemplate);

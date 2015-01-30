@@ -15,6 +15,6 @@ public interface MappingInterface {
 	 * @param url
 	 * 				 the URL of the machine 
 	 */
-	public void mapAndDeploy(String situationTemplatePath, boolean doOverwrite, String url);
+	public void mapAndDeploy(String situationTemplatePath, boolean doOverwrite, String url, boolean debug);
 	
 }

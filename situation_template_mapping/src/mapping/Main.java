@@ -16,6 +16,7 @@ import situationtemplate.model.TOperationNode;
 import situationtemplate.model.TParent;
 import situationtemplate.model.TSituation;
 import situationtemplate.model.TSituationTemplate;
+import utils.IOUtils;
 import utils.NodeREDUtils;
 
 public class Main {
@@ -26,11 +27,15 @@ public class Main {
 	 * TODO delete and create interface
 	 * 
 	 * @param args
-	 *            a valid situation template defined in XML
+	 *            path to a valid situation template defined in XML
 	 */
 	public static void main(String[] args) {
 		try {
 			
+			// connects each node to a corresponding debug node
+			// deactivate this flag for measurements
+			boolean debug = true;
+						
 			java.util.Date date= new java.util.Date();
 			long timestamp = date.getTime();
 			 
@@ -105,8 +110,10 @@ public class Main {
 				situationTemplate.setSituation(situation);
 				
 				Mapper mapper = new Mapper(situationTemplate);
-				mapper.map(false, url, timestamp);
+				mapper.map(false, url, timestamp, debug);
 			} else {
+				
+				IOUtils.clearNodeRED();
 				
 				// input is defined, parse the XML model
 				JAXBContext jc = JAXBContext.newInstance(TSituationTemplate.class);
@@ -117,12 +124,12 @@ public class Main {
 				TSituationTemplate situationTemplate = root.getValue();
 				// begin load test
 				
-				for (int i = 0; i < 5; i++) {
-					situationTemplate.setId(Integer.toString(i));
+//				for (int i = 0; i < 10; i++) {
+					situationTemplate.setId(situationTemplate.getId());
 					
 					Mapper mapper = new Mapper(situationTemplate);
-					mapper.map(false, url, timestamp);
-				}
+					mapper.map(false, url, timestamp, debug);
+//				}
 			}
 		} catch (JAXBException e) {
 			System.err.println("Could not parse JAXB object.");

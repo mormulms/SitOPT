@@ -34,7 +34,7 @@ public class ContextNodeMapper {
 	 * @return the mapped JSON model
 	 */
 	@SuppressWarnings("unchecked")
-	public JSONArray mapContextNodes(TSituationTemplate situationTemplate, JSONArray nodeREDModel, String url) {
+	public JSONArray mapContextNodes(TSituationTemplate situationTemplate, JSONArray nodeREDModel, String url, boolean debug) {
 
 		int xCoordinate = 300;
 		int yCoordinate = 50;
@@ -57,12 +57,15 @@ public class ContextNodeMapper {
 			JSONArray wiresNode = new JSONArray();
 			JSONArray connections = new JSONArray();
 
-			// map the sensor node to a debug node
-			// TODO X/Y coordinates
-//			JSONObject debugNode = NodeREDUtils.generateDebugNode("600", "500", zCoordinate);
-//			nodeREDModel.add(debugNode);
-//			connections.add(debugNode.get("id"));
-
+			if (debug) {
+				// map the sensor node to a debug node
+				// TODO X/Y coordinates
+				JSONObject debugNode = NodeREDUtils.generateDebugNode("600", "500", zCoordinate);
+				debugNode.put("name", sensorNode.getName());
+				debugNode.put("console", "true");
+				nodeREDModel.add(debugNode);
+				connections.add(debugNode.get("id"));
+			}
 			// connect to the parents
 			for (TParent parent : sensorNode.getParent()) {
 				if (parent.getParentID() instanceof TConditionNode) {

@@ -33,7 +33,7 @@ public class ConditionNodeMapper {
 	 *             this exception occurs if the JSON can't be parsed
 	 */
 	@SuppressWarnings("unchecked")
-	public JSONArray mapConditionNodes(TSituationTemplate situationTemplate, JSONArray nodeREDModel) throws ParseException {
+	public JSONArray mapConditionNodes(TSituationTemplate situationTemplate, JSONArray nodeREDModel, boolean debug) throws ParseException {
 
 		String xCoordinate = "600";
 		int yCoordinate = 50;
@@ -70,10 +70,16 @@ public class ConditionNodeMapper {
 				}
 			}
 
-			// also connect to a debug node
-//			JSONObject debugNode = NodeREDUtils.generateDebugNode("600", "500", situationTemplate.getId());
-//			nodeREDModel.add(debugNode);
-//			connections.add(debugNode.get("id"));
+			if (debug) {
+				// also connect to a debug node
+				JSONObject debugNode = NodeREDUtils.generateDebugNode("600", "500", situationTemplate.getId());
+				debugNode.put("name", node.getName());
+				debugNode.put("console", "true");
+				
+				nodeREDModel.add(debugNode);
+				connections.add(debugNode.get("id"));
+			}
+			
 			wiresNode.add(connections);
 
 			nodeREDNode.put("wires", wiresNode);

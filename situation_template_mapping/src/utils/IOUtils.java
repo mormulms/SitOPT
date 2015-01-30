@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -72,7 +74,46 @@ public class IOUtils {
 			e.printStackTrace();
 		}
 	}
+	
+	/**
+	 * Clears all flows currently deployed in Node-RED
+	 */
+	public static void clearNodeRED() {
+		try {
+			
+		JSONArray flow = new JSONArray();
+		
+		String body = flow.toJSONString();
 
+		URL url;
+		
+		url = new URL("http://192.168.209.199:1880/flows");
+
+		HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+		connection.setRequestMethod("POST");
+		connection.setDoInput(true);
+		connection.setDoOutput(true);
+		connection.setUseCaches(false);
+		connection.setRequestProperty("Content-Type", "application/json");
+		connection.setRequestProperty("charset", "UTF-8");
+
+		OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream());
+
+		writer.write(body);
+
+		writer.flush();
+
+		BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+
+		writer.close();
+		reader.close();
+		
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	/**
 	 * This method deploys the model to NodeRED
 	 * 
@@ -86,7 +127,7 @@ public class IOUtils {
 	@SuppressWarnings("unchecked")
 	public static void deployToNodeRED(JSONArray nodeREDModel, TSituationTemplate situationTemplate, boolean doOverwrite) {
 		try {
-						
+					
 			JSONArray flow;
 			
 			if (doOverwrite) {
