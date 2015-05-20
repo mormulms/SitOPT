@@ -1,6 +1,7 @@
 package api;
 
 import java.io.File;
+import java.io.StringReader;
 import java.util.Date;
 
 import javax.xml.bind.JAXBContext;
@@ -16,6 +17,39 @@ import situationtemplate.model.TSituationTemplate;
  * Class implementing the interface of the mapping
  */
 public class Mapping implements MappingInterface {
+
+	/**
+	 * Invokes the mapping of the situation template and the deployment to Node-RED
+	 * 
+	 * @param situationTemplateAsXML
+	 * 				 the situation template as XML string
+	 * @param doOverwrite
+	 * 				 determines whether the currently deployed flows shall be overwritten
+	 * @param url
+	 * 				 the URL of the machine 
+	 */
+	@Override
+	public void mapAndDeployXMLString(String situationTemplateAsXML, boolean doOverwrite, String url, boolean debug) {
+		
+		try {
+			// input is defined, parse the XML model
+			JAXBContext jc;
+			jc = JAXBContext.newInstance(TSituationTemplate.class);
+	
+			Unmarshaller u;
+			u = jc.createUnmarshaller();
+	
+			TSituationTemplate situationTemplate = (TSituationTemplate) u.unmarshal(new StringReader(situationTemplateAsXML));
+		
+			Mapper mapper = new Mapper(situationTemplate);
+			Date date = new Date();
+			mapper.map(doOverwrite, url, date.getTime(), debug);
+		} catch (JAXBException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
 	
 	/**
 	 * Invokes the mapping of the situation template and the deployment to Node-RED

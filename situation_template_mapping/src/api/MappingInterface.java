@@ -17,4 +17,6 @@ public interface MappingInterface {
 	 */
 	public void mapAndDeploy(String situationTemplatePath, boolean doOverwrite, String url, boolean debug);
 	
+	public void mapAndDeployXMLString(String situationTemplateAsXML, boolean doOverwrite, String url, boolean debug);
+	
 }

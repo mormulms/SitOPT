@@ -5,8 +5,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -87,7 +85,7 @@ public class IOUtils {
 
 		URL url;
 		
-		url = new URL("http://192.168.209.199:1880/flows");
+		url = new URL("http://localhost:1880/flows");
 
 		HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 		connection.setRequestMethod("POST");
@@ -133,7 +131,8 @@ public class IOUtils {
 			if (doOverwrite) {
 				flow = new JSONArray();
 			} else {
-				String currentFlows = getHTML("http://192.168.209.199:1880/flows");
+				// TODO why is this hard coded?
+				String currentFlows = getHTML("http://localhost:1880/flows");
 				JSONParser parser = new JSONParser();
 				flow = (JSONArray) parser.parse(currentFlows);
 				
@@ -169,9 +168,9 @@ public class IOUtils {
 			}
 			
 			// pretty print json
-			Gson gson = new GsonBuilder().setPrettyPrinting().create();
-			String json = gson.toJson(flow);
-			System.out.println(json);
+//			Gson gson = new GsonBuilder().setPrettyPrinting().create();
+//			String json = gson.toJson(flow);
+//			System.out.println(json);
 
 			// we use this POST call to deploy the JSON
 			// $.ajax({
@@ -183,7 +182,7 @@ public class IOUtils {
 
 			String body = flow.toJSONString();
 
-			URL url = new URL("http://192.168.209.199:1880/flows");
+			URL url = new URL("http://localhost:1880/flows");
 			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 			connection.setRequestMethod("POST");
 			connection.setDoInput(true);
