@@ -16,7 +16,7 @@ public class Nodes {
 	 * @return the node as JSON string
 	 */
 	public static String getGreaterThanNode(String comparisonValue, String objectID, String situationTemplateID, String sensorId, String sensorquality, String quality) {
-		return "var curr = msg.payload;\n msg.situation = [{'thing':'"+ objectID +"', 'timestamp':'1', 'situationtemplate':'"+ situationTemplateID + "'},{'sensor':'cpu', 'sensorquality':'" +sensorquality+ "', 'value':curr, 'timestamp':1, 'quality':1}]; \n if (curr > "	+ comparisonValue + ") {\n\tmsg.payload = true;\n} else {\n\tmsg.payload = false;\n}\n\nreturn msg;";
+		return "var curr = msg.payload;\n msg.situation = {'sensor':'cpu', 'sensorquality':'" +sensorquality+ "', 'value':curr, 'timestamp':1, 'quality':1}; \n if (curr > "	+ comparisonValue + ") {\n\tmsg.payload = true;\n} else {\n\tmsg.payload = false;\n}\n\nreturn msg;";
 	}
 
 	/**
@@ -28,7 +28,7 @@ public class Nodes {
 	 * @return the node as JSON string
 	 */
 	public static String getLowerThanNode(String comparisonValue, String objectID, String situationTemplateID, String sensorId, String sensorquality, String quality) {
-		return "var curr = msg.payload;\n msg.situation = [{'thing':'"+ objectID +"', 'timestamp':'1', 'situationtemplate':'"+ situationTemplateID + "'},{'sensor':'cpu', 'sensorquality':'" +sensorquality+ "', 'value':curr, 'timestamp':1, 'quality':1}]; \n if (curr < "	+ comparisonValue	+ ") {\n\tmsg.payload = true;\n} else {\n\tmsg.payload = false;\n}\n\nreturn msg;";
+		return "var curr = msg.payload;\n msg.situation = {'sensor':'cpu', 'sensorquality':'" +sensorquality+ "', 'value':curr, 'timestamp':1, 'quality':1}; \n if (curr < "	+ comparisonValue	+ ") {\n\tmsg.payload = true;\n} else {\n\tmsg.payload = false;\n}\n\nreturn msg;";
 	}
 
 	/**
@@ -40,7 +40,7 @@ public class Nodes {
 	 * @return the node as JSON string
 	 */
 	public static String getEqualsNode(String comparisonValue, String objectID, String situationTemplateID, String sensorId, String sensorquality, String quality) {
-		return "var curr = msg.payload;\n msg.situation = [{'thing':'"+ objectID +"', 'timestamp':'1', 'situationtemplate':'"+ situationTemplateID + "'},{'sensor':'cpu', 'sensorquality':'" +sensorquality+ "', 'value':curr, 'timestamp':1, 'quality':1}]; \n if (curr == " + comparisonValue + ") {\n\tmsg.payload = true;\n} else {\n\tmsg.payload = false;\n}\n\nreturn msg;";
+		return "var curr = msg.payload;\n msg.situation = {'sensor':'cpu', 'sensorquality':'" +sensorquality+ "', 'value':curr, 'timestamp':1, 'quality':1}; \n if (curr == " + comparisonValue + ") {\n\tmsg.payload = true;\n} else {\n\tmsg.payload = false;\n}\n\nreturn msg;";
 	}
 
 	/**
@@ -52,7 +52,7 @@ public class Nodes {
 	 * @return the node in JSON
 	 */
 	public static String getNotEquals(String conditionValues, String objectID, String situationTemplateID, String sensorId, String sensorquality, String quality) {
-		return "var curr=1;\n msg.situation = [{'thing':'"+ objectID +"', 'timestamp':'1', 'situationtemplate':'"+ situationTemplateID + "'},{'sensor':'cpu', 'sensorquality':'" +sensorquality+ "', 'value':curr, 'timestamp':1, 'quality':1}]; \n if (msg.statusCode != " + conditionValues + ") {\n  msg.payload = true;\n return msg;  \n} else {\n  msg.payload = false;\n return msg;\n}\n\nreturn null;";
+		return "var curr=1;\n msg.situation = {'sensor':'cpu', 'sensorquality':'" +sensorquality+ "', 'value':curr, 'timestamp':1, 'quality':1}; \n if (msg.statusCode != " + conditionValues + ") {\n  msg.payload = true;\n return msg;  \n} else {\n  msg.payload = false;\n return msg;\n}\n\nreturn null;";
 	}
 	
 	/**
@@ -68,7 +68,7 @@ public class Nodes {
 		String condValue1 = conditionValues.get(0);
 		String condValue2 = conditionValues.get(1);
 		
-		return "var curr=1;\n msg.situation = [{'thing':'"+ objectID +"', 'timestamp':'1', 'situationtemplate':'"+ situationTemplateID + "'},{'sensor':'cpu', 'sensorquality':'" +sensorquality+ "', 'value':curr, 'timestamp':1, 'quality':1}]; \n if (" + condValue1 + " < msg.statusCode < " + condValue2 + ") {\n  msg.payload = true;\n return msg;  \n} else {\n  msg.payload = false;\n return msg;\n}\n\nreturn null;";
+		return "var curr=1;\n msg.situation = {'sensor':'cpu', 'sensorquality':'" +sensorquality+ "', 'value':curr, 'timestamp':1, 'quality':1}; \n if (" + condValue1 + " < msg.statusCode < " + condValue2 + ") {\n  msg.payload = true;\n return msg;  \n} else {\n  msg.payload = false;\n return msg;\n}\n\nreturn null;";
 	}
 	
 	/**
@@ -76,8 +76,8 @@ public class Nodes {
 	 * 
 	 * @return the AND Node in JavaScript
 	 */
-	public static String getANDNode(String numberOfInputs) {
-		return "context.values = context.values || new Array();\ncontext.values.push(msg.payload);\n\nvar inputs = " + numberOfInputs + ";\nif (context.values.length == inputs) {\n  var returnValue = true;\n  for (var i = 0; i < context.values.length; i++) {\n\tif (!(context.values[i])) {\n\t  returnValue = false;\n\t}\n  }\n  msg.payload = returnValue; \n  context.values = null;\n  \n  return msg;\n} else {\n  return null;\n}\n\n";
+	public static String getANDNode(String numberOfInputs, String objectID, String situationTemplateID) {
+		return "context.values = context.values || new Array();\ncontext.values.push(msg.payload);\n\ncontext.sensorValues = context.sensorValues || new Array();\ncontext.sensorValues.push(msg.situation);\n\nvar inputs = " + numberOfInputs + ";\nif (context.values.length == inputs) {\n msg.situation = \"[{'thing':'"+ objectID +"', 'timestamp':'1', 'situationtemplate':'"+ situationTemplateID + "'}\";\n var returnValue = true;\n  for (var i = 0; i < context.values.length; i++) {\nmsg.situation += JSON.stringify(context.sensorValues[i]);\n\tif (!(context.values[i])) {\n\t  returnValue = false;\n\t}\n  }\n msg.situation += ']';\n msg.payload = returnValue; \n  context.values = null;\n context.sensorValues = null;\n\n  return msg;\n} else {\n  return null;\n}\n\n";
 	}
 	
 	/**
@@ -85,7 +85,7 @@ public class Nodes {
 	 * 
 	 * @return the OR Node in JavaScript
 	 */
-	public static Object getORNode(String numberOfInputs) {
-		return "context.values = context.values || new Array();\ncontext.values.push(msg.payload);\n\nvar inputs = " + numberOfInputs + ";\nif (context.values.length == inputs) {\n  var returnValue = false;\n  for (var i = 0; i < inputs; i++) {\n\tif (context.values[i]) {\n\t  returnValue = true;\n\t}\n  }\n\n  msg.payload = returnValue;\n  context.values = null;\n  \n  return msg;\n} else {\n  return null;\n}\n\n";
+	public static Object getORNode(String numberOfInputs, String objectID, String situationTemplateID) {
+		return "context.values = context.values || new Array();\ncontext.values.push(msg.payload);\n\ncontext.sensorValues = context.sensorValues || new Array();\ncontext.sensorValues.push(msg.situation);\n\nvar inputs = " + numberOfInputs + ";\nif (context.values.length == inputs) {\n msg.situation = \"[{'thing':'"+ objectID +"', 'timestamp':'1', 'situationtemplate':'"+ situationTemplateID + "'}\";\n var returnValue = false;\n  for (var i = 0; i < inputs; i++){\nmsg.situation += JSON.stringify(context.sensorValues[i]);\n\tif (context.values[i]) {\n\t  returnValue = true;\n\t}\n  }\n\n msg.situation += ']';\n  msg.payload = returnValue;\n  context.values = null;\ncontext.sensorValues = null\n  \n  return msg;\n} else {\n  return null;\n}\n\n";
 	}
 }

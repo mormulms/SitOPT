@@ -59,9 +59,9 @@ public class OperationNodeMapper {
 			JSONObject nodeREDNode = NodeREDUtils.createNodeREDNode(situationTemplate.getId() + "." + logicNode.getId(), logicNode.getName(), "function", Integer.toString(xCoordinate), Integer.toString(yCoordinate), zCoordinate);
 
 			if (logicNode.getType().equals("and")) {
-				nodeREDNode.put("func", Nodes.getANDNode(Integer.toString(children)));
+				nodeREDNode.put("func", Nodes.getANDNode(Integer.toString(children), "1", situationTemplate.getId()));
 			} else {
-				nodeREDNode.put("func", Nodes.getORNode(Integer.toString(children)));
+				nodeREDNode.put("func", Nodes.getORNode(Integer.toString(children), "1", situationTemplate.getId()));
 			}
 			nodeREDNode.put("outputs", "1");
 			
@@ -87,7 +87,6 @@ public class OperationNodeMapper {
 						
 						JSONArray debugConn = new JSONArray();
 						JSONArray wiresConn = new JSONArray();
-
 						
 						JSONObject debugNode = NodeREDUtils.generateDebugNode("600", "500", zCoordinate);
 						debugNode.put("name", situationTemplate.getName());
