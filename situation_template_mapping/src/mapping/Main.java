@@ -1,7 +1,6 @@
 package mapping;
 
 import java.io.File;
-import java.sql.Timestamp;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
@@ -23,21 +22,20 @@ public class Main {
 
 	/**
 	 * main method for debug reasons
-	 * 
-	 * TODO delete and create interface
-	 * 
+	 *  
 	 * @param args
-	 *            path to a valid situation template defined in XML
+	 * 			  0 URL of the machine to be monitored
+	 *            1 path to a valid situation template defined in XML
+	 *            2 debug flag
 	 */
 	public static void main(String[] args) {
 		try {
 			
 			// connects each node to a corresponding debug node
 			// deactivate this flag for measurements
-			boolean debug = true;
-						
+			boolean debug = Boolean.getBoolean(args[2]);
+			
 			java.util.Date date= new java.util.Date();
-			long timestamp = date.getTime();
 			 
 			String url = args[0];
 			
@@ -108,7 +106,9 @@ public class Main {
 				situation.getConditionNode().add(cpuGreatherThanNode);
 
 				situationTemplate.setSituation(situation);
-				
+			
+				long timestamp = date.getTime();
+
 				Mapper mapper = new Mapper(situationTemplate);
 				mapper.map(false, url, timestamp, debug);
 			} else {
@@ -126,6 +126,8 @@ public class Main {
 				
 //				for (int i = 0; i < 10; i++) {
 					situationTemplate.setId(situationTemplate.getId());
+					
+					long timestamp = date.getTime();
 					
 					Mapper mapper = new Mapper(situationTemplate);
 					mapper.map(false, url, timestamp, debug);

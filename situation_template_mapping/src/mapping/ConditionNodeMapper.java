@@ -10,6 +10,7 @@ import constants.Nodes;
 import situationtemplate.model.TConditionNode;
 import situationtemplate.model.TOperationNode;
 import situationtemplate.model.TParent;
+import situationtemplate.model.TSituation;
 import situationtemplate.model.TSituationTemplate;
 import utils.NodeREDUtils;
 
@@ -44,15 +45,15 @@ public class ConditionNodeMapper {
 			JSONObject nodeREDNode = NodeREDUtils.createNodeREDNode(situationTemplate.getId() + "." + node.getId(), node.getName(), "function", xCoordinate, Integer.toString(yCoordinate), situationTemplate.getId());
 			
 			if (node.getOpType().equals("greaterThan")) {
-				nodeREDNode.put("func", Nodes.getGreaterThanNode(conditionValues.get(0)));
+				nodeREDNode.put("func", Nodes.getGreaterThanNode(conditionValues.get(0), "1", situationTemplate.getId(), "sensor1", "0", "0"));
 			} else if (node.getOpType().equals("lowerThan")) {
-				nodeREDNode.put("func", Nodes.getLowerThanNode(conditionValues.get(0)));
+				nodeREDNode.put("func", Nodes.getLowerThanNode(conditionValues.get(0), "1", situationTemplate.getId(), "sensor1", "0", "0"));
 			} else if (node.getOpType().equals("equals")) {
-				nodeREDNode.put("func", Nodes.getEqualsNode(conditionValues.get(0)));
+				nodeREDNode.put("func", Nodes.getEqualsNode(conditionValues.get(0), "1", situationTemplate.getId(), "sensor1", "0", "0"));
 			} else if (node.getOpType().equals("notEquals")) {
-				nodeREDNode.put("func", Nodes.getNotEquals(conditionValues.get(0)));
+				nodeREDNode.put("func", Nodes.getNotEquals(conditionValues.get(0), "1", situationTemplate.getId(), "sensor1", "0", "0"));
 			} else if (node.getOpType().equals("between")) {
-				nodeREDNode.put("func", Nodes.getBetween(conditionValues));
+				nodeREDNode.put("func", Nodes.getBetween(conditionValues, "1", situationTemplate.getId(), "sensor1", "0", "0"));
 			}
 		
 			nodeREDNode.put("outputs", "1");

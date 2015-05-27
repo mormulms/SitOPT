@@ -7,6 +7,7 @@ import constants.Nodes;
 import situationtemplate.model.TConditionNode;
 import situationtemplate.model.TOperationNode;
 import situationtemplate.model.TParent;
+import situationtemplate.model.TSituation;
 import situationtemplate.model.TSituationNode;
 import situationtemplate.model.TSituationTemplate;
 import utils.NodeREDUtils;
@@ -76,12 +77,25 @@ public class OperationNodeMapper {
 					} else if (parent.getParentID() instanceof TOperationNode) {
 						String parentId = ((TOperationNode) parent.getParentID()).getId();
 						connections.add(situationTemplate.getId() + "." + parentId);
-					} else if (parent.getParentID() instanceof TSituationNode) {						
-						JSONObject debugNode = NodeREDUtils.generateDebugNode("500", "500", situationTemplate.getId());
-						debugNode.put("name", situationTemplate.getId());
-						debugNode.put("console", "true");
+					} else if (parent.getParentID() instanceof TSituationNode) {
+						// create the corresponding NodeRED JSON node
+						JSONObject httpNode = NodeREDUtils.createNodeREDNode("0", "situation", "http request", Integer.toString(200), Integer.toString(200), zCoordinate);
+						httpNode.put("method", "POST");
+						// TODO change URL
+						httpNode.put("url", "localhost:2222/situations");
+						connections.add("0");
+						
+						JSONArray debugConn = new JSONArray();
+						JSONArray wiresConn = new JSONArray();
+
+						
+						JSONObject debugNode = NodeREDUtils.generateDebugNode("600", "500", zCoordinate);
+						debugNode.put("name", situationTemplate.getName());
 						nodeREDModel.add(debugNode);
-						connections.add(debugNode.get("id"));
+						debugConn.add(debugNode.get("id"));
+						wiresConn.add(debugConn);
+						httpNode.put("wires", wiresConn);
+						nodeREDModel.add(httpNode);
 					}
 				}
 			} else {

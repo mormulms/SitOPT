@@ -1,17 +1,16 @@
 package mapping;
 
-import java.sql.Timestamp;
-
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 
-import situationtemplate.model.TSituationNode;
+import situationtemplate.model.TConditionNode;
+import situationtemplate.model.TParent;
+import situationtemplate.model.TSituation;
 import situationtemplate.model.TSituationTemplate;
 import utils.IOUtils;
 import utils.NodeREDUtils;
 
-import java.sql.Timestamp;
 import java.util.Date;
 
 /**
@@ -71,13 +70,16 @@ public class Mapper {
 						
 			// write the JSON file (just for debug reasons), remember to change the path when using this method
 			//IOUtils.writeJSONFile(finalModel, situationTemplate);
-			
+						
 			java.util.Date beginDate= new java.util.Date();
-//			System.out.println("Mapping Time: " + (date.getTime() - timestamp));	
+//			System.out.println("Mapping Time: " + (beginDate.getTime() - timestamp));	
 			
-			final long begin = beginDate.getTime();
-			// deploy the flow to NodeRED
-			IOUtils.deployToNodeRED(finalModel, situationTemplate, doOverwrite);
+			long begin = beginDate.getTime();
+//			 deploy the flow to NodeRED
+			
+//			for (int i = 0; i < 10; i++) {
+				IOUtils.deployToNodeRED(finalModel, situationTemplate, doOverwrite);
+//			}
 			
 			Date endDate = new Date();
 			System.out.println("Deploy Time: " + (begin-endDate.getTime()));
