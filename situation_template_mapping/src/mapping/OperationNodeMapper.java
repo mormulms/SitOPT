@@ -90,8 +90,8 @@ public class OperationNodeMapper {
 						switchNode.put("checkall", "true");
 						switchNode.put("outputs", 1);
 						
-						JSONArray debugConn = new JSONArray();
-						JSONArray wiresConn = new JSONArray();
+						JSONArray httpConn = new JSONArray();
+						JSONArray httpWires = new JSONArray();
 						
 						JSONObject debugNode = NodeREDUtils.generateDebugNode("600", "500", zCoordinate);
 						debugNode.put("name", situationTemplate.getName());
@@ -101,12 +101,12 @@ public class OperationNodeMapper {
 						JSONObject httpNode = NodeREDUtils.createNodeREDNode(NodeREDUtils.generateNodeREDId(), "situation", "http request", Integer.toString(200), Integer.toString(200), zCoordinate);
 						httpNode.put("method", "POST");
 						// TODO change URL
-						httpNode.put("url", "localhost:2222/situations");
+						httpNode.put("url", "192.168.209.200:2222/situations");
 						connections.add(switchNode.get("id"));
 						
-						debugConn.add(httpNode.get("id"));
-						wiresConn.add(debugConn);
-						switchNode.put("wires", wiresConn);
+						httpConn.add(httpNode.get("id"));
+						httpWires.add(httpConn);
+						switchNode.put("wires", httpWires);
 						nodeREDModel.add(switchNode);
 						
 						JSONArray switchConn = new JSONArray();
