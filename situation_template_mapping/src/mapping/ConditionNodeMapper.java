@@ -8,6 +8,7 @@ import org.json.simple.parser.ParseException;
 
 import constants.Nodes;
 import situationtemplate.model.TConditionNode;
+import situationtemplate.model.TContextNode;
 import situationtemplate.model.TOperationNode;
 import situationtemplate.model.TParent;
 import situationtemplate.model.TSituation;
@@ -44,16 +45,26 @@ public class ConditionNodeMapper {
 			List<String> conditionValues = node.getCondValue().getValue();
 			JSONObject nodeREDNode = NodeREDUtils.createNodeREDNode(situationTemplate.getId() + "." + node.getId(), node.getName(), "function", xCoordinate, Integer.toString(yCoordinate), situationTemplate.getId());
 			
+			String sensorId = "";
+			
+			for (TContextNode cn: situationTemplate.getSituation().getContextNode()) {
+				for (TParent p: node.getParent()) {
+					if (p.getParentID().equals(cn)) {
+						sensorId = cn.getId();
+					}
+				}
+			}
+			
 			if (node.getOpType().equals("greaterThan")) {
-				nodeREDNode.put("func", Nodes.getGreaterThanNode(conditionValues.get(0), "1", situationTemplate.getId(), "sensor1", "0", "0"));
+				nodeREDNode.put("func", Nodes.getGreaterThanNode(conditionValues.get(0), "1", situationTemplate.getId(), sensorId, "0", "0"));
 			} else if (node.getOpType().equals("lowerThan")) {
-				nodeREDNode.put("func", Nodes.getLowerThanNode(conditionValues.get(0), "1", situationTemplate.getId(), "sensor1", "0", "0"));
+				nodeREDNode.put("func", Nodes.getLowerThanNode(conditionValues.get(0), "1", situationTemplate.getId(), sensorId, "0", "0"));
 			} else if (node.getOpType().equals("equals")) {
-				nodeREDNode.put("func", Nodes.getEqualsNode(conditionValues.get(0), "1", situationTemplate.getId(), "sensor1", "0", "0"));
+				nodeREDNode.put("func", Nodes.getEqualsNode(conditionValues.get(0), "1", situationTemplate.getId(), sensorId, "0", "0"));
 			} else if (node.getOpType().equals("notEquals")) {
-				nodeREDNode.put("func", Nodes.getNotEquals(conditionValues.get(0), "1", situationTemplate.getId(), "sensor1", "0", "0"));
+				nodeREDNode.put("func", Nodes.getNotEquals(conditionValues.get(0), "1", situationTemplate.getId(), sensorId, "0", "0"));
 			} else if (node.getOpType().equals("between")) {
-				nodeREDNode.put("func", Nodes.getBetween(conditionValues, "1", situationTemplate.getId(), "sensor1", "0", "0"));
+				nodeREDNode.put("func", Nodes.getBetween(conditionValues, "1", situationTemplate.getId(), sensorId, "0", "0"));
 			}
 		
 			nodeREDNode.put("outputs", "1");

@@ -78,12 +78,17 @@ public class OperationNodeMapper {
 						String parentId = ((TOperationNode) parent.getParentID()).getId();
 						connections.add(situationTemplate.getId() + "." + parentId);
 					} else if (parent.getParentID() instanceof TSituationNode) {
-						// create the corresponding NodeRED JSON node
-						JSONObject httpNode = NodeREDUtils.createNodeREDNode("0", "situation", "http request", Integer.toString(200), Integer.toString(200), zCoordinate);
-						httpNode.put("method", "POST");
-						// TODO change URL
-						httpNode.put("url", "localhost:2222/situations");
-						connections.add("0");
+						
+						JSONObject switchNode = NodeREDUtils.createNodeREDNode(NodeREDUtils.generateNodeREDId(), "switch", "switch", Integer.toString(500), Integer.toString(500), zCoordinate);
+						switchNode.put("property", "payload");
+						JSONArray rules = new JSONArray();
+						JSONObject operators = new JSONObject();
+						operators.put("t", "eq");
+						operators.put("v", "true");
+						rules.add(operators);
+						switchNode.put("rules", rules);
+						switchNode.put("checkall", "true");
+						switchNode.put("outputs", 1);
 						
 						JSONArray debugConn = new JSONArray();
 						JSONArray wiresConn = new JSONArray();
@@ -91,9 +96,24 @@ public class OperationNodeMapper {
 						JSONObject debugNode = NodeREDUtils.generateDebugNode("600", "500", zCoordinate);
 						debugNode.put("name", situationTemplate.getName());
 						nodeREDModel.add(debugNode);
-						debugConn.add(debugNode.get("id"));
+
+						// create the corresponding NodeRED JSON node
+						JSONObject httpNode = NodeREDUtils.createNodeREDNode(NodeREDUtils.generateNodeREDId(), "situation", "http request", Integer.toString(200), Integer.toString(200), zCoordinate);
+						httpNode.put("method", "POST");
+						// TODO change URL
+						httpNode.put("url", "localhost:2222/situations");
+						connections.add(switchNode.get("id"));
+						
+						debugConn.add(httpNode.get("id"));
 						wiresConn.add(debugConn);
-						httpNode.put("wires", wiresConn);
+						switchNode.put("wires", wiresConn);
+						nodeREDModel.add(switchNode);
+						
+						JSONArray switchConn = new JSONArray();
+						JSONArray switchWires = new JSONArray();
+						switchConn.add(debugNode.get("id"));
+						switchWires.add(switchConn);
+						httpNode.put("wires", switchWires);
 						nodeREDModel.add(httpNode);
 					}
 				}
