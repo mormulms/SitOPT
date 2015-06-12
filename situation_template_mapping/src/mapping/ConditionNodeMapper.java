@@ -48,8 +48,8 @@ public class ConditionNodeMapper {
 			String sensorId = "";
 			
 			for (TContextNode cn: situationTemplate.getSituation().getContextNode()) {
-				for (TParent p: node.getParent()) {
-					if (p.getParentID().equals(cn)) {
+				for (TParent p: cn.getParent()) {
+					if (p.getParentID().equals(node)) {
 						sensorId = cn.getId();
 					}
 				}

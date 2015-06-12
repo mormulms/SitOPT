@@ -90,8 +90,8 @@ public class OperationNodeMapper {
 						switchNode.put("checkall", "true");
 						switchNode.put("outputs", 1);
 						
-						JSONArray httpConn = new JSONArray();
-						JSONArray httpWires = new JSONArray();
+						JSONArray switchConn = new JSONArray();
+						JSONArray switchWires = new JSONArray();
 						
 						JSONObject debugNode = NodeREDUtils.generateDebugNode("600", "500", zCoordinate);
 						debugNode.put("name", situationTemplate.getName());
@@ -104,17 +104,29 @@ public class OperationNodeMapper {
 						httpNode.put("url", "192.168.209.200:2222/situations");
 						connections.add(switchNode.get("id"));
 						
-						httpConn.add(httpNode.get("id"));
-						httpWires.add(httpConn);
-						switchNode.put("wires", httpWires);
+						JSONObject prepareRequestNode = NodeREDUtils.createNodeREDNode("prepareRequest", "Prepare Request", "function", Integer.toString(200), Integer.toString(200), zCoordinate);
+						prepareRequestNode.put("func", "msg.payload = msg.situation; return msg;");
+						prepareRequestNode.put("outputs", 1);
+						
+						JSONArray prepareRequestConn = new JSONArray();
+						JSONArray prepareRequestWires = new JSONArray();
+						prepareRequestConn.add(httpNode.get("id"));			
+						prepareRequestWires.add(prepareRequestConn);
+						
+						prepareRequestNode.put("wires", prepareRequestWires);
+						
+						switchConn.add(prepareRequestNode.get("id"));
+						switchWires.add(switchConn);
+						switchNode.put("wires", switchWires);
 						nodeREDModel.add(switchNode);
 						
-						JSONArray switchConn = new JSONArray();
-						JSONArray switchWires = new JSONArray();
-						switchConn.add(debugNode.get("id"));
-						switchWires.add(switchConn);
-						httpNode.put("wires", switchWires);
+						JSONArray httpConn = new JSONArray();
+						JSONArray httpWires = new JSONArray();
+						httpConn.add(debugNode.get("id"));
+						httpWires.add(httpConn);
+						httpNode.put("wires", httpWires);
 						nodeREDModel.add(httpNode);
+						nodeREDModel.add(prepareRequestNode);
 					}
 				}
 			} else {
