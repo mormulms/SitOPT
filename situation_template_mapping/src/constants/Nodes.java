@@ -6,7 +6,11 @@ import java.util.List;
  * This class offers methods to generate the Node-RED function nodes as JSON
  */
 public class Nodes {
-
+	private final static String compareString = "var curr = parseInt(msg.payload);\n msg.situation = {'sensor':'%s', 'sensorquality':'%s', 'value':curr, 'timestamp':1, 'quality':1}; \n if (curr %s %s) {\n\tmsg.payload = true;\n} else {\n\tmsg.payload = false;\n}\n\nreturn msg;";
+	private final static String statusCodeString = "var curr = parseInt(msg.payload);\n msg.situation = {'sensor':'%s', 'sensorquality':'%s', 'value':curr, 'timestamp':1, 'quality':1}; \n if (msg.statusCode %s %s) {\n  msg.payload = true;\n return msg;  \n} else {\n  msg.payload = false;\n return msg;\n}\n\nreturn null;";
+	private final static String accumulationString = "context.values = context.values || new Array();\ncontext.values.push(msg.payload);\n\ncontext.sensorValues = context.sensorValues || new Array();\ncontext.sensorValues.push(msg.situation);\n\nvar inputs = %s;\nif (context.values.length == inputs) {\n	msg.situation = [];\n var returnValue = true;\n  	for (var i = 0; i < inputs; i++){\n		msg.situation.push(context.sensorValues[i]);\n		%s\n  	}\n\n		if (returnValue) {\n		msg.situation.push({'thing':'%s', 'timestamp':'1', 'situationtemplate':'%s' , 'occured':true});\n	} else {\n		msg.situation.push({'thing':'%s', 'timestamp':'1', 'situationtemplate':'%s' , 'occured':false});\n	}	\n  	context.values = null;\n	context.sensorValues = null;\n\n	var jsonStr = '{\"situation\": []}';\n	var obj = JSON.parse(jsonStr);\n\n	for (var i = 0; i < msg.situation.length; i++) {\n		obj.situation.push(msg.situation[i]);\n	}\n\n	msg.payload = obj;\n\n  	return msg;\n} else {\n	return null;\n}";
+	private final static String betweenString = "var curr = parseInt(msg.payload);\n msg.situation = {'sensor':'%s', 'sensorquality':'%s', 'value':curr, 'timestamp':1, 'quality':1}; \n if (%s < msg.statusCode && msg.statusCode < %s) {\n  msg.payload = true;\n return msg;  \n} else {\n  msg.payload = false;\n return msg;\n}\n\nreturn null;";
+	
 	/**
 	 * Generates the JavaScript implementation of the "greater than" node
 	 * 
@@ -15,8 +19,8 @@ public class Nodes {
 	 * 
 	 * @return the node as JSON string
 	 */
-	public static String getGreaterThanNode(String comparisonValue, String objectID, String situationTemplateID, String sensorId, String sensorquality, String quality) {
-		return "var curr = parseInt(msg.payload);\n msg.situation = {'sensor':'"+ sensorId +"', 'sensorquality':'" +sensorquality+ "', 'value':curr, 'timestamp':1, 'quality':1}; \n if (curr > "	+ comparisonValue + ") {\n\tmsg.payload = true;\n} else {\n\tmsg.payload = false;\n}\n\nreturn msg;";
+	public static String getGreaterThanNode(String comparisonValue, String objectID, String situationTemplateID, String sensorId, String sensorQuality, String quality) {
+		return String.format(compareString, sensorId, sensorQuality, ">", comparisonValue);
 	}
 
 	/**
@@ -27,8 +31,8 @@ public class Nodes {
 	 * 
 	 * @return the node as JSON string
 	 */
-	public static String getLowerThanNode(String comparisonValue, String objectID, String situationTemplateID, String sensorId, String sensorquality, String quality) {
-		return "var curr = parseInt(msg.payload);\n msg.situation = {'sensor':'"+ sensorId +"', 'sensorquality':'" +sensorquality+ "', 'value':curr, 'timestamp':1, 'quality':1}; \n if (curr < "	+ comparisonValue	+ ") {\n\tmsg.payload = true;\n} else {\n\tmsg.payload = false;\n}\n\nreturn msg;";
+	public static String getLowerThanNode(String comparisonValue, String objectID, String situationTemplateID, String sensorId, String sensorQuality, String quality) {
+		return String.format(compareString, sensorId, sensorQuality, "<", comparisonValue);
 	}
 
 	/**
@@ -39,20 +43,20 @@ public class Nodes {
 	 * 
 	 * @return the node as JSON string
 	 */
-	public static String getEqualsNode(String comparisonValue, String objectID, String situationTemplateID, String sensorId, String sensorquality, String quality) {
-		return "var curr = parseInt(msg.payload);\n msg.situation = {'sensor':'"+ sensorId +"', 'sensorquality':'" +sensorquality+ "', 'value':curr, 'timestamp':1, 'quality':1}; \n if (curr == " + comparisonValue + ") {\n\tmsg.payload = true;\n} else {\n\tmsg.payload = false;\n}\n\nreturn msg;";
+	public static String getEqualsNode(String comparisonValue, String objectID, String situationTemplateID, String sensorId, String sensorQuality, String quality) {
+		return String.format(compareString, sensorId, sensorQuality, "==", comparisonValue);
 	}
 
 	/**
 	 * Generates the JavaScript implementation of the "status code" node
 	 * 
-	 * @param conditionValues
+	 * @param conditionValue
 	 * 			 the status code to be checked
 	 * 
 	 * @return the node in JSON
 	 */
-	public static String getNotEquals(String conditionValues, String objectID, String situationTemplateID, String sensorId, String sensorquality, String quality) {
-		return "var curr = parseInt(msg.payload);\n msg.situation = {'sensor':'"+ sensorId +"', 'sensorquality':'" +sensorquality+ "', 'value':curr, 'timestamp':1, 'quality':1}; \n if (msg.statusCode != " + conditionValues + ") {\n  msg.payload = true;\n return msg;  \n} else {\n  msg.payload = false;\n return msg;\n}\n\nreturn null;";
+	public static String getNotEquals(String conditionValue, String objectID, String situationTemplateID, String sensorId, String sensorQuality, String quality) {
+		return String.format(statusCodeString, sensorId, sensorQuality, "!=", conditionValue);
 	}
 	
 	/**
@@ -63,12 +67,12 @@ public class Nodes {
 	 * 
 	 * @return the node in JSON
 	 */
-	public static Object getBetween(List<String> conditionValues, String objectID, String situationTemplateID, String sensorId, String sensorquality, String quality) {
+	public static Object getBetween(List<String> conditionValues, String objectID, String situationTemplateID, String sensorId, String sensorQuality, String quality) {
 		
 		String condValue1 = conditionValues.get(0);
 		String condValue2 = conditionValues.get(1);
 		
-		return "var curr = parseInt(msg.payload);\n msg.situation = {'sensor':'"+ sensorId +"', 'sensorquality':'" +sensorquality+ "', 'value':curr, 'timestamp':1, 'quality':1}; \n if (" + condValue1 + " < msg.statusCode < " + condValue2 + ") {\n  msg.payload = true;\n return msg;  \n} else {\n  msg.payload = false;\n return msg;\n}\n\nreturn null;";
+		return String.format(betweenString, sensorId, sensorQuality, condValue1, condValue2);
 	}
 	
 	/**
@@ -77,7 +81,8 @@ public class Nodes {
 	 * @return the AND Node in JavaScript
 	 */
 	public static String getANDNode(String numberOfInputs, String objectID, String situationTemplateID) {
-		return "context.values = context.values || new Array();\ncontext.values.push(msg.payload);\n\ncontext.sensorValues = context.sensorValues || new Array();\ncontext.sensorValues.push(msg.situation);\n\nvar inputs = " + numberOfInputs + ";\nif (context.values.length == inputs) {\n	msg.situation = [];\n var returnValue = true;\n  	for (var i = 0; i < inputs; i++){\n		msg.situation.push(context.sensorValues[i]);\n		if (!(context.values[i])) {\n	  		returnValue = false;\n		}\n  	}\n\n		if (returnValue) {\n		msg.situation.push({'thing':" + "'" + objectID + "'" + ", 'timestamp':'1', 'situationtemplate':" + "'" + situationTemplateID + "'" +" , 'occured':true});\n	} else {\n		msg.situation.push({'thing':" + "'" + objectID + "'" + ", 'timestamp':'1', 'situationtemplate':" + "'" + situationTemplateID + "'" +" , 'occured':false});\n	}	\n  	context.values = null;\n	context.sensorValues = null;\n\n	var jsonStr = '{\"situation\": []}';\n	var obj = JSON.parse(jsonStr);\n\n	for (var i = 0; i < msg.situation.length; i++) {\n		obj.situation.push(msg.situation[i]);\n	}\n\n	msg.payload = obj;\n\n  	return msg;\n} else {\n	return null;\n}";
+		final String immediateReturnValue = "if (!context.values[i]) {\n	  		returnValue = false;\n		}";
+		return String.format(accumulationString, numberOfInputs, immediateReturnValue, objectID, situationTemplateID, objectID, situationTemplateID);
 	}
 	
 	/**
@@ -86,6 +91,7 @@ public class Nodes {
 	 * @return the OR Node in JavaScript
 	 */
 	public static Object getORNode(String numberOfInputs, String objectID, String situationTemplateID) {
-		return "context.values = context.values || new Array();\ncontext.values.push(msg.payload);\n\ncontext.sensorValues = context.sensorValues || new Array();\ncontext.sensorValues.push(msg.situation);\n\nvar inputs = " + numberOfInputs + ";\nif (context.values.length == inputs) {\n	msg.situation = []; var returnValue = false;\n  	for (var i = 0; i < inputs; i++){\n		msg.situation.push(context.sensorValues[i]);\n		if (context.values[i]) {\n	  		returnValue = true;\n		}\n  	}\n\n	if (returnValue) {\n		msg.situation.push({'thing':" + "'" + objectID + "'" + ", 'timestamp':'1', 'situationtemplate':" + "'" + situationTemplateID + "'" +" , 'occured':true});\n	} else {\n		msg.situation.push({'thing':" + "'" + objectID + "'" + ", 'timestamp':'1', 'situationtemplate':" + "'" + situationTemplateID + "'" +" , 'occured':false});\n	}	\n  	context.values = null;\n	context.sensorValues = null;\n\n	var jsonStr = '{\"situation\": []}';\n	var obj = JSON.parse(jsonStr);\n\n	for (var i = 0; i < msg.situation.length; i++) {\n		obj.situation.push(msg.situation[i]);\n	}\n\n	msg.payload = obj;\n\n  	return msg;\n} else {\n	return null;\n}";
+		final String immediateReturnValue = "if (context.values[i]) {\n	  		returnValue = true;\n		}";
+		return String.format(accumulationString, numberOfInputs, immediateReturnValue, objectID, situationTemplateID, objectID, situationTemplateID);
 	}
 }
