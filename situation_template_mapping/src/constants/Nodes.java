@@ -6,10 +6,22 @@ import java.util.List;
  * This class offers methods to generate the Node-RED function nodes as JSON
  */
 public class Nodes {
-	private final static String compareString = "var curr = parseInt(msg.payload);\n msg.situation = {'sensor':'%s', 'sensorquality':'%s', 'value':curr, 'timestamp':1, 'quality':1}; \n if (curr %s %s) {\n\tmsg.payload = true;\n} else {\n\tmsg.payload = false;\n}\n\nreturn msg;";
-	private final static String statusCodeString = "var curr = parseInt(msg.payload);\n msg.situation = {'sensor':'%s', 'sensorquality':'%s', 'value':curr, 'timestamp':1, 'quality':1}; \n if (msg.statusCode %s %s) {\n  msg.payload = true;\n return msg;  \n} else {\n  msg.payload = false;\n return msg;\n}\n\nreturn null;";
-	private final static String accumulationString = "context.values = context.values || new Array();\ncontext.values.push(msg.payload);\n\ncontext.sensorValues = context.sensorValues || new Array();\ncontext.sensorValues.push(msg.situation);\n\nvar inputs = %s;\nif (context.values.length == inputs) {\n	msg.situation = [];\n var returnValue = true;\n  	for (var i = 0; i < inputs; i++){\n		msg.situation.push(context.sensorValues[i]);\n		%s\n  	}\n\n		if (returnValue) {\n		msg.situation.push({'thing':'%s', 'timestamp':'1', 'situationtemplate':'%s' , 'occured':true});\n	} else {\n		msg.situation.push({'thing':'%s', 'timestamp':'1', 'situationtemplate':'%s' , 'occured':false});\n	}	\n  	context.values = null;\n	context.sensorValues = null;\n\n	var jsonStr = '{\"situation\": []}';\n	var obj = JSON.parse(jsonStr);\n\n	for (var i = 0; i < msg.situation.length; i++) {\n		obj.situation.push(msg.situation[i]);\n	}\n\n	msg.payload = obj;\n\n  	return msg;\n} else {\n	return null;\n}";
-	private final static String betweenString = "var curr = parseInt(msg.payload);\n msg.situation = {'sensor':'%s', 'sensorquality':'%s', 'value':curr, 'timestamp':1, 'quality':1}; \n if (%s < msg.statusCode && msg.statusCode < %s) {\n  msg.payload = true;\n return msg;  \n} else {\n  msg.payload = false;\n return msg;\n}\n\nreturn null;";
+	private final static String compareString = "var curr = parseInt(msg.payload);\n msg.situation = {'sensor':'%s', 'sensorquality':'%s', 'value':curr, "
+			+ "'timestamp':1, 'quality':1}; \n if (curr %s %s) {\n\tmsg.payload = true;\n} else {\n\tmsg.payload = false;\n}\n\nreturn msg;";
+	private final static String statusCodeString = "var curr = parseInt(msg.payload);\n msg.situation = {'sensor':'%s', 'sensorquality':'%s', 'value':curr, "
+			+ "'timestamp':1, 'quality':1}; \n if (msg.statusCode %s %s) {\n  msg.payload = true;\n return msg;  \n} else {\n  msg.payload = false;\n return msg;\n}"
+			+ "\n\nreturn null;";
+	private final static String accumulationString = "context.values = context.values || new Array();\ncontext.values.push(msg.payload);\n\n"
+			+ "context.sensorValues = context.sensorValues || new Array();\ncontext.sensorValues.push(msg.situation);\n\nvar inputs = %s;\n"
+			+ "if (context.values.length == inputs) {\n	msg.situation = [];\n var returnValue = true;\n  	for (var i = 0; i < inputs; i++)"
+			+ "{\n		msg.situation.push(context.sensorValues[i]);\n		%s\n  	}\n\n		if (returnValue) {\n		msg.situation.push("
+			+ "{'thing':'%s', 'timestamp':'1', 'situationtemplate':'%s' , 'occured':true});\n	} else {\n		msg.situation.push({'thing':'%s', "
+			+ "'timestamp':'1', 'situationtemplate':'%s' , 'occured':false});\n	}	\n  	context.values = null;\n	context.sensorValues = null;\n\n	"
+			+ "var jsonStr = '{\"situation\": []}';\n	var obj = JSON.parse(jsonStr);\n\n	for (var i = 0; i < msg.situation.length; i++) {\n		"
+			+ "obj.situation.push(msg.situation[i]);\n	}\n\n	msg.payload = obj;\n\n  	return msg;\n} else {\n	return null;\n}";
+	private final static String betweenString = "var curr = parseInt(msg.payload);\n msg.situation = {'sensor':'%s', 'sensorquality':'%s', "
+			+ "'value':curr, 'timestamp':1, 'quality':1}; \n if (%s < msg.statusCode && msg.statusCode < %s) {\n  msg.payload = true;\n return msg;  \n} "
+			+ "else {\n  msg.payload = false;\n return msg;\n}\n\nreturn null;";
 	
 	/**
 	 * Generates the JavaScript implementation of the "greater than" node

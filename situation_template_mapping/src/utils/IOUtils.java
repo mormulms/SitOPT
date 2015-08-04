@@ -1,7 +1,9 @@
 package utils;
 
 import java.io.BufferedReader;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
@@ -11,6 +13,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -85,7 +88,20 @@ public class IOUtils {
 
 		URL url;
 		
-		url = new URL("http://localhost:1880/flows");
+		Properties prop = new Properties();
+
+		String server = "localhost";
+		String protocol = "http";
+		String port = "1880";
+		
+		try (InputStream input = new FileInputStream("settings.properties")) {
+			prop.load(input);
+			server = prop.getProperty("server");
+			protocol = prop.getProperty("protocol");
+			port = prop.getProperty("port");
+		}
+
+		url = new URL(String.format("%s://%s:%s/flows", protocol, server, port));
 
 		HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 		connection.setRequestMethod("POST");
@@ -125,14 +141,25 @@ public class IOUtils {
 	@SuppressWarnings("unchecked")
 	public static void deployToNodeRED(JSONArray nodeREDModel, TSituationTemplate situationTemplate, boolean doOverwrite) {
 		try {
+			Properties prop = new Properties();
+			
+			String server = "localhost";
+			String protocol = "http";
+			String port = "1880";
+			
+			try (InputStream input = new FileInputStream("settings.properties")) {
+				prop.load(input);
+				server = prop.getProperty("server");
+				protocol = prop.getProperty("protocol");
+				port = prop.getProperty("port");
+			}
 					
 			JSONArray flow;
 			
 			if (doOverwrite) {
 				flow = new JSONArray();
 			} else {
-				// TODO why is this hard coded?
-				String currentFlows = getHTML("http://localhost:1880/flows");
+				String currentFlows = getHTML(String.format("%s://%s:%s/flows", protocol, server, port));
 				JSONParser parser = new JSONParser();
 				flow = (JSONArray) parser.parse(currentFlows);
 				
@@ -182,7 +209,7 @@ public class IOUtils {
 
 			String body = flow.toJSONString();
 
-			URL url = new URL("http://localhost:1880/flows");
+			URL url = new URL(String.format("%s://%s:%s/flows", protocol, server, port));
 			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 			connection.setRequestMethod("POST");
 			connection.setDoInput(true);
