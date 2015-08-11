@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.StringReader;
 import java.util.Date;
 
+import javax.xml.bind.JAXB;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
@@ -31,24 +32,12 @@ public class Mapping implements MappingInterface {
 	@Override
 	public void mapAndDeployXMLString(String situationTemplateAsXML, boolean doOverwrite, String url, boolean debug) {
 		
-		try {
-			// input is defined, parse the XML model
-			JAXBContext jc;
-			jc = JAXBContext.newInstance(TSituationTemplate.class);
-	
-			Unmarshaller u;
-			u = jc.createUnmarshaller();
-	
-			TSituationTemplate situationTemplate = (TSituationTemplate) u.unmarshal(new StringReader(situationTemplateAsXML));
-		
-			Mapper mapper = new Mapper(situationTemplate);
-			Date date = new Date();
-			mapper.map(doOverwrite, url, date.getTime(), debug);
-		} catch (JAXBException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
+		// input is defined, parse the XML model
+		TSituationTemplate situationTemplate = JAXB.unmarshal(new StringReader(situationTemplateAsXML), TSituationTemplate.class);
+
+		Mapper mapper = new Mapper(situationTemplate);
+		Date date = new Date();
+		mapper.map(doOverwrite, url, date.getTime(), debug);	
 	}
 	
 	/**
