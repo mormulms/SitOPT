@@ -13,7 +13,7 @@ public class Nodes {
 			+ "\n\nreturn null;";
 	private final static String accumulationString = "context.values = context.values || new Array();\ncontext.values.push(msg.payload);\n\n"
 			+ "context.sensorValues = context.sensorValues || new Array();\ncontext.sensorValues.push(msg.situation);\n\nvar inputs = %s;\n"
-			+ "if (context.values.length == inputs) {\n	msg.situation = [];\n var returnValue = true;\n  	for (var i = 0; i < inputs; i++)"
+			+ "if (context.values.length == inputs) {\n	msg.situation = [];\n var returnValue = true;\n    var counter = 0;    for (var i = 0; i < inputs; i++)"
 			+ "{\n		msg.situation.push(context.sensorValues[i]);\n		%s\n  	}\n\n		if (returnValue) {\n		msg.situation.push("
 			+ "{'thing':'%s', 'timestamp':'1', 'situationtemplate':'%s' , 'occured':true});\n	} else {\n		msg.situation.push({'thing':'%s', "
 			+ "'timestamp':'1', 'situationtemplate':'%s' , 'occured':false});\n	}	\n  	context.values = null;\n	context.sensorValues = null;\n\n	"
@@ -104,6 +104,26 @@ public class Nodes {
 	 */
 	public static Object getORNode(String numberOfInputs, String objectID, String situationTemplateID) {
 		final String immediateReturnValue = "if (context.values[i]) {\n	  		returnValue = true;\n		}";
+		return String.format(accumulationString, numberOfInputs, immediateReturnValue, objectID, situationTemplateID, objectID, situationTemplateID);
+	}
+	
+	/**
+	 * Generates the JavaScript implementation of the "XOR" node
+	 * 
+	 * @return the XOR Node in JavaScript
+	 */
+	public static Object getXORNode(String numberOfInputs, String objectID, String situationTemplateID) {
+		final String immediateReturnValue = "if (!context.values[i]) {\n        counter++;        returnValue = counter % 2 == " + numberOfInputs + " % 2;\n    }";
+		return String.format(accumulationString, numberOfInputs, immediateReturnValue, objectID, situationTemplateID, objectID, situationTemplateID);
+	}
+	
+	/**
+	 * Generates the JavaScript implementation of the "NOT" node
+	 * 
+	 * @return the NOT Node in JavaScript
+	 */
+	public static Object getNOTNode(String numberOfInputs, String objectID, String situationTemplateID) {
+		final String immediateReturnValue = "if (i === 0) {\n        returnValue = !context.values[i];\n    }";
 		return String.format(accumulationString, numberOfInputs, immediateReturnValue, objectID, situationTemplateID, objectID, situationTemplateID);
 	}
 }
