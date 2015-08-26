@@ -93,7 +93,7 @@ public class Nodes {
 	 * @return the AND Node in JavaScript
 	 */
 	public static String getANDNode(String numberOfInputs, String objectID, String situationTemplateID) {
-		final String immediateReturnValue = "if (!context.values[i]) {\n	  		returnValue = false;\n		}";
+		final String immediateReturnValue = "if (!context.values[i]) {\n	  		counter++;\n                returnValue = counter == " + numberOfInputs + ";\n		}";
 		return String.format(accumulationString, numberOfInputs, immediateReturnValue, objectID, situationTemplateID, objectID, situationTemplateID);
 	}
 	
@@ -103,7 +103,7 @@ public class Nodes {
 	 * @return the OR Node in JavaScript
 	 */
 	public static Object getORNode(String numberOfInputs, String objectID, String situationTemplateID) {
-		final String immediateReturnValue = "if (context.values[i]) {\n	  		returnValue = true;\n		}";
+		final String immediateReturnValue = "if (context.values[i]) {\n	  		counter++;\n                returnValue = counter >= 1;\n		}";
 		return String.format(accumulationString, numberOfInputs, immediateReturnValue, objectID, situationTemplateID, objectID, situationTemplateID);
 	}
 	
@@ -113,17 +113,37 @@ public class Nodes {
 	 * @return the XOR Node in JavaScript
 	 */
 	public static Object getXORNode(String numberOfInputs, String objectID, String situationTemplateID) {
-		final String immediateReturnValue = "if (!context.values[i]) {\n        counter++;        returnValue = counter % 2 == " + numberOfInputs + " % 2;\n    }";
+		final String immediateReturnValue = "if (!context.values[i]) {\n            counter++;\n            returnValue = counter % 2 == " + numberOfInputs + " % 2;\n        }";
 		return String.format(accumulationString, numberOfInputs, immediateReturnValue, objectID, situationTemplateID, objectID, situationTemplateID);
 	}
 	
 	/**
-	 * Generates the JavaScript implementation of the "NOT" node
+	 * Generates the JavaScript implementation of the "AND" node
 	 * 
-	 * @return the NOT Node in JavaScript
+	 * @return the AND Node in JavaScript
 	 */
-	public static Object getNOTNode(String numberOfInputs, String objectID, String situationTemplateID) {
-		final String immediateReturnValue = "if (i === 0) {\n        returnValue = !context.values[i];\n    }";
+	public static String getANDNotNode(String numberOfInputs, String objectID, String situationTemplateID) {
+		final String immediateReturnValue = "if (!context.values[i]) {\n	  		counter++;\n            returnValue = counter < " + numberOfInputs + ";\n		}";
+		return String.format(accumulationString, numberOfInputs, immediateReturnValue, objectID, situationTemplateID, objectID, situationTemplateID);
+	}
+	
+	/**
+	 * Generates the JavaScript implementation of the "OR" node
+	 * 
+	 * @return the OR Node in JavaScript
+	 */
+	public static Object getORNotNode(String numberOfInputs, String objectID, String situationTemplateID) {
+		final String immediateReturnValue = "if (context.values[i]) {\n	  		counter++;\n            returnValue = counter == 0;\n		}";
+		return String.format(accumulationString, numberOfInputs, immediateReturnValue, objectID, situationTemplateID, objectID, situationTemplateID);
+	}
+	
+	/**
+	 * Generates the JavaScript implementation of the "XOR" node
+	 * 
+	 * @return the XOR Node in JavaScript
+	 */
+	public static Object getXORNotNode(String numberOfInputs, String objectID, String situationTemplateID) {
+		final String immediateReturnValue = "if (!context.values[i]) {\n            counter++;\n            returnValue = counter % 2 != " + numberOfInputs + " % 2;\n        }";
 		return String.format(accumulationString, numberOfInputs, immediateReturnValue, objectID, situationTemplateID, objectID, situationTemplateID);
 	}
 }

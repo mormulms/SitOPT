@@ -1,5 +1,10 @@
 package mapping;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
+import javax.management.RuntimeErrorException;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -57,13 +62,21 @@ public class OperationNodeMapper {
 
 			// create the comparison node in NodeRED
 			JSONObject nodeREDNode = NodeREDUtils.createNodeREDNode(situationTemplate.getId() + "." + logicNode.getId(), logicNode.getName(), "function", Integer.toString(xCoordinate), Integer.toString(yCoordinate), zCoordinate);
-
-			if (logicNode.getType().equals("and")) {
-				nodeREDNode.put("func", Nodes.getANDNode(Integer.toString(children), "1", situationTemplate.getId()));
-			} else {
-				nodeREDNode.put("func", Nodes.getORNode(Integer.toString(children), "1", situationTemplate.getId()));
+			Method m;
+			
+			try {
+				m = Nodes.class.getMethod("get" + logicNode.getType().toUpperCase() + (logicNode.isNegated() ? "Not" : "") + "Node", String.class, String.class, String.class);
+			} catch (NoSuchMethodException | SecurityException e) {
+				e.printStackTrace();
+				throw new RuntimeException(e);
 			}
-			nodeREDNode.put("outputs", "1");
+			
+			try {
+				nodeREDNode.put("func", m.invoke(null, Integer.toString(children), "1", situationTemplate.getId()));
+			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+				e.printStackTrace();
+				throw new RuntimeException(e);
+			}
 			
 			// connect it to the parent(s)
 			JSONArray wiresNode = new JSONArray();

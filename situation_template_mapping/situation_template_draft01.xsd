@@ -36,10 +36,11 @@
 			<xs:element name="type">
 				<xs:simpleType>
 					<xs:restriction base="xs:string">
-						<xs:pattern value="or|and"/>
+						<xs:pattern value="xor|or|and"/>
 					</xs:restriction>
 				</xs:simpleType>
 			</xs:element>
+			<xs:element name="negated" type="xs:boolean" minOccurs="1" maxOccurs="1" />
 		</xs:sequence>
 		<xs:attribute name="id" type="xs:ID" use="required"/>
 		<xs:attribute name="name" type="xs:string"/>
