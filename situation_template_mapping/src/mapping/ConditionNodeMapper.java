@@ -40,19 +40,22 @@ public class ConditionNodeMapper {
 		String xCoordinate = "600";
 		int yCoordinate = 50;
 		
-		for (TConditionNode node : situationTemplate.getSituation().getConditionNode()) {
+		for (TSituation situation : situationTemplate.getSituation()) {
+		for (TConditionNode node : situation.getConditionNode()) {
 			
 			List<String> conditionValues = node.getCondValue().getValue();
 			JSONObject nodeREDNode = NodeREDUtils.createNodeREDNode(situationTemplate.getId() + "." + node.getId(), node.getName(), "function", xCoordinate, Integer.toString(yCoordinate), situationTemplate.getId());
 			
 			String sensorId = "";
 			
-			for (TContextNode cn: situationTemplate.getSituation().getContextNode()) {
+			for (TSituation s : situationTemplate.getSituation()) {
+			for (TContextNode cn: s.getContextNode()) {
 				for (TParent p: cn.getParent()) {
 					if (p.getParentID().equals(node)) {
 						sensorId = cn.getId();
 					}
 				}
+			}
 			}
 			
 			if (node.getOpType().equals("greaterThan")) {
@@ -98,6 +101,7 @@ public class ConditionNodeMapper {
 
 			nodeREDModel.add(nodeREDNode);
 			yCoordinate += 100;
+		}
 		}
 		
 		return nodeREDModel;

@@ -42,7 +42,7 @@ public class Main {
 			// if no input is defined, we just define an exemplary situation
 			// template using JAXB
 			if (args.length == 1) {
-				// we create an exemplary situation template using JAXB to test our code
+				/*// we create an exemplary situation template using JAXB to test our code
 				TSituationTemplate situationTemplate = new TSituationTemplate();
 				situationTemplate.setId(NodeREDUtils.generateNodeREDId());
 
@@ -110,7 +110,7 @@ public class Main {
 				long timestamp = date.getTime();
 
 				Mapper mapper = new Mapper(situationTemplate);
-				mapper.map(false, url, timestamp, debug);
+				mapper.map(false, url, timestamp, debug);*/
 			} else {
 				
 				IOUtils.clearNodeRED();

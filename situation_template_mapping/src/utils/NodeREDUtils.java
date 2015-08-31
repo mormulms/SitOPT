@@ -6,6 +6,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import situationtemplate.model.TContextNode;
+import situationtemplate.model.TSituation;
 import situationtemplate.model.TSituationTemplate;
 
 /**
@@ -110,10 +111,11 @@ public class NodeREDUtils {
 		JSONArray connections = new JSONArray();
 
 		// TODO
-		for (TContextNode sensorNode : situationTemplate.getSituation()
-				.getContextNode()) {
+		for (TSituation situation : situationTemplate.getSituation()) {
+		for (TContextNode sensorNode : situation.getContextNode()) {
 			String sensorNodeId = sensorNode.getId();
 			connections.add(situationTemplate.getId() + "." + sensorNodeId);
+		}
 		}
 		
 		connections.add(debugNode.get("id"));

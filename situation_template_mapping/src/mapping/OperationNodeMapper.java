@@ -44,8 +44,9 @@ public class OperationNodeMapper {
 
 		// get the number of children of the operation node
 		int children = 0;
-		for (TOperationNode logicNode : situationTemplate.getSituation().getOperationNode()) {
-			for (TConditionNode node: situationTemplate.getSituation().getConditionNode()) {
+		for (TSituation situation : situationTemplate.getSituation()) {
+		for (TOperationNode logicNode : situation.getOperationNode()) {
+			for (TConditionNode node: situation.getConditionNode()) {
 				for (TParent parent: node.getParent()) {
 					
 					if (parent.getParentID() instanceof TConditionNode) {
@@ -125,6 +126,7 @@ public class OperationNodeMapper {
 			nodeREDModel.add(nodeREDNode);
 			
 			yCoordinate += 100;
+		}
 		}
 		
 		return nodeREDModel;

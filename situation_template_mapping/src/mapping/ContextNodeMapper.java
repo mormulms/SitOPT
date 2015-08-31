@@ -7,6 +7,7 @@ import situationtemplate.model.TConditionNode;
 import situationtemplate.model.TContextNode;
 import situationtemplate.model.TOperationNode;
 import situationtemplate.model.TParent;
+import situationtemplate.model.TSituation;
 import situationtemplate.model.TSituationTemplate;
 import utils.NodeREDUtils;
 
@@ -43,7 +44,8 @@ public class ContextNodeMapper {
 		
 		if (!url.endsWith("/")) url += "/";
 		
-		for (TContextNode sensorNode : situationTemplate.getSituation().getContextNode()) {
+		for (TSituation situation : situationTemplate.getSituation()) {
+		for (TContextNode sensorNode : situation.getContextNode()) {
 
 			// TODO: create real Registry
 			String sensorURL = url +  MockUpRegistry.getURLForID(sensorNode.getName());
@@ -81,6 +83,7 @@ public class ContextNodeMapper {
 			nodeREDModel.add(nodeREDNode);
 
 			yCoordinate += 100;
+		}
 		}
 
 		return nodeREDModel;

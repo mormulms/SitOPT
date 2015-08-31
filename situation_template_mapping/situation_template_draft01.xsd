@@ -8,7 +8,7 @@
 	<!-- TODO: set maxOccurs="unbounded", a situation template could contain more than one situation -->
 	<xs:complexType name="tSituationTemplate">
 		<xs:sequence>
-			<xs:element name="Situation" type="tSituation" maxOccurs="1"/>
+			<xs:element name="Situation" type="tSituation" maxOccurs="unbounded"/>
 		</xs:sequence>
 		<xs:attribute name="id" type="xs:ID" use="required"/>
 		<xs:attribute name="name" type="xs:string"/>
