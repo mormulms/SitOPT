@@ -1,0 +1,25 @@
+doctype html
+html
+  head
+    title SitOPT
+    link(rel='StyleSheet', href='style.css', type='text/css', media='screen')
+  body
+    #body2
+      #page
+        #menulinks
+          include navibar
+        #header
+          h1
+            a(href='#') SitOPT
+          .description Optimierung und Adaption situationsbezogener Anwendungen basierend auf Workflow-Fragmenten
+        #mainarea
+          #contentarea
+            h2 Willkommen
+            | 		Das Ziel dieses Forschungsvorhabens ist es, Konzepte und Methoden zu entwickeln, die es situationsbezogenen Anwendungen erlauben, sich autonom an die dynamische Umgebung, in der sie ablaufen, anzupassen. Auf der Anwendungsebene werden hierzu insbesondere Konzepte der fragmentbasierten Workflowmodellierung erweitert, um den Situationsbezug zu berücksichtigen und eine darauf aufbauende Adaption zu ermöglichen. Dynamische Anpassung auf Anwendungsebene setzt eine effiziente Erkennung der Situationen, die eine Anpassung erforderlich machen, voraus. Hier sind Konzepte zu entwickeln, die sowohl Anwendungswissen als auch die sich dynamisch ändernde Umgebung berücksichtigen.
+          #sidebar
+            h2 Functions
+            | 		To start the situation recognition, go to page 'Things', select the object, situation template and
+            the situation recognition system. Then click the button 'Start situation recognition'. An instance of Node-RED opens automatically. Recognized situations will be saved in CouchDB. To see an overview of all functions, open 'API Reference'.
+
+        #footer
+          include footer

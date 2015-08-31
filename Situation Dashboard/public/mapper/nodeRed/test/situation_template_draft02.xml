@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SituationTemplate id="A0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="situation_template_draft01.xsd"
+	name="SystemObservation">
+	<Situation id="A1" name="SystemFailure">
+		<operationNode id="A2" name="AND (CPU and RAM sensor)">
+			<parent parentID="A3"/>
+			<type>and</type>
+		</operationNode>
+		<operationNode id="A3" name="OR (rootNode)">
+			<type>or</type>
+			<parent parentID="A9"/>
+		</operationNode>
+		<conditionNode id="A4" name="CPU high load">
+			<type>type</type>
+			<measureName>measureName</measureName>
+			<opType>greaterThan</opType>
+			<condValue>
+				<value>70</value>
+			</condValue>
+			<parent parentID="A2"/>
+		</conditionNode>
+		<conditionNode id="A8" name="RAM full">
+			<type>type</type>
+			<measureName>measureName</measureName>
+			<opType>greaterThan</opType>
+			<condValue>
+				<value>90</value>
+			</condValue>
+			<parent parentID="A2"/>
+		</conditionNode>
+		<contextNode id="A5" name="memorySensor">
+			<parent parentID="A8"></parent>
+		</contextNode>
+		<contextNode id="A6" name="cpuSensor">
+			<parent parentID="A4"></parent>
+		</contextNode>
+		<contextNode id="A7" name ="watchdogSensor">
+			<parent parentID="A3"/>
+		</contextNode>
+		<situationNode name="machine_failed" id="A9"/>	
+	</Situation>
+</SituationTemplate>
