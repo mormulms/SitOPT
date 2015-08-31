@@ -3,9 +3,15 @@
 "version": "1.0.0",
 "dependencies":
 {
-"express": "~4.0.0",
-"mysql": "*",
-"ejs": "~1.0.0",
+"express": "*",
+"cradle": "0.6.9",
+"ejs": "*",
+"jade": "*",
+"open": "0.0.5",
+"request": "2.2.9",
+"stylus":"0.51.1",
+
+
 "googlemaps": "*"
 }
 }
