@@ -1,0 +1,12 @@
+{
+  "name": "computesensor",
+  "version": "1.0.0",
+  "description": "get /memoryusage/ returns MB of free RAM",
+  "main": "app.js",
+  "dependencies": {
+    "os-utils": "^0.0.14",
+    "express": "^4.13.0"
+  },
+  "author": "",
+  "license": "ISC"
+}
