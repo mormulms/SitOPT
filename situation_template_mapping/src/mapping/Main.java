@@ -1,13 +1,17 @@
 package mapping;
 
 import java.io.File;
+import java.io.StringReader;
+import java.util.Date;
 
+import javax.xml.bind.JAXB;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.transform.stream.StreamSource;
 
+import api.Mapping;
 import situationtemplate.model.TConditionNode;
 import situationtemplate.model.TConditionNode.CondValue;
 import situationtemplate.model.TContextNode;
@@ -29,7 +33,36 @@ public class Main {
 	 *            2 debug flag
 	 */
 	public static void main(String[] args) {
-		try {
+		
+		
+		System.out.println("Template: " + args[0]);
+		System.out.println("Boolean: " + args[1]);
+		System.out.println("Url: " + args[2]);
+		System.out.println("Debug: " + args[3]);
+		
+		 
+		
+		String str = args[0].replace("\\r"," ").replace("\\n"," ").replace("\\t"," ");
+		System.out.println("New: " + str);
+		
+		
+		Mapping mapping = new Mapping();
+		
+		//For mapping situation templates by XML string
+		mapping.mapAndDeployXMLString(str, Boolean.parseBoolean(args[1])  ,args[2] ,  false);
+		
+		//for mapping situation templates by XML file
+		//mapping.mapAndDeploy(args[0], true, args[2], false);
+		
+		
+		//TSituationTemplate situationTemplate = JAXB.unmarshal(new StringReader(args[0]), TSituationTemplate.class);
+
+		//Mapper mapper = new Mapper(situationTemplate);
+		//Date date = new Date();
+		//mapper.map(true, args[2], date.getTime(), false);	
+		
+		
+		/*try {
 			
 			// connects each node to a corresponding debug node
 			// deactivate this flag for measurements
@@ -136,6 +169,6 @@ public class Main {
 		} catch (JAXBException e) {
 			System.err.println("Could not parse JAXB object.");
 			e.printStackTrace();
-		}
+		}*/
 	}
 }

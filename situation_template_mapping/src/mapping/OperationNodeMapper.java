@@ -87,7 +87,7 @@ public class OperationNodeMapper {
 						JSONObject httpNode = NodeREDUtils.createNodeREDNode(NodeREDUtils.generateNodeREDId(), "situation", "http request", Integer.toString(200), Integer.toString(200), zCoordinate);
 						httpNode.put("method", "POST");
 						// TODO change URL
-						httpNode.put("url", "192.168.209.200:2222/situations");
+						httpNode.put("url", "http://localhost:10010/situations");
 				
 						JSONArray httpConn = new JSONArray();
 						JSONArray httpWires = new JSONArray();
