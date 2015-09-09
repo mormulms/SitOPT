@@ -1,5 +1,7 @@
 package mapping;
 
+import situationtemplate.model.TContextNode;
+
 /**
  * Just to debug
  */
@@ -18,14 +20,9 @@ public class MockUpRegistry {
 		return null;
 	}
 
-	public static String getURLForID(String name) {
-
-		if (name.equals("memorySensor")) {
-			return "memoryusage";
-		} else if (name.equals("cpuSensor")) {
-			return "cpuusage";
-		} else if (name.equals("watchdogSensor")) {
-			return "ping";
+	public static String getURLForID(TContextNode node) {
+		if (node != null) {
+			return "o1/" + node.getName();
 		}
 
 		return null;

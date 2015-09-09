@@ -1,5 +1,10 @@
 package mapping;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -42,13 +47,26 @@ public class ContextNodeMapper {
 		// the z coordinate is used to assign the nodes to a corresponding sheet
 		String zCoordinate = situationTemplate.getId();
 		
-		if (!url.endsWith("/")) url += "/";
+		Properties prop = new Properties();
+		try (InputStream in = new FileInputStream("settings.properties")) {
+			prop.load(in);
+			in.close();
+			StringBuilder builder = new StringBuilder();
+			builder.append(prop.getProperty("resourceServer"));
+			builder.append(':');
+			builder.append(prop.getProperty("resourcePort"));
+			builder.append(builder.charAt(builder.length() - 1) == '/' ? "" : '/');
+			builder.append("rmp/sensordata/");
+			url = builder.toString();	
+		} catch (IOException e) {
+			throw new RuntimeException("Did not find server for resources in configuration.", e);
+		}
 		
 		for (TSituation situation : situationTemplate.getSituation()) {
 		for (TContextNode sensorNode : situation.getContextNode()) {
 
 			// TODO: create real Registry
-			String sensorURL = url +  MockUpRegistry.getURLForID(sensorNode.getName());
+			String sensorURL = url +  MockUpRegistry.getURLForID(sensorNode);
 
 			// create the corresponding NodeRED JSON node
 			JSONObject nodeREDNode = NodeREDUtils.createNodeREDNode(situationTemplate.getId() + "." + sensorNode.getId(), sensorNode.getName(), TYPE, Integer.toString(xCoordinate), Integer.toString(yCoordinate), zCoordinate);
