@@ -37,7 +37,7 @@ public class Main {
 			
 			java.util.Date date= new java.util.Date();
 			 
-			String url = args[0];
+			String objectID = args[0];
 			
 			// if no input is defined, we just define an exemplary situation
 			// template using JAXB
@@ -130,7 +130,7 @@ public class Main {
 					long timestamp = date.getTime();
 					
 					Mapper mapper = new Mapper(situationTemplate);
-					mapper.map(false, url, timestamp, debug);
+					mapper.map(false, objectID, timestamp, debug);
 //				}
 			}
 		} catch (JAXBException e) {

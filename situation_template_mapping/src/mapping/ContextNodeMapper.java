@@ -1,13 +1,9 @@
 package mapping;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Properties;
-
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
+import constants.Properties;
 import situationtemplate.model.TConditionNode;
 import situationtemplate.model.TContextNode;
 import situationtemplate.model.TOperationNode;
@@ -34,39 +30,34 @@ public class ContextNodeMapper {
 	 * 				 the situation template JAXB node
 	 * @param nodeREDModel
 	 * 				 the Node-RED flow as JSON
-	 * @param url
+	 * @param objectID
 	 * 				 the URL of the machine
 	 * 
 	 * @return the mapped JSON model
 	 */
 	@SuppressWarnings("unchecked")
-	public JSONArray mapContextNodes(TSituationTemplate situationTemplate, JSONArray nodeREDModel, String url, boolean debug) {
+	public JSONArray mapContextNodes(TSituationTemplate situationTemplate, JSONArray nodeREDModel, String objectID, boolean debug) {
 
 		int xCoordinate = 300;
 		int yCoordinate = 50;
 		// the z coordinate is used to assign the nodes to a corresponding sheet
 		String zCoordinate = situationTemplate.getId();
 		
-		Properties prop = new Properties();
-		try (InputStream in = new FileInputStream("settings.properties")) {
-			prop.load(in);
-			in.close();
+		String url = "";
 			StringBuilder builder = new StringBuilder();
-			builder.append(prop.getProperty("resourceServer"));
+			builder.append(Properties.getResourceProtocol());
+			builder.append("://");
+			builder.append(Properties.getResourceServer());
 			builder.append(':');
-			builder.append(prop.getProperty("resourcePort"));
+			builder.append(Properties.getResourcePort());
 			builder.append(builder.charAt(builder.length() - 1) == '/' ? "" : '/');
 			builder.append("rmp/sensordata/");
 			url = builder.toString();	
-		} catch (IOException e) {
-			throw new RuntimeException("Did not find server for resources in configuration.", e);
-		}
 		
 		for (TSituation situation : situationTemplate.getSituation()) {
 		for (TContextNode sensorNode : situation.getContextNode()) {
 
-			// TODO: create real Registry
-			String sensorURL = url +  MockUpRegistry.getURLForID(sensorNode);
+			String sensorURL = url +  objectID + "/" + sensorNode.getName();
 
 			// create the corresponding NodeRED JSON node
 			JSONObject nodeREDNode = NodeREDUtils.createNodeREDNode(situationTemplate.getId() + "." + sensorNode.getId(), sensorNode.getName(), TYPE, Integer.toString(xCoordinate), Integer.toString(yCoordinate), zCoordinate);

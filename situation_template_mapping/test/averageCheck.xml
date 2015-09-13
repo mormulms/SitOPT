@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SituationTemplate id="A0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="situation_template_draft01.xsd"
+	name="SystemObservation">
+	<Situation id="A1" name="SystemFailure">
+		<operationNode id="A3" name="combine Sensors">
+			<type>and</type>
+			<parent parentID="A10"/>
+			<negated>true</negated>
+		</operationNode>
+		<conditionNode id="A4" name="% CPU load">
+			<type>type</type>
+			<measureName>measureName</measureName>
+			<opType>greaterThan</opType>
+			<condValue>
+				<value>70</value>
+			</condValue>
+			<parent parentID="A3"/>
+		</conditionNode>
+		<conditionNode id="A11" name="average" xsi:type="tTimeNode">
+			<type>type</type>
+			<measureName>measureName</measureName>
+			<opType>average</opType>
+			<condValue>
+				<value>70</value>
+			</condValue>
+			<parent parentID="A4"/>
+			<amountIntervals>3</amountIntervals>
+		</conditionNode>
+		<conditionNode id="A8" name="MB RAM free">
+			<type>type</type>
+			<measureName>measureName</measureName>
+			<opType>lowerThan</opType>
+			<condValue>
+				<value>10</value>
+			</condValue>
+			<parent parentID="A3"/>
+		</conditionNode>
+		<conditionNode id="A9" name="StatusCodeChecker">
+			<type>type</type>
+			<measureName>measureName</measureName>
+			<opType>notEquals</opType>
+			<condValue>
+				<value>200</value>
+			</condValue>
+			<parent parentID="A3"></parent>
+		</conditionNode>
+		<contextNode id="A5" name="memorySensor">
+			<parent parentID="A8"></parent>
+		</contextNode>
+		<contextNode id="A6" name="cpuSensor">
+			<parent parentID="A11"></parent>
+		</contextNode>
+		<contextNode id="A7" name ="watchdogSensor">
+			<parent parentID="A9"/>
+		</contextNode>
+		<situationNode name="machine_failed" id="A10"/>
+	</Situation>
+</SituationTemplate>

@@ -36,14 +36,24 @@
 			<xs:element name="type">
 				<xs:simpleType>
 					<xs:restriction base="xs:string">
-						<xs:pattern value="xor|or|and"/>
+						<xs:pattern value="and|xor|or" />
 					</xs:restriction>
 				</xs:simpleType>
 			</xs:element>
-			<xs:element name="negated" type="xs:boolean" minOccurs="1" maxOccurs="1" />
+			<xs:element name="negated" type="xs:boolean" />
 		</xs:sequence>
 		<xs:attribute name="id" type="xs:ID" use="required"/>
 		<xs:attribute name="name" type="xs:string"/>
+	</xs:complexType>
+
+	<xs:complexType name="tTimeNode">
+		<xs:complexContent>
+			<xs:extension base="tConditionNode">
+				<xs:sequence>
+			                <xs:element name="amountIntervals" type="xs:positiveInteger" minOccurs="1" maxOccurs="1"/>
+			        </xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
 	</xs:complexType>
 		
 	<!-- TODO (?): set use="required" on parent element of sensor nodes, each sensor should be processed -->
@@ -64,7 +74,7 @@
 			<xs:element name="opType" maxOccurs="1" minOccurs="1">
 				<xs:simpleType>
 					<xs:restriction base="xs:string">
-						<xs:pattern value="lowerThan|greaterThan|equals|notEquals|between"/>
+						<xs:pattern value="lowerThan|greaterThan|equals|notEquals|between|interval|average|min|max"/>
 					</xs:restriction>
 				</xs:simpleType>
 			</xs:element>

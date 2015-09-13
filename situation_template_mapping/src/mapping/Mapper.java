@@ -39,12 +39,12 @@ public class Mapper {
 	 * Main class of the mapping that receives the pattern-based model as XML
 	 * and invokes methods to transform it into an executable model in JSON.
 	 * 
-	 * @param url
+	 * @param objectID
 	 * 				 the URL of the machine 
 	 * @param debug 
 	 */
 	@SuppressWarnings("unchecked")
-	public void map(boolean doOverwrite, String url, long timestamp, boolean debug) {
+	public void map(boolean doOverwrite, String objectID, long timestamp, boolean debug) {
 		try {
 
 			JSONArray nodeREDModel = new JSONArray();
@@ -60,13 +60,13 @@ public class Mapper {
 
 			// first, map all the operation nodes, then map the other nodes
 			OperationNodeMapper lnm = new OperationNodeMapper();
-			lnm.mapOperationNodes(situationTemplate, nodeREDModel);
+			lnm.mapOperationNodes(situationTemplate, nodeREDModel, objectID);
 			
 			ContextNodeMapper snm = new ContextNodeMapper();
-			nodeREDModel = snm.mapContextNodes(situationTemplate, nodeREDModel, url, debug);
+			nodeREDModel = snm.mapContextNodes(situationTemplate, nodeREDModel, objectID, debug);
 			
 			ConditionNodeMapper nm = new ConditionNodeMapper();
-			JSONArray finalModel = nm.mapConditionNodes(situationTemplate, nodeREDModel, debug);
+			JSONArray finalModel = nm.mapConditionNodes(situationTemplate, nodeREDModel, debug, objectID);
 						
 			// write the JSON file (just for debug reasons), remember to change the path when using this method
 			//IOUtils.writeJSONFile(finalModel, situationTemplate);

@@ -16,12 +16,12 @@ app.get('/rmp/sensordata/:objectId/:sensorId', function(req, res) {
 
         case "cpuSensor":
             os.cpuFree(function(value) {
-                res.send((71).toString())
+                res.send((30).toString())
             });
             break;
 
         case "watchdogSensor":
-            res.sendStatus(404);
+            res.send((200).toString());
             break;
     }
 });

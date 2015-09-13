@@ -9,6 +9,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import constants.Nodes;
+import constants.Properties;
 import situationtemplate.model.TConditionNode;
 import situationtemplate.model.TOperationNode;
 import situationtemplate.model.TParent;
@@ -33,7 +34,7 @@ public class OperationNodeMapper {
 	 * @return the mapped model
 	 */
 	@SuppressWarnings("unchecked")
-	public JSONArray mapOperationNodes(TSituationTemplate situationTemplate, JSONArray nodeREDModel) {
+	public JSONArray mapOperationNodes(TSituationTemplate situationTemplate, JSONArray nodeREDModel, String objectID) {
 		
 		// TODO those are just random values, write style function!
 		int xCoordinate = 900;
@@ -73,7 +74,7 @@ public class OperationNodeMapper {
 			}
 			
 			try {
-				nodeREDNode.put("func", m.invoke(null, Integer.toString(children), "1", situationTemplate.getId()));
+				nodeREDNode.put("func", m.invoke(null, Integer.toString(children), objectID, situationTemplate.getId()));
 			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 				e.printStackTrace();
 				throw new RuntimeException(e);
@@ -100,8 +101,19 @@ public class OperationNodeMapper {
 						// create the corresponding NodeRED JSON node
 						JSONObject httpNode = NodeREDUtils.createNodeREDNode(NodeREDUtils.generateNodeREDId(), "situation", "http request", Integer.toString(200), Integer.toString(200), zCoordinate);
 						httpNode.put("method", "POST");
-						// TODO change URL
-						httpNode.put("url", "192.168.209.200:2222/situations");
+						
+						StringBuilder builder = new StringBuilder();
+						builder.append(Properties.getSituationProtocol());
+						builder.append("://");
+						builder.append(Properties.getSituationServer());
+						builder.append(":");
+						builder.append(Properties.getSituationPort());
+						if (!Properties.getSituationPath().startsWith("/")) {
+							builder.append("/");
+						}
+						builder.append(Properties.getSituationPath());
+						
+						httpNode.put("url", builder.toString());
 				
 						JSONArray httpConn = new JSONArray();
 						JSONArray httpWires = new JSONArray();

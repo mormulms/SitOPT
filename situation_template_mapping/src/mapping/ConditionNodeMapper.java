@@ -1,5 +1,6 @@
 package mapping;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 import org.json.simple.JSONArray;
@@ -13,6 +14,7 @@ import situationtemplate.model.TOperationNode;
 import situationtemplate.model.TParent;
 import situationtemplate.model.TSituation;
 import situationtemplate.model.TSituationTemplate;
+import situationtemplate.model.TTimeNode;
 import utils.NodeREDUtils;
 
 /**
@@ -35,7 +37,7 @@ public class ConditionNodeMapper {
 	 *             this exception occurs if the JSON can't be parsed
 	 */
 	@SuppressWarnings("unchecked")
-	public JSONArray mapConditionNodes(TSituationTemplate situationTemplate, JSONArray nodeREDModel, boolean debug) throws ParseException {
+	public JSONArray mapConditionNodes(TSituationTemplate situationTemplate, JSONArray nodeREDModel, boolean debug, String objectID) throws ParseException {
 
 		String xCoordinate = "600";
 		int yCoordinate = 50;
@@ -58,17 +60,28 @@ public class ConditionNodeMapper {
 			}
 			}
 			
-			if (node.getOpType().equals("greaterThan")) {
-				nodeREDNode.put("func", Nodes.getGreaterThanNode(conditionValues.get(0), "1", situationTemplate.getId(), sensorId, "0", "0"));
-			} else if (node.getOpType().equals("lowerThan")) {
-				nodeREDNode.put("func", Nodes.getLowerThanNode(conditionValues.get(0), "1", situationTemplate.getId(), sensorId, "0", "0"));
-			} else if (node.getOpType().equals("equals")) {
-				nodeREDNode.put("func", Nodes.getEqualsNode(conditionValues.get(0), "1", situationTemplate.getId(), sensorId, "0", "0"));
-			} else if (node.getOpType().equals("notEquals")) {
-				nodeREDNode.put("func", Nodes.getNotEquals(conditionValues.get(0), "1", situationTemplate.getId(), sensorId, "0", "0"));
-			} else if (node.getOpType().equals("between")) {
-				nodeREDNode.put("func", Nodes.getBetween(conditionValues, "1", situationTemplate.getId(), sensorId, "0", "0"));
+			Object methodReturn;
+			
+			if (node instanceof TTimeNode) {
+				TTimeNode timeNode = (TTimeNode)node;
+				try {
+					methodReturn = Nodes.class.getMethod("get" + timeNode.getOpType().toUpperCase() + "Node", String.class, String.class, String.class, String.class)
+						.invoke(null, timeNode.getAmountIntervals().toString(), conditionValues.get(0), objectID, situationTemplate.getId());
+				} catch (NoSuchMethodException | SecurityException | InvocationTargetException  | IllegalAccessException e) {
+					e.printStackTrace();
+					throw new RuntimeException(e);
+				}
+			} else {
+				try {
+					methodReturn = Nodes.class.getMethod("get" + node.getOpType().toUpperCase() + "Node", List.class, String.class, String.class, String.class, String.class, String.class)
+						.invoke(null, conditionValues, objectID, situationTemplate.getId(), sensorId, "0", "0");
+				} catch (NoSuchMethodException | SecurityException | InvocationTargetException  | IllegalAccessException e) {
+					e.printStackTrace();
+					throw new RuntimeException(e);
+				}
 			}
+			
+			nodeREDNode.put("func", methodReturn);
 		
 			nodeREDNode.put("outputs", "1");
 			
