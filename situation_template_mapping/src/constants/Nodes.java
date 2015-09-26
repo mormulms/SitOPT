@@ -1,17 +1,20 @@
 package constants;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import situationtemplate.model.TContextNode;
 
 /**
  * This class offers methods to generate the Node-RED function nodes as JSON
  */
 public class Nodes {
-	private final static String compareString = "var curr = parseInt(msg.payload);\n msg.situation = {'sensor':'%s', 'sensorquality':'%s', 'value':curr, "
+	private final static String compareString = "var curr = parseInt(JSON.parse(msg.payload).value);\n msg.situation = {'sensor':'%s', 'sensorquality':'%s', 'value':curr, "
 			+ "'timestamp':new Date(), 'quality':1}; \n if (curr %s %s) {\n\tmsg.payload = true;\n} else {\n\tmsg.payload = false;\n}\n\nreturn msg;";
-	private final static String statusCodeString = "var curr = parseInt(msg.payload);\n msg.situation = {'sensor':'%s', 'sensorquality':'%s', 'value':curr, "
+	private final static String statusCodeString = "var curr = parseInt(JSON.parse(msg.payload).value);\n msg.situation = {'sensor':'%s', 'sensorquality':'%s', 'value':curr, "
 			+ "'timestamp':new Date(), 'quality':1}; \n if (msg.statusCode %s %s) {\n  msg.payload = true;\n return msg;  \n} else {\n  msg.payload = false;\n return msg;\n}"
 			+ "\n\nreturn null;";
-	private final static String accumulationString = "context.values = context.values || new Array();\ncontext.values.push(msg.payload);\n\n"
+	private final static String accumulationString = "context.values = context.values || new Array();\ncontext.values.push(JSON.parse(msg.payload).value);\n\n"
 			+ "context.sensorValues = context.sensorValues || new Array();\ncontext.sensorValues.push(msg.situation);\n\nvar inputs = %s;\n"
 			+ "if (context.values.length == inputs) {\n	msg.situation = [];\n var returnValue = true;\n    var counter = 0;    for (var i = 0; i < inputs; i++)"
 			+ "{\n		msg.situation.push(context.sensorValues[i]);\n		%s\n  	}\n\n		if (returnValue) {\n		msg.situation.push("
@@ -19,11 +22,11 @@ public class Nodes {
 			+ "'timestamp':new Date(), 'situationtemplate':'%s' , 'occured':false});\n	}	\n  	context.values = null;\n	context.sensorValues = null;\n\n	"
 			+ "var jsonStr = '{\"situation\": []}';\n	var obj = JSON.parse(jsonStr);\n\n	for (var i = 0; i < msg.situation.length; i++) {\n		"
 			+ "obj.situation.push(msg.situation[i]);\n	}\n\n	msg.payload = obj;\n\n  	return msg;\n} else {\n	return null;\n}";
-	private final static String betweenString = "var curr = parseInt(msg.payload);\n msg.situation = {'sensor':'%s', 'sensorquality':'%s', "
+	private final static String betweenString = "var curr = parseInt(JSON.parse(msg.payload).value);\n msg.situation = {'sensor':'%s', 'sensorquality':'%s', "
 			+ "'value':curr, 'timestamp':new Date(), 'quality':1}; \n if (%s < msg.statusCode && msg.statusCode < %s) {\n  msg.payload = true;\n return msg;  \n} "
 			+ "else {\n  msg.payload = false;\n return msg;\n}\n\nreturn null;";
 	private final static String timeString = "context.values = context.values || new Array();\n"
-            + "context.values.push(msg.payload);\n\n"
+            + "context.values.push(JSON.parse(msg.payload).value);\n\n"
             + "context.sensorValues = context.sensorValues || new Array();\n"
             + "context.sensorValues.push(msg.situation);\n\n"
             + "var intervals = %s;\n"
@@ -48,6 +51,26 @@ public class Nodes {
             + "}\n\n"
             + "msg.payload = returnValue;\n"
             + "return msg;";
+	
+	private final static String sensorComparisonString = 
+			"var payload = msg.payload;\n"
+			+ "var obj = JSON.parse(payload);\n"
+			+ "var index;\n"
+			+ "%s\n\n"
+			+ "context.values = context.values || [];\n"
+			+ "if (context.values.length > index) {\n"
+			+ "    context.values[index] = obj.value;\n"
+			+ "} else if (context.values.length == index) {\n"
+			+ "    context.values.push(obj.value);\n"
+			+ "}\n"
+			+ "var bool = true;\n"
+			+ "if (context.values.length == %s) {\n"
+			+ "    for (var i = 0; i < %s - 1; i++) {\n"
+			+ "        bool &= (context.values[i] %s context.values[i+1]);\n"
+			+ "    }\n"
+			+ "}\n"
+			+ "msg.payload = bool;\n"
+			+ "return msg;";
 	
 	/**
 	 * Generates the JavaScript implementation of the "greater than" node
@@ -181,7 +204,7 @@ public class Nodes {
 	public static Object getAVERAGENode(String intervals, String value, String objectID, String situationTemplateID) {
 		final String immediateReturnValue = 
 	                    "    counter += parseInt(context.values[i]);\n"
-	                    + "    returnValue = counter;\n";
+	                    + "    returnValue = counter / (max - min);\n";
 		return String.format(timeString, intervals, "''", immediateReturnValue);
 	}
 
@@ -216,17 +239,117 @@ public class Nodes {
 	}
 
 	/**
-	 * Generates the JavaScript implementation of the "Interval" node
+	 * Generates the JavaScript implementation of the "intervalMinEqual" node
 	 * 
 	 * @return the Interval Node in JavaScript
 	 */
-	public static Object getINTERVALNode(String intervals, String value, String objectID, String situationTemplateID) {
+	public static Object getINTERVALMINEQUALNode(String intervals, String value, String objectID, String situationTemplateID) {
 		final String immediateReturnValue = 
 				"    if (context.values[i] == true) {\n"
 				+ "        counter++;\n"
 				+ "    }\n"
-				+ "    returnValue = counter == intervals;\n";
+				+ "    returnValue = counter >= intervals;\n";
 		
 		return String.format(timeString, intervals, value, immediateReturnValue);
+	}
+	
+	/**
+	 * Generates the JavaScript implementation of the "intervalMin" node
+	 * 
+	 * @return the Interval Node in JavaScript
+	 */
+	public static Object getINTERVALMINNode(String intervals, String value, String objectID, String situationTemplateID) {
+		final String immediateReturnValue = 
+				"    if (context.values[i] == true) {\n"
+				+ "        counter++;\n"
+				+ "    }\n"
+				+ "    returnValue = counter > intervals;\n";
+		
+		return String.format(timeString, intervals, value, immediateReturnValue);
+	}
+	
+	/**
+	 * Generates the JavaScript implementation of the "intervalMaxEqual" node
+	 * 
+	 * @return the Interval Node in JavaScript
+	 */
+	public static Object getINTERVALMAXEQUALNode(String intervals, String value, String objectID, String situationTemplateID) {
+		final String immediateReturnValue = 
+				"    if (context.values[i] == true) {\n"
+				+ "        counter++;\n"
+				+ "    }\n"
+				+ "    returnValue = counter <= intervals;\n";
+		
+		return String.format(timeString, intervals, value, immediateReturnValue);
+	}
+	
+	/**
+	 * Generates the JavaScript implementation of the "intervalMax" node
+	 * 
+	 * @return the Interval Node in JavaScript
+	 */
+	public static Object getINTERVALMAXNode(String intervals, String value, String objectID, String situationTemplateID) {
+		final String immediateReturnValue = 
+				"    if (context.values[i] == true) {\n"
+				+ "        counter++;\n"
+				+ "    }\n"
+				+ "    returnValue = counter < intervals;\n";
+		
+		return String.format(timeString, intervals, value, immediateReturnValue);
+	}
+
+	/**
+	 * Generates the JavaScript implementation of the "sensorEquals" node
+	 * 
+	 * @return the sensor Node in JavaScript
+	 */
+	public static Object getSENSOREQUALSNode(ArrayList<TContextNode> contextNodes, String value, String objectID, String situationTemplateID) {
+		String indexMapping = mapIndex(contextNodes);
+		return String.format(sensorComparisonString, indexMapping, contextNodes.size(), contextNodes.size(), "==");
+	}
+
+	/**
+	 * Generates the JavaScript implementation of the "sensorLowerThan" node
+	 * 
+	 * @return the sensor Node in JavaScript
+	 */
+	public static Object getSENSORLOWERTHANNode(ArrayList<TContextNode> contextNodes, String value, String objectID, String situationTemplateID) {
+		String indexMapping = mapIndex(contextNodes);
+		return String.format(sensorComparisonString, indexMapping, contextNodes.size(), contextNodes.size(), "<");
+	}
+
+	/**
+	 * Generates the JavaScript implementation of the "sensorGreaterThan" node
+	 * 
+	 * @return the sensor Node in JavaScript
+	 */
+	public static Object getSENSORGREATERTHANNode(ArrayList<TContextNode> contextNodes, String value, String objectID, String situationTemplateID) {
+		String indexMapping = mapIndex(contextNodes);
+		return String.format(sensorComparisonString, indexMapping, contextNodes.size(), contextNodes.size(), ">");
+	}
+
+	/**
+	 * Makes the index mapping for the sensor nodes.
+	 * 
+	 * @param contextNodes the sensors which are the input for the conditionNode
+	 * @return String mapping each sensor to an id.
+	 */
+	private static String mapIndex(ArrayList<TContextNode> contextNodes) {
+		int index = 0;
+		StringBuilder builder = new StringBuilder();
+		for (int i = 0; i < contextNodes.size(); i++) {
+			if (i == 0) {
+				builder.append("if (obj.sensor == \"");
+			} else {
+				builder.append("} else if (obj.sensor == \"");
+			}
+			builder.append(contextNodes.get(i).getName());
+			builder.append("\") {\n    index = ");
+			builder.append(index);
+			index++;
+			builder.append(";\n");
+		}
+		builder.append('}');
+		return builder.toString();
 	}
 }

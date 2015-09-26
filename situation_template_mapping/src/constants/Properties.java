@@ -4,9 +4,13 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+
+import situationtemplate.model.TContextNode;
 
 public class Properties {
 	private static String resourceServer, resourcePort, resourceProtocol, protocol, server, port, situationProtocol, situationServer, situationPort, situationPath;
+	private final static ArrayList<TContextNode> CONTEXT_NODES = new ArrayList<>();
 	
 	public static String getResourceServer() {
 		return resourceServer;
@@ -47,6 +51,10 @@ public class Properties {
 	public static String getSituationPath() {
 		return situationPath;
 	}
+	
+	public static ArrayList<TContextNode> getContextNodes() {
+		return CONTEXT_NODES;
+	}
 
 	static {
 		java.util.Properties prop = new java.util.Properties();
@@ -56,6 +64,9 @@ public class Properties {
 			resourceServer = prop.getProperty("resourceServer");
 			resourcePort = prop.getProperty("resourcePort");
 			resourceProtocol = prop.getProperty("resourceProtocol");
+			if (resourceProtocol == null) {
+				resourceProtocol = "http";
+			}
 			protocol = prop.getProperty("protocol");
 			server = prop.getProperty("server");
 			port = prop.getProperty("port");

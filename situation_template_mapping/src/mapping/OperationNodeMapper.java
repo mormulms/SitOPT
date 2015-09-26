@@ -3,8 +3,6 @@ package mapping;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-import javax.management.RuntimeErrorException;
-
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 

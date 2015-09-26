@@ -5,7 +5,6 @@
 	<!-- root -->
 	<xs:element name="SituationTemplate" type="tSituationTemplate"/>
 	
-	<!-- TODO: set maxOccurs="unbounded", a situation template could contain more than one situation -->
 	<xs:complexType name="tSituationTemplate">
 		<xs:sequence>
 			<xs:element name="Situation" type="tSituation" maxOccurs="unbounded"/>
@@ -36,7 +35,9 @@
 			<xs:element name="type">
 				<xs:simpleType>
 					<xs:restriction base="xs:string">
-						<xs:pattern value="and|xor|or" />
+						<xs:enumeration value="and"/>
+						<xs:enumeration value="xor"/>
+						<xs:enumeration value="or"/>
 					</xs:restriction>
 				</xs:simpleType>
 			</xs:element>
@@ -74,7 +75,21 @@
 			<xs:element name="opType" maxOccurs="1" minOccurs="1">
 				<xs:simpleType>
 					<xs:restriction base="xs:string">
-						<xs:pattern value="lowerThan|greaterThan|equals|notEquals|between|interval|average|min|max"/>
+						<xs:enumeration value="lowerThan"/>
+						<xs:enumeration value="greaterThan"/>
+						<xs:enumeration value="equals"/>
+						<xs:enumeration value="notEquals"/>
+						<xs:enumeration value="between"/>
+						<xs:enumeration value="average"/>
+						<xs:enumeration value="min"/>
+						<xs:enumeration value="max"/>
+						<xs:enumeration value="intervalMinEqual"/>
+						<xs:enumeration value="intervalMin"/>
+						<xs:enumeration value="intervalMaxEqual"/>
+						<xs:enumeration value="intervalMax"/>
+						<xs:enumeration value="sensorLowerThan" />
+						<xs:enumeration value="sensorGreaterThan" />
+						<xs:enumeration value="sensorEquals" />
 					</xs:restriction>
 				</xs:simpleType>
 			</xs:element>
@@ -90,7 +105,7 @@
 		<xs:attribute name="id" type="xs:ID" use="required"/>
 		<xs:attribute name="name" type="xs:string"/>
 	</xs:complexType>
-
+	
 	<xs:complexType name="tParent">
 		<xs:attribute name="parentID" type="xs:IDREF"/>
 	</xs:complexType>
