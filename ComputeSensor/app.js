@@ -8,24 +8,24 @@ app.get('/rmp/sensordata/:objectId/:sensorId', function(req, res) {
     var objectId = req.params.objectId;
     res.type('text/plain');
     switch (sensor) {
-        case "memorySensor":
+        case 'memorySensor':
             var memoryUsage = os.freemem();
             memoryUsage /= os.totalmem();
-            res.send((9).toString());
+            res.send('{"sensor":"' +sensor + '","objectId":"' + objectId + '", "value":"9"}');
             break;
 
-        case "cpuSensor":
+        case 'cpuSensor':
             os.cpuFree(function(value) {
-                res.send((30).toString())
+                res.send('{"sensor":"' +sensor + '","objectId":"' + objectId + '", "value":"30"}');
             });
             break;
 
-        case "watchdogSensor":
-            res.send((200).toString());
+        case 'watchdogSensor':
+            res.send('{"sensor":"' +sensor + '","objectId":"' + objectId + '", "value":"200"}');
             break;
     }
 });
 
 app.listen(8080, function() {
-    console.log("IT LIVES")
+    console.log('IT LIVES')
 });
