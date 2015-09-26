@@ -9,9 +9,9 @@ import situationtemplate.model.TContextNode;
  * This class offers methods to generate the Node-RED function nodes as JSON
  */
 public class Nodes {
-	private final static String compareString = "var curr = parseInt(JSON.parse(msg.payload).value);\n msg.situation = {'sensor':'%s', 'sensorquality':'%s', 'value':curr, "
+	private final static String compareString = "var curr = parseInt(JSON.parse(msg.payload).value);\n msg.situation = {'sensor':'%s', 'value':curr, "
 			+ "'timestamp':new Date(), 'quality':1}; \n if (curr %s %s) {\n\tmsg.payload = true;\n} else {\n\tmsg.payload = false;\n}\n\nreturn msg;";
-	private final static String statusCodeString = "var curr = parseInt(JSON.parse(msg.payload).value);\n msg.situation = {'sensor':'%s', 'sensorquality':'%s', 'value':curr, "
+	private final static String statusCodeString = "var curr = parseInt(JSON.parse(msg.payload).value);\n msg.situation = {'sensor':'%s', 'value':curr, "
 			+ "'timestamp':new Date(), 'quality':1}; \n if (msg.statusCode %s %s) {\n  msg.payload = true;\n return msg;  \n} else {\n  msg.payload = false;\n return msg;\n}"
 			+ "\n\nreturn null;";
 	private final static String accumulationString = "context.values = context.values || new Array();\ncontext.values.push(JSON.parse(msg.payload).value);\n\n"
@@ -22,7 +22,7 @@ public class Nodes {
 			+ "'timestamp':new Date(), 'situationtemplate':'%s' , 'occured':false});\n	}	\n  	context.values = null;\n	context.sensorValues = null;\n\n	"
 			+ "var jsonStr = '{\"situation\": []}';\n	var obj = JSON.parse(jsonStr);\n\n	for (var i = 0; i < msg.situation.length; i++) {\n		"
 			+ "obj.situation.push(msg.situation[i]);\n	}\n\n	msg.payload = obj;\n\n  	return msg;\n} else {\n	return null;\n}";
-	private final static String betweenString = "var curr = parseInt(JSON.parse(msg.payload).value);\n msg.situation = {'sensor':'%s', 'sensorquality':'%s', "
+	private final static String betweenString = "var curr = parseInt(JSON.parse(msg.payload).value);\n msg.situation = {'sensor':'%s', "
 			+ "'value':curr, 'timestamp':new Date(), 'quality':1}; \n if (%s < msg.statusCode && msg.statusCode < %s) {\n  msg.payload = true;\n return msg;  \n} "
 			+ "else {\n  msg.payload = false;\n return msg;\n}\n\nreturn null;";
 	private final static String timeString = "context.values = context.values || new Array();\n"
@@ -81,7 +81,7 @@ public class Nodes {
 	 * @return the node as JSON string
 	 */
 	public static String getGREATERTHANNode(List<String> conditionValues, String objectID, String situationTemplateID, String sensorId, String sensorQuality, String quality) {
-		return String.format(compareString, sensorId, sensorQuality, ">", conditionValues.get(0));
+		return String.format(compareString, sensorId, ">", conditionValues.get(0));
 	}
 
 	/**
@@ -93,7 +93,7 @@ public class Nodes {
 	 * @return the node as JSON string
 	 */
 	public static String getLOWERTHANNode(List<String> conditionValues, String objectID, String situationTemplateID, String sensorId, String sensorQuality, String quality) {
-		return String.format(compareString, sensorId, sensorQuality, "<", conditionValues.get(0));
+		return String.format(compareString, sensorId, "<", conditionValues.get(0));
 	}
 
 	/**
@@ -105,7 +105,7 @@ public class Nodes {
 	 * @return the node as JSON string
 	 */
 	public static String getEQUALSNode(List<String> conditionValues, String objectID, String situationTemplateID, String sensorId, String sensorQuality, String quality) {
-		return String.format(compareString, sensorId, sensorQuality, "==", conditionValues.get(0));
+		return String.format(compareString, sensorId, "==", conditionValues.get(0));
 	}
 
 	/**
@@ -117,7 +117,7 @@ public class Nodes {
 	 * @return the node in JSON
 	 */
 	public static String getNOTEQUALSNode(List<String> conditionValues, String objectID, String situationTemplateID, String sensorId, String sensorQuality, String quality) {
-		return String.format(statusCodeString, sensorId, sensorQuality, "!=", conditionValues.get(0));
+		return String.format(statusCodeString, sensorId, "!=", conditionValues.get(0));
 	}
 	
 	/**
@@ -133,7 +133,7 @@ public class Nodes {
 		String condValue1 = conditionValues.get(0);
 		String condValue2 = conditionValues.get(1);
 		
-		return String.format(betweenString, sensorId, sensorQuality, condValue1, condValue2);
+		return String.format(betweenString, sensorId, condValue1, condValue2);
 	}
 	
 	/**
@@ -151,6 +151,7 @@ public class Nodes {
 	 * 
 	 * @return the OR Node in JavaScript
 	 */
+	
 	public static Object getORNode(String numberOfInputs, String objectID, String situationTemplateID) {
 		final String immediateReturnValue = "if (context.values[i]) {\n	  		counter++;}\n                returnValue = counter >= 1;\n";
 		return String.format(accumulationString, numberOfInputs, immediateReturnValue, objectID, situationTemplateID, objectID, situationTemplateID);

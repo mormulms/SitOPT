@@ -1,0 +1,109 @@
+doctype html
+html
+  head
+    meta(http-equiv='refresh', content='1; URL=http://localhost:3001/things')
+    title SitOPT
+    link(rel='StyleSheet', href='style.css', type='text/css', media='screen')
+  body
+    #body2
+      #page
+        #menulinks
+          include navibar
+        #header
+          h1
+            a(href='#') SitOPT
+          .description Optimierung und Adaption situationsbezogener Anwendungen basierend auf Workflow-Fragmenten
+        #mainarea
+          #contentarea
+
+            h1 Things
+            h2 Things are objects that can be monitored. All things contain at least one sensor and return information which can then be combined within an executed situation template to derive the situation of the thing.
+            -for (var i in things)
+              - var thing = things[i]
+              .boxed
+
+                br
+                | Name: #{thing.name} 
+                br
+                | Monitored: #{thing.monitored}
+                br
+                | Location: 
+                a(href='https://maps.google.com/?q=#{thing.coordinates}')  
+                  | #{thing.coordinates}
+                br
+                | ID: #{thing.id} 
+                br
+                | URL: #{thing.url}
+                br
+                | Description: #{thing.description}
+                br
+                br 
+                | Situation Templates:    
+                select#selectedTemplate(onchange='startRec()')
+                  -for (var j in templates)
+                    -var template = templates[j]
+                    option(value='#{template.id }', title='Tooltip') #{template.name +" "+ template.id}
+                br 
+                | Situation Recognition System:    
+                select
+                  option(value='NodeRed') NodeRed
+                    |                   
+                    option(value='Esper') Esper (not implemented)
+                br
+                | Store every situation (when occured attribute does not change) (not implemented) 
+                input#check(type='checkbox', name='store', value='true')
+
+
+                form(method='post', action='/') 
+                  input(type='submit', value='Start situation recognition', onclick='startRecognition();')
+                  input(type='hidden', id='sendTemplate', name= "id", value= '')
+                br
+                br
+                | Situations: 
+                br
+
+
+                -for (var k in situations)
+                  -var situation = situations[k]
+                  -if (situation.thing == thing.id)
+                    br
+                    
+                    |   #{situation.name}:     
+                    -if (situation.occured == true)
+                      br 
+                      img(src='images/SystemFailure.jpg', alt='Failure') 
+                      | Situation is valid 
+                    -else
+                      br
+                      img(src='images/SystemOK.png', alt='OK') 
+                      | Situation is not valid
+                    br
+                    | Derived from situation template "#{situation.situationtemplate}" 
+                    br
+                    | Quality: #{situation.quality}
+                    br
+                    | Recognized at "#{situation.timestamp}"
+                    br
+                    
+
+
+                  
+              
+
+
+          #sidebar
+
+
+
+        #footer
+          include footer
+
+    script(language='JavaScript').
+                  
+      function startRecognition()
+        {
+        
+        var e = document.getElementById('selectedTemplate');
+        var strUser = e.options[e.selectedIndex].value;
+        document.getElementById('sendTemplate').value = strUser;
+        }  
