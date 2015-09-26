@@ -41,3 +41,4 @@ npm-debug.log
 /situation_template_mapping/src/situationtemplate
 /.recommenders
 /situation_template_mapping/doc
+.idea
