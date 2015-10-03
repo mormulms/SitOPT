@@ -1,0 +1,26 @@
+{
+  "author": "Armin Hüneburg <hueneburg.armin@gmail.com",
+  "name": "RBS",
+  "description": "Node.JS implementation of the RBS (originally in Java)",
+  "version": "0.0.1",
+  "engines": {
+    "node": ">=0.10.0"
+  },
+  "dependencies": {
+    "actionhero": "12.0.0",
+    "grunt": "latest",
+    "mongoose": "^4.1.8",
+    "ws": "latest"
+  },
+  "devDependencies": {
+    "mocha": "latest",
+    "should": "latest"
+  },
+  "scripts": {
+    "help": "actionhero help",
+    "start": "actionhero start",
+    "actionhero": "actionhero",
+    "startCluster": "actionhero startCluster",
+    "test": "mocha"
+  }
+}
