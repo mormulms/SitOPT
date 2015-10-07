@@ -12,6 +12,7 @@ import javax.xml.bind.Unmarshaller;
 import javax.xml.transform.stream.StreamSource;
 
 import mapping.Mapper;
+import mapping.ObjectIdSensorIdMapping;
 import situationtemplate.model.TSituationTemplate;
 
 /**
@@ -30,14 +31,14 @@ public class Mapping implements MappingInterface {
 	 * 				 the URL of the machine 
 	 */
 	@Override
-	public void mapAndDeployXMLString(String situationTemplateAsXML, boolean doOverwrite, String url, boolean debug) {
+	public void mapAndDeployXMLString(String situationTemplateAsXML, boolean doOverwrite, ObjectIdSensorIdMapping sensorMapping, boolean debug) {
 		
 		// input is defined, parse the XML model
 		TSituationTemplate situationTemplate = JAXB.unmarshal(new StringReader(situationTemplateAsXML), TSituationTemplate.class);
 
 		Mapper mapper = new Mapper(situationTemplate);
 		Date date = new Date();
-		mapper.map(doOverwrite, url, date.getTime(), debug);	
+		mapper.map(doOverwrite, sensorMapping, date.getTime(), debug);	
 	}
 	
 	/**
@@ -51,7 +52,7 @@ public class Mapping implements MappingInterface {
 	 * 				 the URL of the machine 
 	 */
 	@Override
-	public void mapAndDeploy(String situationTemplatePath, boolean doOverwrite, String url, boolean debug) {
+	public void mapAndDeploy(String situationTemplatePath, boolean doOverwrite, ObjectIdSensorIdMapping sensorMapping, boolean debug) {
 		try {
 			// input is defined, parse the XML model
 			JAXBContext jc;
@@ -65,7 +66,7 @@ public class Mapping implements MappingInterface {
 
 			Mapper mapper = new Mapper(situationTemplate);
 			Date date = new Date();
-			mapper.map(doOverwrite, url, date.getTime(), debug);
+			mapper.map(doOverwrite, sensorMapping, date.getTime(), debug);
 
 		} catch (JAXBException e) {
 			System.err.println("Could not parse the XML file, an error occurred.");

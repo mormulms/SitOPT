@@ -2,6 +2,7 @@ package mapping;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -9,6 +10,7 @@ import org.json.simple.JSONObject;
 import constants.Nodes;
 import constants.Properties;
 import situationtemplate.model.TConditionNode;
+import situationtemplate.model.TContextNode;
 import situationtemplate.model.TOperationNode;
 import situationtemplate.model.TParent;
 import situationtemplate.model.TSituation;
@@ -32,7 +34,7 @@ public class OperationNodeMapper {
 	 * @return the mapped model
 	 */
 	@SuppressWarnings("unchecked")
-	public JSONArray mapOperationNodes(TSituationTemplate situationTemplate, JSONArray nodeREDModel, String objectID) {
+	public JSONArray mapOperationNodes(TSituationTemplate situationTemplate, JSONArray nodeREDModel, ObjectIdSensorIdMapping sensorMapping) {
 		
 		// TODO those are just random values, write style function!
 		int xCoordinate = 900;
@@ -63,6 +65,36 @@ public class OperationNodeMapper {
 			// create the comparison node in NodeRED
 			JSONObject nodeREDNode = NodeREDUtils.createNodeREDNode(situationTemplate.getId() + "." + logicNode.getId(), logicNode.getName(), "function", Integer.toString(xCoordinate), Integer.toString(yCoordinate), zCoordinate);
 			Method m;
+			ArrayList<String> parentIds = new ArrayList<>();
+			parentIds.add(logicNode.getId());
+			ArrayList<TContextNode> sensors = new ArrayList<>();
+			
+			for (TOperationNode node : situation.getOperationNode()) {
+				for (TParent parent : node.getParent()) {
+					if (parentIds.contains(parent.getParentID())) {
+						parentIds.add(node.getId());
+						break;
+					}
+				}
+			}
+			for (TConditionNode node : situation.getConditionNode()) {
+				for (TParent parent : node.getParent()) {
+					if (parentIds.contains(parent.getParentID())) {
+						parentIds.add(node.getId());
+						break;
+					}
+				}
+			}
+			for (TContextNode node : situation.getContextNode()) {
+				for (TParent parent : node.getParent()) {
+					if (parentIds.contains(parent.getParentID())) {
+						sensors.add(node);
+						break;
+					}
+				}
+			}
+			
+			String sensorIdMapping = sensorMapping.map(sensors);
 			
 			try {
 				m = Nodes.class.getMethod("get" + logicNode.getType().toUpperCase() + (logicNode.isNegated() ? "Not" : "") + "Node", String.class, String.class, String.class);
@@ -72,7 +104,7 @@ public class OperationNodeMapper {
 			}
 			
 			try {
-				nodeREDNode.put("func", m.invoke(null, Integer.toString(children), objectID, situationTemplate.getId()));
+				nodeREDNode.put("func", m.invoke(null, Integer.toString(children), sensorIdMapping, situationTemplate.getId()));
 			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 				e.printStackTrace();
 				throw new RuntimeException(e);

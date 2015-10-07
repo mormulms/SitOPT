@@ -1,5 +1,7 @@
 package api;
 
+import mapping.ObjectIdSensorIdMapping;
+
 /**
  * The interface of the mapping
  */
@@ -15,8 +17,8 @@ public interface MappingInterface {
 	 * @param url
 	 * 				 the URL of the machine 
 	 */
-	public void mapAndDeploy(String situationTemplatePath, boolean doOverwrite, String url, boolean debug);
+	public void mapAndDeploy(String situationTemplatePath, boolean doOverwrite, ObjectIdSensorIdMapping sensorMapping, boolean debug);
 	
-	public void mapAndDeployXMLString(String situationTemplateAsXML, boolean doOverwrite, String url, boolean debug);
+	public void mapAndDeployXMLString(String situationTemplateAsXML, boolean doOverwrite, ObjectIdSensorIdMapping sensorMapping, boolean debug);
 	
 }

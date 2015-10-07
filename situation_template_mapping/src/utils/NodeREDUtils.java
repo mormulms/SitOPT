@@ -5,6 +5,7 @@ import java.util.Random;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
+import mapping.ObjectIdSensorIdMapping;
 import situationtemplate.model.TContextNode;
 import situationtemplate.model.TSituation;
 import situationtemplate.model.TSituationTemplate;
@@ -90,7 +91,8 @@ public class NodeREDUtils {
 	 * @return the inject node
 	 */
 	@SuppressWarnings("unchecked")
-	public static JSONObject generateInputNode(String zCoordinate, TSituationTemplate situationTemplate, JSONObject debugNode) {
+	public static JSONObject generateInputNode(String zCoordinate, TSituationTemplate situationTemplate,
+			JSONObject debugNode, ObjectIdSensorIdMapping sensorMapping) {
 
 		JSONObject input = new JSONObject();
 		input.put("id", generateNodeREDId());
@@ -112,35 +114,37 @@ public class NodeREDUtils {
 
 		// TODO
 		for (TSituation situation : situationTemplate.getSituation()) {
-		for (TContextNode sensorNode : situation.getContextNode()) {
-			String sensorNodeId = sensorNode.getId();
-			connections.add(situationTemplate.getId() + "." + sensorNodeId);
+			for (TContextNode sensorNode : situation.getContextNode()) {
+				for (String object : sensorMapping.getObjects(sensorNode.getId())) {
+					String sensorNodeId = sensorNode.getId() + object;
+					connections.add(situationTemplate.getId() + "." + sensorNodeId);
+				}
+			}
 		}
-		}
-		
+
 		connections.add(debugNode.get("id"));
-		
+
 		wires.add(connections);
 		input.put("wires", wires);
 
 		return input;
 	}
-	
+
 	/**
 	 * Creates a NodeRED JSON node
 	 * 
 	 * @param id
-	 * 			 the id of the node
+	 *            the id of the node
 	 * @param name
-	 * 			 the name of the node
+	 *            the name of the node
 	 * @param type
-	 * 			 the type of the node
+	 *            the type of the node
 	 * @param x
-	 * 			the x coordinate of the node
+	 *            the x coordinate of the node
 	 * @param y
-	 * 			the y coordinate of the node
+	 *            the y coordinate of the node
 	 * @param z
-	 * 			the sheet id
+	 *            the sheet id
 	 * 
 	 * @return the node as JSONObject
 	 */
@@ -153,7 +157,7 @@ public class NodeREDUtils {
 		nodeREDNode.put("x", x);
 		nodeREDNode.put("y", y);
 		nodeREDNode.put("z", z);
-		
+
 		return nodeREDNode;
 	}
 }

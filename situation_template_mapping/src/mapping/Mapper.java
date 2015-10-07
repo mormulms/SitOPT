@@ -5,6 +5,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 
 import situationtemplate.model.TConditionNode;
+import situationtemplate.model.TContextNode;
 import situationtemplate.model.TParent;
 import situationtemplate.model.TSituation;
 import situationtemplate.model.TSituationTemplate;
@@ -39,12 +40,12 @@ public class Mapper {
 	 * Main class of the mapping that receives the pattern-based model as XML
 	 * and invokes methods to transform it into an executable model in JSON.
 	 * 
-	 * @param objectID
+	 * @param sensorMapping
 	 * 				 the URL of the machine 
 	 * @param debug 
 	 */
 	@SuppressWarnings("unchecked")
-	public void map(boolean doOverwrite, String objectID, long timestamp, boolean debug) {
+	public void map(boolean doOverwrite, ObjectIdSensorIdMapping sensorMapping, long timestamp, boolean debug) {
 		try {
 
 			JSONArray nodeREDModel = new JSONArray();
@@ -55,18 +56,18 @@ public class Mapper {
 			nodeREDModel.add(debugNode);
 			
 			// each NodeRED flow needs an inject input node, which is generated and added at this point
-			JSONObject input = NodeREDUtils.generateInputNode(situationTemplate.getId(), situationTemplate, debugNode);
+			JSONObject input = NodeREDUtils.generateInputNode(situationTemplate.getId(), situationTemplate, debugNode, sensorMapping);
 			nodeREDModel.add(input);
 
 			// first, map all the operation nodes, then map the other nodes
 			OperationNodeMapper lnm = new OperationNodeMapper();
-			lnm.mapOperationNodes(situationTemplate, nodeREDModel, objectID);
+			lnm.mapOperationNodes(situationTemplate, nodeREDModel, sensorMapping);
 			
 			ContextNodeMapper snm = new ContextNodeMapper();
-			nodeREDModel = snm.mapContextNodes(situationTemplate, nodeREDModel, objectID, debug);
+			nodeREDModel = snm.mapContextNodes(situationTemplate, nodeREDModel, sensorMapping, debug);
 			
 			ConditionNodeMapper nm = new ConditionNodeMapper();
-			JSONArray finalModel = nm.mapConditionNodes(situationTemplate, nodeREDModel, debug, objectID);
+			JSONArray finalModel = nm.mapConditionNodes(situationTemplate, nodeREDModel, debug, sensorMapping);
 						
 			// write the JSON file (just for debug reasons), remember to change the path when using this method
 			//IOUtils.writeJSONFile(finalModel, situationTemplate);
@@ -82,6 +83,7 @@ public class Mapper {
 //			}
 			
 			Date endDate = new Date();
+			System.out.println(finalModel.toJSONString());
 			System.out.println("Deploy Time: " + (begin-endDate.getTime()));
 		} catch (ParseException e) {
 			System.err.println("Could not parse JSON, an error occurred.");

@@ -1,5 +1,7 @@
 package mapping;
 
+import java.util.ArrayList;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -27,16 +29,18 @@ public class ContextNodeMapper {
 	 * Maps the context nodes to corresponding NodeRED nodes
 	 * 
 	 * @param situationTemplate
-	 * 				 the situation template JAXB node
+	 *            the situation template JAXB node
 	 * @param nodeREDModel
-	 * 				 the Node-RED flow as JSON
+	 *            the Node-RED flow as JSON
 	 * @param objectID
-	 * 				 the URL of the machine
+	 *            the URL of the machine
 	 * 
 	 * @return the mapped JSON model
 	 */
 	@SuppressWarnings("unchecked")
-	public JSONArray mapContextNodes(TSituationTemplate situationTemplate, JSONArray nodeREDModel, String objectID, boolean debug) {
+	public JSONArray mapContextNodes(TSituationTemplate situationTemplate, JSONArray nodeREDModel,
+			ObjectIdSensorIdMapping sensorMapping, boolean debug) {
+		System.out.println("Before Sensor: " + nodeREDModel.size());
 
 		int xCoordinate = 300;
 		int yCoordinate = 50;
@@ -52,50 +56,59 @@ public class ContextNodeMapper {
 		builder.append(Properties.getResourcePort());
 		builder.append(builder.charAt(builder.length() - 1) == '/' ? "" : '/');
 		builder.append("rmp/sensordata/");
-		url = builder.toString();	
+		url = builder.toString();
 
 		for (TSituation situation : situationTemplate.getSituation()) {
 			for (TContextNode sensorNode : situation.getContextNode()) {
 				Properties.getContextNodes().add(sensorNode);
 
-				String sensorURL = url +  objectID + "/" + sensorNode.getName();
+				String sensorURL = url + "%s/" + sensorNode.getName();
 
 				// create the corresponding NodeRED JSON node
-				JSONObject nodeREDNode = NodeREDUtils.createNodeREDNode(situationTemplate.getId() + "." + sensorNode.getId(), sensorNode.getName(), TYPE, Integer.toString(xCoordinate), Integer.toString(yCoordinate), zCoordinate);
-				nodeREDNode.put("method", METHOD);
-				nodeREDNode.put("url", sensorURL);
+				ArrayList<JSONObject> nodeREDNodes = new ArrayList<>();
+				String[] objects = sensorMapping.getObjects(sensorNode.getId());
+				for (String object : objects) {
+					JSONObject nodeREDNode = NodeREDUtils.createNodeREDNode(
+							situationTemplate.getId() + "." + sensorNode.getId() + object,
+							sensorNode.getName() + " for " + object, TYPE, Integer.toString(xCoordinate),
+							Integer.toString(yCoordinate), zCoordinate);
+					nodeREDNode.put("method", METHOD);
+					nodeREDNode.put("url", String.format(sensorURL, object));
+					nodeREDNodes.add(nodeREDNode);
+					yCoordinate += 100;
 
-				// now connect the node to the flow
-				JSONArray wiresNode = new JSONArray();
-				JSONArray connections = new JSONArray();
+					// now connect the node to the flow
+					JSONArray wiresNode = new JSONArray();
+					JSONArray connections = new JSONArray();
 
-				if (debug) {
-					// map the sensor node to a debug node
-					// TODO X/Y coordinates
-					JSONObject debugNode = NodeREDUtils.generateDebugNode("600", "500", zCoordinate);
-					debugNode.put("name", sensorNode.getName());
-					debugNode.put("console", "true");
-					nodeREDModel.add(debugNode);
-					connections.add(debugNode.get("id"));
-				}
-				// connect to the parents
-				for (TParent parent : sensorNode.getParent()) {
-					if (parent.getParentID() instanceof TConditionNode) {
-						String a = ((TConditionNode)parent.getParentID()).getId();
-						connections.add(situationTemplate.getId() + "." +((TConditionNode) parent.getParentID()).getId());
-					} else if (parent.getParentID() instanceof TOperationNode) {
-						connections.add(situationTemplate.getId() + "." +((TOperationNode) parent.getParentID()).getId());
+					if (debug) {
+						// map the sensor node to a debug node
+						// TODO X/Y coordinates
+						JSONObject debugNode = NodeREDUtils.generateDebugNode("600", "500", zCoordinate);
+						debugNode.put("name", sensorNode.getName());
+						debugNode.put("console", "true");
+						nodeREDModel.add(debugNode);
+						connections.add(debugNode.get("id"));
 					}
+					// connect to the parents
+					for (TParent parent : sensorNode.getParent()) {
+						if (parent.getParentID() instanceof TConditionNode) {
+							connections.add(situationTemplate.getId() + "."
+									+ ((TConditionNode) parent.getParentID()).getId() + object);
+						} else if (parent.getParentID() instanceof TOperationNode) {
+							connections.add(situationTemplate.getId() + "."
+									+ ((TOperationNode) parent.getParentID()).getId() + object);
+						}
+					}
+
+					wiresNode.add(connections);
+					nodeREDNode.put("wires", wiresNode);
+					nodeREDModel.add(nodeREDNode);
 				}
 
-				wiresNode.add(connections);
-
-				nodeREDNode.put("wires", wiresNode);
-				nodeREDModel.add(nodeREDNode);
-
-				yCoordinate += 100;
 			}
 		}
+		System.out.println("After Sensors: " + nodeREDModel.size());
 
 		return nodeREDModel;
 	}

@@ -1,17 +1,13 @@
 package mapping;
 
 import java.io.File;
-import java.io.StringReader;
-import java.util.Date;
 
-import javax.xml.bind.JAXB;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.transform.stream.StreamSource;
 
-import api.Mapping;
 import situationtemplate.model.TConditionNode;
 import situationtemplate.model.TConditionNode.CondValue;
 import situationtemplate.model.TContextNode;
@@ -28,49 +24,18 @@ public class Main {
 	 * main method for debug reasons
 	 *  
 	 * @param args
-	 * 			  0 URL of the machine to be monitored
+	 * 			  0 Path to objectID<->SensorID mapping
 	 *            1 path to a valid situation template defined in XML
 	 *            2 debug flag
 	 */
 	public static void main(String[] args) {
-		
-		
-		System.out.println("Template: " + args[0]);
-		System.out.println("Boolean: " + args[1]);
-		System.out.println("Url: " + args[2]);
-		System.out.println("Debug: " + args[3]);
-		
-		 
-		
-		String str = args[0].replace("\\r"," ").replace("\\n"," ").replace("\\t"," ");
-		System.out.println("New: " + str);
-		
-		
-		Mapping mapping = new Mapping();
-		
-		//For mapping situation templates by XML string
-		mapping.mapAndDeployXMLString(str, Boolean.parseBoolean(args[1])  ,args[2] ,  false);
-		
-		//for mapping situation templates by XML file
-		//mapping.mapAndDeploy(args[0], true, args[2], false);
-		
-		
-		//TSituationTemplate situationTemplate = JAXB.unmarshal(new StringReader(args[0]), TSituationTemplate.class);
-
-		//Mapper mapper = new Mapper(situationTemplate);
-		//Date date = new Date();
-		//mapper.map(true, args[2], date.getTime(), false);	
-		
-		
-		/*try {
+		try {
 			
 			// connects each node to a corresponding debug node
 			// deactivate this flag for measurements
 			boolean debug = Boolean.getBoolean(args[2]);
 			
 			java.util.Date date= new java.util.Date();
-			 
-			String objectID = args[0];
 			
 			// if no input is defined, we just define an exemplary situation
 			// template using JAXB
@@ -78,10 +43,8 @@ public class Main {
 				/*// we create an exemplary situation template using JAXB to test our code
 				TSituationTemplate situationTemplate = new TSituationTemplate();
 				situationTemplate.setId(NodeREDUtils.generateNodeREDId());
-
 				TSituation situation = new TSituation();
 				situation.setId(NodeREDUtils.generateNodeREDId());
-
 				TOperationNode myAND = new TOperationNode();
 				String andId = NodeREDUtils.generateNodeREDId();
 				myAND.setId(andId);
@@ -124,29 +87,26 @@ public class Main {
 				TParent parent3 = new TParent();
 				parent3.setParentID(freeRAMLowerThanNode);
 				sensorNode.getParent().add(parent3);
-
 				TContextNode sensorNode1 = new TContextNode();
 				sensorNode1.setId(MockUpRegistry.getDataSourceIDs(1));
 				sensorNode1.setName("cpuSensor");
 				TParent parent4 = new TParent();
 				parent4.setParentID(cpuGreatherThanNode);
 				sensorNode1.getParent().add(parent4);
-
 				situation.getContextNode().add(sensorNode);
 				situation.getContextNode().add(sensorNode1);
-
 				situation.getConditionNode().add(freeRAMLowerThanNode);
 				situation.getConditionNode().add(cpuGreatherThanNode);
-
 				situationTemplate.setSituation(situation);
 			
 				long timestamp = date.getTime();
-
 				Mapper mapper = new Mapper(situationTemplate);
 				mapper.map(false, url, timestamp, debug);*/
 			} else {
 				
 				IOUtils.clearNodeRED();
+				
+				ObjectIdSensorIdMapping sensorMapping = new ObjectIdSensorIdMapping(args[0]);
 				
 				// input is defined, parse the XML model
 				JAXBContext jc = JAXBContext.newInstance(TSituationTemplate.class);
@@ -163,12 +123,12 @@ public class Main {
 					long timestamp = date.getTime();
 					
 					Mapper mapper = new Mapper(situationTemplate);
-					mapper.map(false, objectID, timestamp, debug);
+					mapper.map(false, sensorMapping, timestamp, debug);
 //				}
 			}
 		} catch (JAXBException e) {
 			System.err.println("Could not parse JAXB object.");
 			e.printStackTrace();
-		}*/
+		}
 	}
 }
