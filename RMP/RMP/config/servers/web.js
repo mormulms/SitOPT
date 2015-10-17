@@ -21,14 +21,14 @@ exports.default = {
         },
         // Route that actions will be served from; secondary route against this route will be treated as actions,
         //  IE: /api/?action=test == /api/test/
-        urlPathForActions : 'api',
+        urlPathForActions : '',
         // Route that static files will be served from;
         //  path (relative to your project root) to serve static content from
         //  set to `null` to disable the file server entirely 
         urlPathForFiles : 'public',
         // When visiting the root URL, should visitors see 'api' or 'file'?
         //  Visitors can always visit /api and /public as normal
-        rootEndpointType : 'api',
+        rootEndpointType : 'file',
         // simple routing also adds an 'all' route which matches /api/:action for all actions
         simpleRouting : true,
         // queryRouting allows an action to be defined via a URL param, ie: /api?action=:action

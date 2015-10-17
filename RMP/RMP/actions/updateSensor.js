@@ -13,7 +13,8 @@ exports.action = {
         objectID: {required: true},
         sensorUrl: {required: false},
         sensorType: {required: false},
-        timeStamp: {required: false}
+        timeStamp: {required: false},
+        quality: {required: false}
     },
 
     run: function(api, data, next){
@@ -30,6 +31,9 @@ exports.action = {
             updates.timestamp = data.params.timeStamp;
         } else {
             updates.timestamp = new Date();
+        }
+        if (data.params.quality != null) {
+            updates.quality = data.params.quality;
         }
         if (!(data.params.sensorType == null && data.params.sensorUrl == null)) {
             api.sensor.update({sensorID: data.params.sensorID, objectID: data.params.objectID}, updates, function (err, amount) {

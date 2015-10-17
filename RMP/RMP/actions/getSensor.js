@@ -10,11 +10,11 @@ exports.action = {
 
     inputs: {
         sensorID: {required: true},
-        objectID: {required: true}
+        objectID: {required: false}
     },
 
     run: function(api, data, next) {
-        api.sensor.findOne({sensorID: data.params.sensorID, objectID: data.params.objectID}, function (err, sensor) {
+        api.sensor.findOne({sensorID: data.params.sensorID}, function (err, sensor) {
             if (err) {
                 next(err);
             } else {

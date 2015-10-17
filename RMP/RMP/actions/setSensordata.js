@@ -9,7 +9,6 @@ exports.action = {
     middleware:             [],
 
     inputs: {
-        objectID: {required: true},
         sensorID: {required: true},
         value: {required: true},
         timeStamp: {required: false}
@@ -19,7 +18,7 @@ exports.action = {
         var error = null;
 
         var date = data.params.timeStamp || new Date();
-        api.sensorCache.findOneAndUpdate({objectID: data.params.objectID, sensorID: data.params.sensorID}, {value: data.params.value, timeStamp: date}, function(err, val) {
+        api.sensorCache.findOneAndUpdate({sensorID: data.params.sensorID}, {value: data.params.value, timeStamp: date}, function(err, val) {
             if (err) {
                 console.log(err);
                 next(err);
@@ -28,7 +27,7 @@ exports.action = {
                 data.response.payload = val[0];
                 next(null);
             } else {
-                var obj = new api.sensorCache({sensorID:data.params.sensorID, objectID: data.params.objectID, value: data.params.value, timeStamp: date});
+                var obj = new api.sensorCache({sensorID:data.params.sensorID, value: data.params.value, timeStamp: date});
                 obj.save(function(err) {
                     if (err) {
                         console.log(err);

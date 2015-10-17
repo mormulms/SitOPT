@@ -17,12 +17,12 @@ exports.task = {
                 for (var i = 0; i < result.length; i++) {
                     var value = result[i];
                     var url = value.sensorUrl;
-                    if (url.toLowerCase().startWith("https")) {
+                    if (url.toLowerCase().startsWith("https")) {
                         module = https;
                     }
                     var splits = url.split("/");
                     var hostPort = splits[2];
-                    if (!url.startWith("http")) {
+                    if (!url.startsWith("http")) {
                         hostPort = splits[0];
                     }
                     splits = hostPort.split(":");
