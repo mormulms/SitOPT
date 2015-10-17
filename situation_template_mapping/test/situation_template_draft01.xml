@@ -36,13 +36,13 @@
 			</condValue>
 			<parent parentID="A3"></parent>
 		</conditionNode>
-		<contextNode id="A5" name="memorySensor">
+		<contextNode id="A5" type="memorySensor">
 			<parent parentID="A8"></parent>
 		</contextNode>
-		<contextNode id="A6" name="cpuSensor">
+		<contextNode id="A6" type="cpuSensor">
 			<parent parentID="A4"></parent>
 		</contextNode>
-		<contextNode id="A7" name ="watchdogSensor">
+		<contextNode id="A7" type="watchdogSensor">
 			<parent parentID="A9"/>
 		</contextNode>
 		<situationNode name="machine_failed" id="A10"/>

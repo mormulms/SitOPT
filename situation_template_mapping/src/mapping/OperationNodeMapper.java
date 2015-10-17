@@ -56,7 +56,15 @@ public class OperationNodeMapper {
 						}
 					} else if (parent.getParentID() instanceof TOperationNode) {
 						if (((TOperationNode) parent.getParentID()).getId().equals(logicNode.getId())) {
-							children++;
+							for (TContextNode snode : situation.getContextNode()) {
+								for (TParent sparent : snode.getParent()) {
+									if (((TConditionNode)sparent.getParentID()).getId().equals(node.getId())) {
+										for (String object : sensorMapping.getObjects(snode.getId())) {
+											children++;
+										}
+									}
+								}
+							}
 						}
 					}
 				}

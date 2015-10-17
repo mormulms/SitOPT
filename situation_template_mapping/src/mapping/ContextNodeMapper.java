@@ -40,7 +40,6 @@ public class ContextNodeMapper {
 	@SuppressWarnings("unchecked")
 	public JSONArray mapContextNodes(TSituationTemplate situationTemplate, JSONArray nodeREDModel,
 			ObjectIdSensorIdMapping sensorMapping, boolean debug) {
-		System.out.println("Before Sensor: " + nodeREDModel.size());
 
 		int xCoordinate = 300;
 		int yCoordinate = 50;
@@ -62,15 +61,16 @@ public class ContextNodeMapper {
 			for (TContextNode sensorNode : situation.getContextNode()) {
 				Properties.getContextNodes().add(sensorNode);
 
-				String sensorURL = url + "%s/" + sensorNode.getName();
+				String sensorURL = url + "%s/" + sensorNode.getType();
 
 				// create the corresponding NodeRED JSON node
 				ArrayList<JSONObject> nodeREDNodes = new ArrayList<>();
 				String[] objects = sensorMapping.getObjects(sensorNode.getId());
 				for (String object : objects) {
+					String name = sensorNode.getName() == null ? sensorNode.getType() : sensorNode.getName();
 					JSONObject nodeREDNode = NodeREDUtils.createNodeREDNode(
 							situationTemplate.getId() + "." + sensorNode.getId() + object,
-							sensorNode.getName() + " for " + object, TYPE, Integer.toString(xCoordinate),
+							name + " for " + object, TYPE, Integer.toString(xCoordinate),
 							Integer.toString(yCoordinate), zCoordinate);
 					nodeREDNode.put("method", METHOD);
 					nodeREDNode.put("url", String.format(sensorURL, object));
@@ -85,7 +85,7 @@ public class ContextNodeMapper {
 						// map the sensor node to a debug node
 						// TODO X/Y coordinates
 						JSONObject debugNode = NodeREDUtils.generateDebugNode("600", "500", zCoordinate);
-						debugNode.put("name", sensorNode.getName());
+						debugNode.put("name", sensorNode.getName().isEmpty() ? sensorNode.getType() : sensorNode.getName());
 						debugNode.put("console", "true");
 						nodeREDModel.add(debugNode);
 						connections.add(debugNode.get("id"));
@@ -108,7 +108,6 @@ public class ContextNodeMapper {
 
 			}
 		}
-		System.out.println("After Sensors: " + nodeREDModel.size());
 
 		return nodeREDModel;
 	}

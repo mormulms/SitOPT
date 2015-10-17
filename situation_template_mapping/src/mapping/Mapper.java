@@ -83,7 +83,6 @@ public class Mapper {
 //			}
 			
 			Date endDate = new Date();
-			System.out.println(finalModel.toJSONString());
 			System.out.println("Deploy Time: " + (begin-endDate.getTime()));
 		} catch (ParseException e) {
 			System.err.println("Could not parse JSON, an error occurred.");

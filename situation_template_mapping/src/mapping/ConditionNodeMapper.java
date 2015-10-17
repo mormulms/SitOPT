@@ -48,7 +48,6 @@ public class ConditionNodeMapper {
 
 		for (TSituation situation : situationTemplate.getSituation()) {
 			for (TConditionNode node : situation.getConditionNode()) {
-				System.out.println("CONDITION: " + node.getId());
 				ArrayList<String> objects = new ArrayList<>();
 				for (TContextNode cnode : situation.getContextNode()) {
 					for (TParent parent : cnode.getParent()) {
@@ -147,7 +146,7 @@ public class ConditionNodeMapper {
 					if (debug) {
 						// also connect to a debug node
 						JSONObject debugNode = NodeREDUtils.generateDebugNode("600", "500", situationTemplate.getId());
-						debugNode.put("name", node.getName());
+						debugNode.put("name", node.getName().isEmpty() ? node.getOpType() : node.getName());
 						debugNode.put("console", "true");
 
 						nodeREDModel.add(debugNode);
@@ -157,7 +156,6 @@ public class ConditionNodeMapper {
 					wiresNode.add(connections);
 
 					nodeREDNode.put("wires", wiresNode);
-					System.out.println("WIRES:\n" + wiresNode.toJSONString());
 
 					nodeREDModel.add(nodeREDNode);
 					yCoordinate += 100;
