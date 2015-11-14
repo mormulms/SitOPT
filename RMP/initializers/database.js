@@ -19,7 +19,9 @@ module.exports = {
                 objectID: String,
                 sensorID: String,
                 value: String,
-                timeStamp: {type: Date, default: Date.now}
+                timeStamp: {type: Date, default: Date.now},
+                quality: Number,
+                sensorQuality: Number
             });
 
             api.sensorCache = mongoose.model('Cache', cacheSchema);

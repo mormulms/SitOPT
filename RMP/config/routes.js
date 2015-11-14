@@ -28,13 +28,14 @@ exports.default = {
              ---------------------- */
 
             get : [
-                { path: '/sensordata/:objectID/:sensorID', action: 'getSensordata' },
+                { path: '/rmp/sensordata/:objectID/:sensorType', action: 'getSensordata' },
                 { path: '/sensor/:objectID/:sensorID', action: 'getSensor' },
-                { path: '/sensor', action: 'getAllSensors' }
+                { path: '/sensor', action: 'getAllSensors' },
+                { path: '/rmp/objectdata/:objectID', action: 'getObjectdata' }
             ],
 
             post : [
-                { path: '/', action: 'setSensordata'},
+                { path: '/value', action: 'setSensordata'},
                 { path: '/sensor', action: 'addSensor' }
             ],
 
