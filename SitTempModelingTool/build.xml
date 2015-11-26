@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project basedir="." default="build" name="SitTempModelingTool">
+    <property environment="env"/>
+    <property name="srcDir" value="."/>
+    <property name="debuglevel" value="source,lines,vars"/>
+    <property name="target" value="1.8"/>
+    <property name="source" value="1.8"/>
+    <path id="classpathDir">
+        <pathelement location="bin"/>
+        <pathelement location="lib/javax.servlet-3.1.jar"/>
+        <pathelement location="lib/json-simple-1.1.1.jar" />
+        <pathelement location="lib/commons-codec-1.9.jar" />
+        <pathelement location="lib/commons-io-2.4.jar" />
+        <pathelement location="lib/fluent-hc-4.5.1.jar" />
+        <pathelement location="lib/httpclient-4.5.1.jar" />
+        <pathelement location="lib/httpclient-cache-4.5.1.jar" />
+        <pathelement location="lib/httpclient-win-4.5.1.jar" />
+        <pathelement location="lib/httpcore-4.4.3.jar" />
+        <pathelement location="lib/httpmime-4.5.1.jar" />
+        <pathelement location="lib/jna-4.1.0.jar" />
+        <pathelement location="lib/jna-platform-4.1.0.jar" />
+    </path>
+    <target name="init">
+        <mkdir dir="bin"/>
+    </target>
+    <target name="clean">
+        <delete dir="bin"/>
+    </target>
+    <target name="build" depends="build-project,build-war"/>
+    <target name="cleanall" depends="clean"/>
+    <target name="build-project" depends="clean,init">
+        <echo message="${ant.project.name}: ${ant.file}"/>
+        <javac debug="true" debuglevel="${debuglevel}" destdir="bin" source="${source}" target="${target}"
+		includeantruntime="false">
+            <src path="src"/>
+            <classpath refid="classpathDir" />
+        </javac>
+    </target>
+ 
+   <target name="build-war" depends="build-project">
+	  <war destfile="SitTempModelingTool.war" webxml="WebContent/WEB-INF/web.xml">
+	  	<webinf dir="WebContent/WEB-INF">
+	  		<include name="resources"/>
+	    </webinf>
+	  	<fileset dir="">
+	  		<include name="index.jsp"/>
+	  		<include name="redirected.jsp"/>
+	  		<include name="css/*.css"/>
+	  		<include name="img/*.*"/>
+	  		<include name="abstracts/*.html"/>
+	  		<include name="scripts/*.js"/>
+            <include name="res/*.xsd"/>
+	  	</fileset>
+	  	<fileset dir="WebContent">
+	    </fileset>
+	  	<lib dir="lib"/>
+	  	<classes dir="bin"/>
+	  </war>
+   </target>
+	
+	<!--<copyfile src="SitTempModelingTool.war" dest=""/>-->
+
+</project>

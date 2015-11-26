@@ -1,0 +1,295 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <title>SitOpt Client</title>
+    <meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+
+    <meta name="author" content="Eduard Schaefer, Sunayana Sarangi, Manuel Goeggelmann">
+    <meta name="editor" content="html-editor phase 5">
+
+    <link rel="stylesheet" type="text/css" href="css/stylesheet.css"/>
+    <link type="text/css" rel="stylesheet" href="css/palette.css" />
+
+    <script type="text/javascript" src="scripts/buttons.js"></script>
+
+    <script type="text/javascript" src="scripts/jquery-1.11.3.min.js"></script>
+    <script type="text/javascript" src="scripts/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="scripts/bootstrap.min.css"></script>
+    <script type="text/javascript" src="scripts/bootstrap.min.js"></script>
+    <script type="text/javascript" src="scripts/jquery.jsPlumb-1.7.6.js"></script>
+    <script type="text/javascript" src="scripts/XMLWriter.js"></script>
+    <script type="text/javascript" src="scripts/FileSaver.js"></script>
+    <script type="text/javascript" src="scripts/validation.js"></script>
+
+</head>
+
+<body bgcolor=#e7e7e7><!-- Hintergrundfarbe-->
+
+<div align="center" id="wrapper" >
+    <!-- Header Image File -->
+    <img src="img/header.png">
+
+    <!-- Navigation Bar -->
+    <div id="navigation">
+
+        <li><button class="myButton navibut" onclick="save()">SAVE</button></li><!-- speichere eine ID auf der Serverdatenbank: HTTPS Request: POST -->
+        <li><button class="myButton navibut" id="loadBtn" onclick="loadBtn()">LOAD</button></li><!-- lade eine ID von Serverdatenbank: HTTPS Request GET -->
+        <li><button class="myButton navibut" onclick="importXML()">IMPORT XML</button></li><!-- XML File importieren: Clientseitig, siehe Winery-->
+        <li><button class="myButton navibut" onclick="exportXML()">EXPORT XML</button></li><!-- XML File exportieren: Clientseitig, siehe Winery-->
+        <li><button class="myButton navibut" onclick="startRec()">START RECOGNITION</button></li><!-- ??? -->
+        <li><button class="myButton navibut" onclick="clearAll()">CLEAR ALL</button></li><!-- alles zurücksetzen, siehe Winery -->
+        <li><button class="myButton navibut" onclick="validate()">VALIDATE</button></li>
+        <!-- Scripte für die Button Sektion -->
+
+    </div>
+
+    <div id="errors" class="alert alert-danger" role="alert" style="display:none"></div>
+
+
+    <div id="content">
+
+        <!-- Drawing Area div -->
+        <div class="drawingArea unselectable" id="drawingArea">
+            <div id="nodeSit" type="situationnode" class="nodeTemplateSituation hidden">Situation</div>
+            <div id="nodeContCond" type="contcondnode" class="nodeTemplateContextCondition hidden">ContextCondition</div>
+            <div id="nodeOpr" type="operationnode" class="nodeTemplateOperation hidden">Opr</div>
+        </div>
+
+        <!-- Palette which contains the graphical tools and the template to be cloned-->
+
+        <div id="palette">
+            <div id="paletteLabel">Palette</div>
+            <div id="SituationNode" class="paletteEntrySituation unselectable">Situation Node</div>
+            <br>
+            <div id="ContextConditionNode" class="paletteEntryContextCondition unselectable">ContextCondition Node</div>
+            <br>
+            <div id="OperationNode" class="paletteEntryOperation unselectable">Operation Node</div>
+
+        </div>
+
+        <div id="sitForm" class="hidden nodeForm">
+            <form>
+                Situation:<br> <br>
+                <input type="text" id="sitType" />
+                <br> <br>
+                <button type="button" id="sitButton" class="saveButton">save</button>
+            </form>
+        </div>
+        <div id="oprForm" class="hidden nodeForm" role="form">
+            <form>
+                Operation:<br> <br>
+                <input type="text" id="oprName" />
+                <br> <br>
+                <!-- Operator Types -->
+                <div class="form-group">
+                    <label for="oprType">OperatorType:</label> <br> <br>
+                    <select class="form-control" id="oprType">
+                        <option> </option>
+                        <option>AND</option>
+                        <option>OR</option>
+                        <option>XOR</option>
+                    </select>
+                </div>
+                <br>
+                <div class="form-group">
+                    <label for="oprnegated">Negated:</label> <br> <br>
+                    <select class="form-control" id="oprNegated">
+                        <option> </option>
+                        <option>true</option>
+                        <option>false</option>
+                    </select>
+                </div>
+                <br>
+                <button type="button" id="oprButton" class="saveButton">save</button>
+            </form>
+        </div>
+        <div id="contCondForm" class="hidden nodeForm">
+            <form role="form">
+                <br>
+                ContextCondition:<br>
+
+                <input type="text" id="contCondType" />
+                <br> <br>
+                <!-- Sensor Types -->
+                <div class="form-group">
+                    <label for="sensorType">SensorType:</label>
+                    <select class="form-control" id="sensorType" onchange="configureDropDownLists(this,document.getElementById('unit'));">
+                        <option> </option>
+                        <!-- Code to auto populate the sensor list from array -->
+                        <script type="text/javascript" src="scripts/sensorArray.js"></script>
+                    </select>
+                </div>
+                <br>
+                <!-- Operator Types -->
+                <div class="form-group">
+                    <label for="operator">Operator:</label>
+                    <select class="form-control" id="operator" onchange="createNewValueField(this);">
+                        <option>lowerThan</option>
+                        <option>greaterThan</option>
+                        <option>equals</option>
+                        <option>notEquals</option>
+                        <option>between</option>
+                        <option>average</option>
+                        <option>min</option>
+                        <option>max</option>
+                        <option>intervalMinEqual</option>
+                        <option>intervalMin</option>
+                        <option>intervalMaxEqual</option>
+                        <option>intervalMax</option>
+                        <option>sensorLowerThan</option>
+                        <option>sensorGreaterThan</option>
+                        <option>sensorEquals</option>
+                    </select>
+                </div>
+                <br>
+                <!-- Number of Intervals -->
+                <div class="form-group">
+                    <label for="numberOfIntervals" style="display:none">Number of Intervals:</label>
+                    <input type="text" class="form-control" id="numberOfIntervals" style="display:none" />
+                </div>
+                <br>
+                <!-- Sensor Values -->
+                <div class="form-group">
+                    <label for="value">Value:</label>
+                    <input type="text" class="form-control" id="value" />
+                </div>
+                <br>
+                <!-- Sensor Units -->
+                <div class="form-group" id="senUnit">
+                    <br>
+                    <label for="unit">Unit:</label>
+                    <select class="form-control" id="unit">
+                    </select>
+                </div>
+                <br>
+                <button type="button" id="cntxButton" class="saveButton">save</button>
+                <br> <br>
+            </form>
+        </div>
+        <!-- Modales Fenster Loadbox-->
+        <script>
+
+            $(document).ready(function(){
+                $(".cancelbut").click(function(){
+                    $("#loadbox").hide();
+                });
+            });
+        </script>
+        <div id="loadbox">
+            <p> Choose file from list:</p><br>
+            <select id="selectTempl">
+                <option>Choose a file</option>
+            </select>
+            <button class="myButton centerbut" id="openTempl">Open</button>
+            <button class="myButton cancelbut">Cancel</button>
+        </div>
+    </div>
+
+    <!-- Scripts for Palette handling -->
+
+    <script type="text/javascript" src="scripts/paletteHandling.js"></script>
+
+    <!-- Code for drag and drop -->
+    <script type="text/javascript" src="scripts/dragAndDrop.js"></script>
+
+    <!-- Script to restrict Selection of Units depending on selected Sensor Type -->
+    <script type="text/javascript" src="scripts/unitsDropDown.js"></script>
+
+    <script>
+        $(document).ready(function(){
+
+            // Code to deselect a node when anywhere outside the selected node is clicked
+            $(".drawingArea").mousedown(function(event) {
+                $(".selected").removeClass("selected");
+                $("#sitForm").addClass("hidden");
+                $("#oprForm").addClass("hidden");
+                $("#contCondForm").addClass("hidden");
+                $("#loadbox").addClass("hidden");
+                $("#loadbox").hide();
+            });
+
+            // Code to delete selected node when del key is pressed
+            $(document).on("keydown", function(event) {
+                if (event.keyCode == 46) {
+                    var delNode = $(".drawingArea").find(".selected");
+                    jsPlumb.ready(function() {
+                        jsPlumb.remove(delNode);
+                        $("#sitForm").addClass("hidden");
+                        $("#oprForm").addClass("hidden");
+                        $("#contCondForm").addClass("hidden");
+                        // Decrement the Nodecounter when situation node is deleted using del key
+                        sitNodeCtr--;
+                    });
+                }
+            });
+
+        });
+    </script>
+
+    <!-- Code to display additional Value field if operator "inbetween" is selected -->
+    <script>
+        function createNewValueField(operator) {
+            if (operator.value == "between") {
+                $("#numberOfIntervals").hide();
+                $("#numberOfIntervals").val("");
+                $("label[for|='numberOfIntervals']").hide();
+                if (!($("value2").length)) {
+                    $secondValueDiv = '<div class="form-group" id="value2"><label for="value1">SecondValue:</label><input type="text" class="form-control" id="secondValue" /></div>';
+                    $("#senUnit").before($secondValueDiv);
+                }
+            } else if (operator.value.startsWith("interval")) {
+                $("#numberOfIntervals").show();
+                $("label[for|='numberOfIntervals']").show();
+                $("label[for=value1]").remove();
+                $("#secondValue").remove();
+            } else {
+                $("#numberOfIntervals").val("");
+                $("#numberOfIntervals").hide();
+                $("label[for|='numberOfIntervals']").hide();
+                $("label[for=value1]").remove();
+                $("#secondValue").remove();
+            }
+        }
+    </script>
+
+    <!-- Code for configuring Node Properties -->
+    <script type="text/javascript" src="scripts/nodeProperties.js"></script>
+
+    <!-- Code for template modelling -->
+    <script type="text/javascript" src="scripts/templateModelling.js"></script>
+
+    <!-- Creates an XML String of the modelled Situationtemplate. -->
+    <script type="text/javascript" src="scripts/createXML.js"></script>
+
+    <!-- Imports Situationtemplate xml file and automodells Graph from the file. -->
+    <input style="display:none;" type="file" id="fileinput" />
+    <script type="text/javascript" src="scripts/autoModelling.js"></script>
+
+    <!-- ClearAll function. -->
+    <script>
+        function clearAll() {
+            //var length = drawingArea.children.length;
+            for (var i = 0; i < drawingArea.children.length; i++) {
+                var clrNode = drawingArea.children[i];
+                if ($(clrNode).hasClass("hidden")) {
+                } else if ($(clrNode).hasClass("nodeTemplateSituation")
+                        || $(clrNode).hasClass("nodeTemplateOperation")
+                        || $(clrNode).hasClass("nodeTemplateContextCondition")) {
+                    jsPlumb.remove(clrNode);
+                    i = -1;
+
+                };
+            };
+            $("#sitForm").addClass("hidden");
+            $("#oprForm").addClass("hidden");
+            $("#contCondForm").addClass("hidden");
+            // Set the situation Nodecounter to null when clearAll is executed
+            sitNodeCtr = 0;
+        }
+    </script>
+
+</div>
+
+
+</body>
+</html>

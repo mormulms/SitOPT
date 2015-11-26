@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!-- XML Schema definition of a SituationTemplate to observe sensor data and detects occurring situations -->
+<xs:schema version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	
+	<!-- root -->
+	<xs:element name="SituationTemplate" type="tSituationTemplate"/>
+	
+	<xs:complexType name="tSituationTemplate">
+		<xs:sequence>
+			<xs:element name="Situation" type="tSituation" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="id" type="xs:ID" use="required"/>
+		<xs:attribute name="name" type="xs:string"/>
+	</xs:complexType>
+	
+	<xs:complexType name="tSituation">
+		<xs:sequence>
+			<xs:element name="situationNode" type="tSituationNode"/>
+			<xs:element name="operationNode" type="tOperationNode" maxOccurs="unbounded"/>
+			<xs:element name="conditionNode" type="tConditionNode" maxOccurs="unbounded"/>
+			<xs:element name="contextNode" type="tContextNode" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="id" type="xs:ID" use="required"/>
+		<xs:attribute name="name" type="xs:string"/>
+	</xs:complexType>
+	
+	<xs:complexType name="tSituationNode">
+		<xs:attribute name="id" type="xs:ID" use="required"/>
+		<xs:attribute name="name" type="xs:string"/>
+	</xs:complexType>
+	
+	<xs:complexType name="tOperationNode">
+		<xs:sequence>
+			<xs:element name="parent" type="tParent" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="type">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="and"/>
+						<xs:enumeration value="xor"/>
+						<xs:enumeration value="or"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="negated" type="xs:boolean" />
+		</xs:sequence>
+		<xs:attribute name="id" type="xs:ID" use="required"/>
+		<xs:attribute name="name" type="xs:string"/>
+	</xs:complexType>
+
+	<xs:complexType name="tTimeNode">
+		<xs:complexContent>
+			<xs:extension base="tConditionNode">
+				<xs:sequence>
+			                <xs:element name="amountIntervals" type="xs:positiveInteger" minOccurs="1" maxOccurs="1"/>
+			        </xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+		
+	<!-- TODO (?): set use="required" on parent element of sensor nodes, each sensor should be processed -->
+	<xs:complexType name="tContextNode">
+		<xs:sequence>
+			<xs:element name="parent" type="tParent" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="id" type="xs:ID" use="required"/>
+		<xs:attribute name="name" type="xs:string"/>
+		<xs:attribute name="type" type="xs:string" use="required"/>
+	</xs:complexType>
+	
+	<!-- main processing node. TODO: handle sub-situations -->
+	<xs:complexType name="tConditionNode">
+		<xs:sequence>
+			<xs:element name="type" type="xs:string"/> 
+			<xs:element name="measureName" type="xs:string"/>
+			<xs:element name="opType" maxOccurs="1" minOccurs="1">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="lowerThan"/>
+						<xs:enumeration value="greaterThan"/>
+						<xs:enumeration value="equals"/>
+						<xs:enumeration value="notEquals"/>
+						<xs:enumeration value="between"/>
+						<xs:enumeration value="average"/>
+						<xs:enumeration value="min"/>
+						<xs:enumeration value="max"/>
+						<xs:enumeration value="intervalMinEqual"/>
+						<xs:enumeration value="intervalMin"/>
+						<xs:enumeration value="intervalMaxEqual"/>
+						<xs:enumeration value="intervalMax"/>
+						<xs:enumeration value="sensorLowerThan" />
+						<xs:enumeration value="sensorGreaterThan" />
+						<xs:enumeration value="sensorEquals" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="condValue">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="value" type="xs:string" maxOccurs="2"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="parent" type="tParent" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="id" type="xs:ID" use="required"/>
+		<xs:attribute name="name" type="xs:string"/>
+	</xs:complexType>
+	
+	<xs:complexType name="tParent">
+		<xs:attribute name="parentID" type="xs:IDREF"/>
+	</xs:complexType>
+
+</xs:schema>

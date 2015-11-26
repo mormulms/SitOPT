@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd" version="3.1" metadata-complete="true">
+  <display-name>SitTempModelingTool</display-name>
+  <welcome-file-list>
+    <welcome-file>index.html</welcome-file>
+    <welcome-file>index.htm</welcome-file>
+    <welcome-file>index.jsp</welcome-file>
+    <welcome-file>default.html</welcome-file>
+    <welcome-file>default.htm</welcome-file>
+    <welcome-file>default.jsp</welcome-file>
+  </welcome-file-list>
+  <servlet>
+    <servlet-name>save</servlet-name>
+    <servlet-class>servlets.Save</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>load</servlet-name>
+    <servlet-class>servlets.Load</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>goValidate</servlet-name>
+    <servlet-class>servlets.GoValidate</servlet-class>
+  </servlet>
+    <servlet>
+    <servlet-name>loadsituationtemplate</servlet-name>
+    <servlet-class>servlets.LoadSituationTemplate</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>save</servlet-name>
+    <url-pattern>/save</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>load</servlet-name>
+    <url-pattern>/load</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>goValidate</servlet-name>
+    <url-pattern>/goValidate</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>loadsituationtemplate</servlet-name>
+    <url-pattern>/loadsituationtemplate</url-pattern>
+  </servlet-mapping>
+</web-app>

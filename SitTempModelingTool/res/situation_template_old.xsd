@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+
+<xs:schema version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+	<xs:element name="SituationTemplate" type="tSituationTemplate"/>
+	
+	<xs:complexType name="tSituationTemplate">
+		<xs:sequence>
+			<xs:element name="Situation" type="tSituation" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="name" type="xs:string"/>
+	</xs:complexType>
+	
+	<xs:complexType name="tSituation">
+		<xs:sequence>
+			<xs:element name="situationNode" type="tSituationNode"/>
+			<xs:element name="operationNode" type="tOperationNode" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="conditionNode" type="tConditionNode" maxOccurs="unbounded"/>
+			<xs:element name="contextNode" type="tContextNode" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="id" type="xs:ID" use="required"/>
+		<xs:attribute name="name" type="xs:string"/>
+	</xs:complexType>
+	
+	<xs:complexType name="tSituationNode">
+		<xs:attribute name="id" type="xs:ID" use="required"/>
+		<xs:attribute name="name" type="xs:string"/>
+	</xs:complexType>
+			
+	<xs:complexType name="tContextNode">
+		<xs:sequence>
+			<xs:element name="parent" type="tParent" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="id" type="xs:ID" use="required"/>
+		<xs:attribute name="name" type="xs:string"/>
+		<xs:attribute name="type" type="xs:string" use="required"/>
+	</xs:complexType>
+	
+	<xs:complexType name="tConditionNode">
+		<xs:sequence>
+			<xs:element name="opType" maxOccurs="1" minOccurs="1">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:pattern value="lowerThan|greaterThan|equals|notEquals|between"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="condValue">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="value" type="xs:string" maxOccurs="2"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="parent" type="tParent" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="id" type="xs:ID" use="required"/>
+		<xs:attribute name="name" type="xs:string"/>
+	</xs:complexType>
+
+   	<xs:complexType name="tOperationNode">
+		<xs:sequence>
+			<xs:element name="parent" type="tParent" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="type">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:pattern value="OR|AND|XOR|NOT"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="id" type="xs:ID" use="required"/>
+		<xs:attribute name="name" type="xs:string"/>
+	</xs:complexType>
+    
+	<xs:complexType name="tParent">
+		<xs:attribute name="parentID" type="xs:IDREF"/>
+	</xs:complexType>
+
+</xs:schema>
