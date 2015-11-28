@@ -9,19 +9,42 @@ import situationtemplate.model.TContextNode;
  * This class offers methods to generate the Node-RED function nodes as JSON
  */
 public class Nodes {
-	private final static String compareString = "var curr = parseInt(JSON.parse(msg.payload).value);\n msg.situation = {'sensor':'%s', 'value':curr, "
+	private final static String compareString = "var curr = parseInt(JSON.parse(msg.payload).payload.value);\n msg.situation = {'sensor':'%s', 'value':curr, "
 			+ "'timestamp':new Date(), 'quality':1}; \n if (curr %s %s) {\n\tmsg.payload = true;\n} else {\n\tmsg.payload = false;\n}\n\nreturn msg;";
 	private final static String statusCodeString = "var curr = parseInt(JSON.parse(msg.payload).value);\n msg.situation = {'sensor':'%s', 'value':curr, "
 			+ "'timestamp':new Date(), 'quality':1}; \n if (msg.statusCode %s %s) {\n  msg.payload = true;\n return msg;  \n} else {\n  msg.payload = false;\n return msg;\n}"
 			+ "\n\nreturn null;";
-	private final static String accumulationString = "context.values = context.values || new Array();\ncontext.values.push(JSON.parse(msg.payload).value);\n\n"
-			+ "context.sensorValues = context.sensorValues || new Array();\ncontext.sensorValues.push(msg.situation);\n\nvar inputs = %s;\n"
-			+ "if (context.values.length == inputs) {\n	msg.situation = [];\n var returnValue = true;\n    var counter = 0;    for (var i = 0; i < inputs; i++)"
-			+ "{\n		msg.situation.push(context.sensorValues[i]);\n		%s\n  	}\n\n		if (returnValue) {\n		msg.situation.push("
-			+ "{'thing':'%s', 'timestamp':new Date(), 'situationtemplate':'%s' , 'occured':true});\n	} else {\n		msg.situation.push({'thing':'%s', "
-			+ "'timestamp':new Date(), 'situationtemplate':'%s' , 'occured':false});\n	}	\n  	context.values = null;\n	context.sensorValues = null;\n\n	"
-			+ "var jsonStr = '{\"situation\": []}';\n	var obj = JSON.parse(jsonStr);\n\n	for (var i = 0; i < msg.situation.length; i++) {\n		"
-			+ "obj.situation.push(msg.situation[i]);\n	}\n\n	msg.payload = obj;\n\n  	return msg;\n} else {\n	return null;\n}";
+	private final static String accumulationString = "context.values = context.values || [];\n"
+			+ "context.values.push(JSON.parse(msg.payload));\n\n"
+			+ "context.sensorValues = context.sensorValues || [];\n"
+			+ "context.sensorValues.push(msg.situation);\n\n"
+			+ "var inputs = %s;\n"
+			+ "if (context.values.length == inputs) {\n"
+			+ "  msg.situation = [];\n"
+			+ "  var returnValue = true;\n"
+			+ "  var counter = 0;\n"
+			+ "  for (var i = 0; i < inputs; i++) {\n"
+			+ "    msg.situation.push(context.sensorValues[i]);\n"
+			+ "    %s\n"
+			+ "  }\n\n"
+			+ "  if (returnValue) {\n"
+			+ "    msg.situation.push({'thing':'%s', 'timestamp':new Date(), 'situationtemplate':'%s' , 'occured':true});\n"
+			+ "  } else {\n"
+			+ "    msg.situation.push({'thing':'%s', 'timestamp':new Date(), 'situationtemplate':'%s' , 'occured':false});\n"
+			+ "  }\n"
+			+ "  context.values = null;\n"
+			+ "  context.sensorValues = null;\n\n"
+			+ "  var jsonStr = '{\"situation\": []}';\n"
+			+ "  var obj = JSON.parse(jsonStr);\n\n"
+			+ "  for (var i = 0; i < msg.situation.length; i++) {\n"
+			+ "    obj.situation.push(msg.situation[i]);\n"
+			+ "  }\n\n"
+			+ "  msg.payload = obj;\n"
+			+ "  node.warn(JSON.stringify(msg));\n"
+			+ "  return msg;\n"
+			+ "} else {\n"
+			+ "  return null;\n"
+			+ "}";
 	private final static String betweenString = "var curr = parseInt(JSON.parse(msg.payload).value);\n msg.situation = {'sensor':'%s', "
 			+ "'value':curr, 'timestamp':new Date(), 'quality':1}; \n if (%s < msg.statusCode && msg.statusCode < %s) {\n  msg.payload = true;\n return msg;  \n} "
 			+ "else {\n  msg.payload = false;\n return msg;\n}\n\nreturn null;";
@@ -142,7 +165,10 @@ public class Nodes {
 	 * @return the AND Node in JavaScript
 	 */
 	public static String getANDNode(String numberOfInputs, String objectID, String situationTemplateID) {
-		final String immediateReturnValue = "if (context.values[i]) {\n	  		counter++;}\n                returnValue = counter == " + numberOfInputs + ";\n";
+		final String immediateReturnValue = "if (context.values[context.values.length - 1 - i]) {\n"
+				+ "      counter++;\n"
+				+ "    }\n"
+				+ "    returnValue = counter == " + numberOfInputs + ";\n";
 		return String.format(accumulationString, numberOfInputs, immediateReturnValue, objectID, situationTemplateID, objectID, situationTemplateID);
 	}
 	
