@@ -52,6 +52,7 @@ function validate() {
             }
         }
     }
+    recognizeCycles(errors);
     var message = "";
     for (var i = 0; i < errors.length; i++) {
         message += errors[i] + "<br/>";
@@ -59,4 +60,47 @@ function validate() {
     message = message.substr(0, message.length - 5);
     $("#errors").html(message);
     $("#errors").show();
+}
+
+function recognizeCycles(errors) {
+    var ops = $('div[type^="operation"]:not(.hidden)');
+    var visited = {};
+    var finished = {};
+
+    for (var i = 0; i < ops.length; i++) {
+        var op = ops[i];
+        var id = $(op).attr("id");
+        visited[id] = false;
+        finished[id] = false;
+    }
+
+    for (var i = 0; i < ops.length; i++) {
+        var op = ops[i];
+            if (!(function dfs(o) {
+                    var id = $(o).attr("id");
+                if (id in finished && finished[id]) {
+                    return true;
+                }
+                if (id in visited && visited[id]) {
+                    return false;
+                }
+                visited[id] = true;
+                var parents = jsPlumb.getConnections().filter(function (connection) {
+                    return connection.sourceId === id;
+                });
+                for (var j = 0; j < parents.length; j++) {
+                    var parent = parents[j];
+                    if ($("#" + parent.targetId).attr("type").startsWith("operation")) {
+                        if (!dfs($("#" + parent.targetId))) {
+                            return false;
+                        }
+                    }
+                }
+                finished[id] = true;
+                return true;
+            })(op)) {
+            errors.push("Invalid Operation Node: Cycle detected in " + $(op).attr("id"));
+        }
+    }
+    return errors;
 }

@@ -26,7 +26,7 @@ $(document).ready(function(){
             $(this).addClass("selected");
 
             // Code to hide all Forms except Form for Situation Node
-            $("#oprForm").addClass("hidden");
+            $("#gegay").addClass("hidden");
             $("#contCondForm").addClass("hidden");
             $("#sitForm").removeClass("hidden");
 
@@ -99,9 +99,9 @@ $(document).ready(function(){
                 // Code to Change the name of the node to user entered name
                 var source = $(selected).attr("source");
                 if (source == "fromModelling") {
-                    selected.children[1].innerHTML = oprName + "<br>" + oprVal + "<br>" + negated;
+                    selected.children[1].innerHTML = oprName;
                 } else {
-                    selected.childNodes[0].nodeValue = oprName + "<br>" + oprVal + "<br>" + negated;
+                    selected.childNodes[0].nodeValue = oprName;
                 }
 
                 properties = selected.children[0];
@@ -160,8 +160,8 @@ $(document).ready(function(){
                 var secVal = $("#secondValue").val();
                 var unit = $("#unit").val();
                 var numbOfIntervals = $("#numberOfIntervals").val();
-                var numbPattern = new RegExp(/^\d+$/);
-                if (!numbPattern.test(numbOfIntervals)) {
+                var numbPattern = new RegExp(/^\d*$/);
+                if (numbOfIntervals != null && !numbPattern.test(numbOfIntervals)) {
                     $("#errors").html("Please enter a number as number of intervals.");
                     return;
                 }
@@ -177,7 +177,7 @@ $(document).ready(function(){
                     selected.children[1].innerHTML = contCondVal;
                 } else {
                     selected.childNodes[0].nodeValue = contCondVal;
-                };
+                }
 
                 properties = selected.children[0];
                 properties.setAttribute("conname", contCondVal);
