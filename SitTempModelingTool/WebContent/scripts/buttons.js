@@ -53,20 +53,17 @@ function save() {
 	      });
 	}
 };
-     
-function goValidate() {
 
+function goValidate() {
 	$.ajax({
-	        type: "POST",
-	        url: "goValidate",
-	        data: {sitTemplate: getSituationTemplateAsXML("validation"), sitNodeNumb: sitNodeCtr}
-	      }).done(function( msg ) {
-	    	  // TODO delete
-	    	  alert(msg);
-	      });
+		type: "POST",
+		url: "goValidate",
+		data: {sitTemplate: getSituationTemplateAsXML("validation"), sitNodeNumb: sitNodeCtr}
+	}).done(function (msg) {
+		// TODO delete
+		alert(msg);
+	});
 };
-                     
-                      
 function startRec() {
 	
 	 $.ajax({
@@ -84,6 +81,11 @@ function clearAll() {
 };
                      
 function exportXML() {
+
+	if (!validate()) {
+		$("#errors").html($("#errors").html() + "<br>Please solve all problems above, before you export as XML");
+		return;
+	}
 
 	 var exportname = prompt("Unter welchem Namen soll das Template exportiert werden?", "Unbenannt");
 	    

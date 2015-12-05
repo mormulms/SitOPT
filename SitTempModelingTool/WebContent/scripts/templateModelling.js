@@ -17,12 +17,26 @@ function makeDraggable(dragObj) {
 
     jsPlumb.ready(function() {
         // ContextCondition Node is only Source
-        if (dragObj.hasClass("nodeTemplateContextCondition")) {
+        if (dragObj.hasClass("nodeTemplateContext")) {
             jsPlumb.addEndpoint(dragObjId,
                 {
                     anchor:"Top",
                     uuid: dragObjId
                 }, commonSrc);
+        };
+        // Condition Node is Source and Target
+        if (dragObj.hasClass("nodeTemplateCondition")) {
+            jsPlumb.addEndpoint(dragObjId,
+                {
+                    anchor:"Top",
+                    uuid: dragObjId
+                }, commonSrc);
+            jsPlumb.addEndpoint(dragObjId,
+                {
+                    anchor:"Bottom",
+                    uuid: dragObjId,
+                    connectionsDetachable: true
+                }, commonTar);
         };
         // Operation Node is both Source and Target
         if (dragObj.hasClass("nodeTemplateOperation")) {

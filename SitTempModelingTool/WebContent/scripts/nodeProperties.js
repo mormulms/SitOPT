@@ -5,12 +5,13 @@ $(document).ready(function(){
     var properties = null;
     var fieldProperties = null;
 
-    $(".drawingArea").on("click", ".nodeTemplateSituation, .nodeTemplateOperation, .nodeTemplateContextCondition", function() {
+    $(".drawingArea").on("click", ".nodeTemplateSituation, .nodeTemplateOperation, .nodeTemplateContext, .nodeTemplateCondition", function() {
 
         $("#oprType").val('');
         $("#oprName").val('');
         $("#sitType").val('');
-        $("#contCondType").val('');
+        $("#conditionType").val('');
+        $("#contextType").val('');
         $("#sensorType").val('');
         $("#operator").val('');
         $("#value").val('');
@@ -26,8 +27,9 @@ $(document).ready(function(){
             $(this).addClass("selected");
 
             // Code to hide all Forms except Form for Situation Node
-            $("#gegay").addClass("hidden");
-            $("#contCondForm").addClass("hidden");
+            $("#oprForm").addClass("hidden");
+            $("#contextForm").addClass("hidden");
+            $("#conditionForm").addClass("hidden");
             $("#sitForm").removeClass("hidden");
 
             // Code to display the properties when Node selected
@@ -62,9 +64,7 @@ $(document).ready(function(){
 
                 $("#sitForm").addClass("hidden");
             });
-        };
-
-        if ($(this).hasClass("nodeTemplateOperation")) {
+        } else if ($(this).hasClass("nodeTemplateOperation")) {
 
             // Code to deselct all nodes except Operation Nodes
             $(".selected").removeClass("selected");
@@ -72,7 +72,8 @@ $(document).ready(function(){
 
             // Code to hide all Forms except Form for Operation Node
             $("#sitForm").addClass("hidden");
-            $("#contCondForm").addClass("hidden");
+            $("#contextForm").addClass("hidden");
+            $("#conditionForm").addClass("hidden");
             $("#oprForm").removeClass("hidden");
 
             // Code to display the properties when Node selected
@@ -111,18 +112,15 @@ $(document).ready(function(){
 
                 $("#oprForm").addClass("hidden");
             });
-        };
+        } else if ($(this).hasClass("nodeTemplateCondition")) {
 
-        if ($(this).hasClass("nodeTemplateContextCondition")) {
-
-            // Code to deselct all nodes except ContextCondition Nodes
             $(".selected").removeClass("selected");
             $(this).addClass("selected");
 
-            // Code to hide all Forms except Form for ContextCondition Node
             $("#sitForm").addClass("hidden");
             $("#oprForm").addClass("hidden");
-            $("#contCondForm").removeClass("hidden");
+            $("#contextForm").addClass("hidden");
+            $("#conditionForm").removeClass("hidden");
 
 
             // Code to display the properties when Node selected
@@ -131,11 +129,8 @@ $(document).ready(function(){
 
 
             for (var i = 0; i < fieldProperties.length; i++) {
-                if (fieldProperties[i].name == "conname") {
-                    document.getElementById("contCondType").value = fieldProperties[i].value;
-                } else if (fieldProperties[i].name == "sensortype") {
-                    document.getElementById("sensorType").value = fieldProperties[i].value;
-                    configureDropDownLists(document.getElementById("sensorType"), document.getElementById('unit'));
+                if (fieldProperties[i].name == "conditionname") {
+                    document.getElementById("conditionType").value = fieldProperties[i].value;
                 } else if (fieldProperties[i].name == "operator") {
                     document.getElementById("operator").value = fieldProperties[i].value;
                     createNewValueField(document.getElementById("operator"));
@@ -146,19 +141,15 @@ $(document).ready(function(){
                     if(typeof elem !== 'undefined' && elem !== null) {
                         document.getElementById("secondValue").value = fieldProperties[i].value;
                     }
-                } else if (fieldProperties[i].name == "sensorunit") {
-                    document.getElementById("unit").value = fieldProperties[i].value;
                 }
             }
 
             // Code to process save button click on the form
-            $("#cntxButton").click(function() {
-                var contCondVal = $("#contCondType").val();
-                var senTyp = $("#sensorType").val();
+            $("#conditionButton").click(function() {
+                var conditionVal = $("#conditionType").val();
                 var opr = $("#operator").val();
                 var val = $("#value").val();
                 var secVal = $("#secondValue").val();
-                var unit = $("#unit").val();
                 var numbOfIntervals = $("#numberOfIntervals").val();
                 var numbPattern = new RegExp(/^\d*$/);
                 if (numbOfIntervals != null && !numbPattern.test(numbOfIntervals)) {
@@ -166,30 +157,81 @@ $(document).ready(function(){
                     return;
                 }
 
-
                 // Code to populate the hidden div when user saves the filled in form
-                    selected = $(".selected")[0];
+                selected = $(".selected")[0];
 
                 // Code to Change the name of the node to user entered name
 
                 var source = $(selected).attr("source");
                 if (source == "fromModelling") {
-                    selected.children[1].innerHTML = contCondVal;
+                    selected.children[1].innerHTML = conditionVal;
                 } else {
-                    selected.childNodes[0].nodeValue = contCondVal;
+                    selected.childNodes[0].nodeValue = conditionVal;
                 }
 
                 properties = selected.children[0];
-                properties.setAttribute("conname", contCondVal);
-                properties.setAttribute("sensortype", senTyp);
+                properties.setAttribute("conditionname", conditionVal);
                 properties.setAttribute("operator", opr);
                 properties.setAttribute("sensorvalue", val);
                 properties.setAttribute("sensorsecondvalue", secVal);
-                properties.setAttribute("sensorunit", unit);
                 properties.setAttribute("numberOfIntervals", numbOfIntervals);
 
-                $("#contCondForm").addClass("hidden");
+                $("#conditionForm").addClass("hidden");
             });
-        };
+        } else if ($(this).hasClass("nodeTemplateContext")) {
+
+            $(".selected").removeClass("selected");
+            $(this).addClass("selected");
+
+            $("#sitForm").addClass("hidden");
+            $("#oprForm").addClass("hidden");
+            $("#conditionForm").addClass("hidden");
+            $("#contextForm").removeClass("hidden");
+
+
+            // Code to display the properties when Node selected
+            selectedNode = $(".selected")[0];
+            fieldProperties = selectedNode.children[0].attributes;
+
+
+            for (var i = 0; i < fieldProperties.length; i++) {
+                if (fieldProperties[i].name == "contextname") {
+                    document.getElementById("contextType").value = fieldProperties[i].value;
+                } else if (fieldProperties[i].name == "sensortype") {
+                    document.getElementById("sensorType").value = fieldProperties[i].value;
+                    configureDropDownLists(document.getElementById("sensorType"), document.getElementById('unit'));
+                } else if (fieldProperties[i].name == "sensorunit") {
+                    document.getElementById("unit").value = fieldProperties[i].value;
+                }
+            }
+
+            // Code to process save button click on the form
+            $("#contextButton").click(function() {
+                var contextVal = $("#contextType").val();
+                var senTyp = $("#sensorType").val();
+                var unit = $("#unit").val();
+                unit = unit == null ? "" : unit;
+
+
+                // Code to populate the hidden div when user saves the filled in form
+                selected = $(".selected")[0];
+
+                // Code to Change the name of the node to user entered name
+
+                var source = $(selected).attr("source");
+                if (source == "fromModelling") {
+                    selected.children[1].innerHTML = contextVal;
+                } else {
+                    selected.childNodes[0].nodeValue = contextVal;
+                }
+
+                properties = selected.children[0];
+                properties.setAttribute("contextName", contextVal);
+                properties.setAttribute("sensortype", senTyp);
+                properties.setAttribute("sensorunit", unit);
+
+                $("#contextForm").addClass("hidden");
+            });
+        }
     });
 });

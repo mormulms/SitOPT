@@ -20,7 +20,8 @@ function showPalette() {
 	$("#paletteLabel").hide();
 
 	$(".paletteEntrySituation").show();
-	$(".paletteEntryContextCondition").show();
+	$(".paletteEntryCondition").show();
+	$(".paletteEntryContext").show();
 	$(".paletteEntryOperation").show();
 }
 
@@ -30,7 +31,8 @@ function hidePalette() {
 
 	// hide all palette entries
 	$(".paletteEntrySituation").hide();
-	$(".paletteEntryContextCondition").hide();
+	$(".paletteEntryCondition").hide();
+	$(".paletteEntryContext").hide();
 	$(".paletteEntryOperation").hide();
 
 	$("#paletteLabel").show();

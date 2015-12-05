@@ -37,9 +37,9 @@
         <li><button class="myButton navibut" onclick="importXML()">IMPORT XML</button></li><!-- XML File importieren: Clientseitig, siehe Winery-->
         <li><button class="myButton navibut" onclick="exportXML()">EXPORT XML</button></li><!-- XML File exportieren: Clientseitig, siehe Winery-->
         <li><button class="myButton navibut" onclick="startRec()">START RECOGNITION</button></li><!-- ??? -->
-        <li><button class="myButton navibut" onclick="clearAll()">CLEAR ALL</button></li><!-- alles zurÃ¼cksetzen, siehe Winery -->
+        <li><button class="myButton navibut" onclick="clearAll()">CLEAR ALL</button></li><!-- alles zurücksetzen, siehe Winery -->
         <li><button class="myButton navibut" onclick="validate()">VALIDATE</button></li>
-        <!-- Scripte fÃ¼r die Button Sektion -->
+        <!-- Scripte für die Button Sektion -->
 
     </div>
 
@@ -51,8 +51,9 @@
         <!-- Drawing Area div -->
         <div class="drawingArea unselectable" id="drawingArea">
             <div id="nodeSit" type="situationnode" class="nodeTemplateSituation hidden">Situation</div>
-            <div id="nodeContCond" type="contcondnode" class="nodeTemplateContextCondition hidden">ContextCondition</div>
-            <div id="nodeOpr" type="operationnode" class="nodeTemplateOperation hidden">Opr</div>
+            <div id="nodeOpr" type="operationnode" class="nodeTemplateOperation hidden">Operation</div>
+            <div id="nodeCondition" type="conditionnode" class="nodeTemplateCondition hidden">Condition</div>
+            <div id="nodeContext" type="contextnode" class="nodeTemplateContext hidden">Context</div>
         </div>
 
         <!-- Palette which contains the graphical tools and the template to be cloned-->
@@ -61,9 +62,11 @@
             <div id="paletteLabel">Palette</div>
             <div id="SituationNode" class="paletteEntrySituation unselectable">Situation Node</div>
             <br>
-            <div id="ContextConditionNode" class="paletteEntryContextCondition unselectable">ContextCondition Node</div>
-            <br>
             <div id="OperationNode" class="paletteEntryOperation unselectable">Operation Node</div>
+            <br>
+            <div id="ConditionNode" class="paletteEntryCondition unselectable">Condition Node</div>
+            <br>
+            <div id="ContextNode" class="paletteEntryContext unselectable">Context Node</div>
 
         </div>
 
@@ -103,23 +106,13 @@
                 <button type="button" id="oprButton" class="saveButton">save</button>
             </form>
         </div>
-        <div id="contCondForm" class="hidden nodeForm">
+        <div id="conditionForm" class="hidden nodeForm">
             <form role="form">
                 <br>
-                ContextCondition:<br>
+                Condition:<br>
 
-                <input type="text" id="contCondType" />
+                <input type="text" id="conditionType" />
                 <br> <br>
-                <!-- Sensor Types -->
-                <div class="form-group">
-                    <label for="sensorType">SensorType:</label>
-                    <select class="form-control" id="sensorType" onchange="configureDropDownLists(this,document.getElementById('unit'));">
-                        <option> </option>
-                        <!-- Code to auto populate the sensor list from array -->
-                        <script type="text/javascript" src="scripts/sensorArray.js"></script>
-                    </select>
-                </div>
-                <br>
                 <!-- Operator Types -->
                 <div class="form-group">
                     <label for="operator">Operator:</label>
@@ -154,6 +147,28 @@
                     <input type="text" class="form-control" id="value" />
                 </div>
                 <br>
+                <button type="button" id="conditionButton" class="saveButton">save</button>
+                <br> <br>
+            </form>
+        </div>
+
+        <div id="contextForm" class="hidden nodeForm">
+            <form role="form">
+                <br>
+                Context:<br>
+
+                <input type="text" id="contextType" />
+                <br> <br>
+                <!-- Sensor Types -->
+                <div class="form-group">
+                    <label for="sensorType">SensorType:</label>
+                    <select class="form-control" id="sensorType" onchange="configureDropDownLists(this,document.getElementById('unit'));">
+                        <option> </option>
+                        <!-- Code to auto populate the sensor list from array -->
+                        <script type="text/javascript" src="scripts/sensorArray.js"></script>
+                    </select>
+                </div>
+                <br>
                 <!-- Sensor Units -->
                 <div class="form-group" id="senUnit">
                     <br>
@@ -162,7 +177,7 @@
                     </select>
                 </div>
                 <br>
-                <button type="button" id="cntxButton" class="saveButton">save</button>
+                <button type="button" id="contextButton" class="saveButton">save</button>
                 <br> <br>
             </form>
         </div>
@@ -203,7 +218,8 @@
                 $(".selected").removeClass("selected");
                 $("#sitForm").addClass("hidden");
                 $("#oprForm").addClass("hidden");
-                $("#contCondForm").addClass("hidden");
+                $("#conditionForm").addClass("hidden");
+                $("#contextForm").addClass("hidden");
                 $("#loadbox").addClass("hidden");
                 $("#loadbox").hide();
             });
@@ -234,8 +250,8 @@
                 $("#numberOfIntervals").val("");
                 $("label[for|='numberOfIntervals']").hide();
                 if (!($("value2").length)) {
-                    $secondValueDiv = '<div class="form-group" id="value2"><label for="value1">SecondValue:</label><input type="text" class="form-control" id="secondValue" /></div>';
-                    $("#senUnit").before($secondValueDiv);
+                    var secondValueDiv = '<div class="form-group" id="value2"><label for="value1">SecondValue:</label><input type="text" class="form-control" id="secondValue" /></div>';
+                    $("#conditionButton").before(secondValueDiv);
                 }
             } else if (operator.value.startsWith("interval")) {
                 $("#numberOfIntervals").show();
@@ -274,7 +290,8 @@
                 if ($(clrNode).hasClass("hidden")) {
                 } else if ($(clrNode).hasClass("nodeTemplateSituation")
                         || $(clrNode).hasClass("nodeTemplateOperation")
-                        || $(clrNode).hasClass("nodeTemplateContextCondition")) {
+                        || $(clrNode).hasClass("nodeTemplateCondition")
+                        || $(clrNode).hasClass("nodeTemplateContext")) {
                     jsPlumb.remove(clrNode);
                     i = -1;
 
@@ -282,7 +299,8 @@
             };
             $("#sitForm").addClass("hidden");
             $("#oprForm").addClass("hidden");
-            $("#contCondForm").addClass("hidden");
+            $("#contextForm").addClass("hidden");
+            $("#conditionForm").addClass("hidden");
             // Set the situation Nodecounter to null when clearAll is executed
             sitNodeCtr = 0;
         }
