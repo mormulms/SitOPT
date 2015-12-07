@@ -52,18 +52,7 @@ function save() {
 	    	  alert(msg)
 	      });
 	}
-};
-
-function goValidate() {
-	$.ajax({
-		type: "POST",
-		url: "goValidate",
-		data: {sitTemplate: getSituationTemplateAsXML("validation"), sitNodeNumb: sitNodeCtr}
-	}).done(function (msg) {
-		// TODO delete
-		alert(msg);
-	});
-};
+}
 function startRec() {
 	
 	 $.ajax({
@@ -111,7 +100,6 @@ function openSitTempl(selTempl) {
       }).done(function( msg ) {
     	//code to automodell the retrieved template
     	  parseAndTraverseXML(msg);
-          connectXML(msg);
       });
 
 	});
