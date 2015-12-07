@@ -53,11 +53,7 @@ $(document).ready(function(){
 
                 // Code to Change the name of the node to user entered name
                 var source = $(selected).attr("source");
-                if (source == "fromModelling") {
-                    selected.children[1].innerHTML = sitVal;
-                } else {
-                    selected.childNodes[0].nodeValue = sitVal;
-                };
+                selected.childNodes[0].nodeValue = sitVal;
 
                 properties = selected.children[0];
                 properties.setAttribute("sitvalue", sitVal);
@@ -77,16 +73,11 @@ $(document).ready(function(){
             $("#oprForm").removeClass("hidden");
 
             // Code to display the properties when Node selected
-            selectedNode = $(".selected")[0];
-            fieldProperties = selectedNode.children[0].attributes;
+            selectedNode = $(".selected div")[0];
 
-            for (var i = 0; i < fieldProperties.length; i++) {
-                if (fieldProperties[i].name == "oprname") {
-                    document.getElementById("oprName").value = fieldProperties[i].value;
-                } else if (fieldProperties[i].name == "oprvalue") {
-                    document.getElementById("oprType").value = fieldProperties[i].value;
-                };
-            };
+            document.getElementById("oprName").value = $(selectedNode).attr("oprname");
+            document.getElementById("oprType").value = $(selectedNode).attr("oprvalue");
+            document.getElementById("oprNegated").value = $(selectedNode).attr("oprnegated");
 
             // Code to process save button click on the form
             $("#oprButton").click(function() {
@@ -99,11 +90,7 @@ $(document).ready(function(){
 
                 // Code to Change the name of the node to user entered name
                 var source = $(selected).attr("source");
-                if (source == "fromModelling") {
-                    selected.children[1].innerHTML = oprName;
-                } else {
-                    selected.childNodes[0].nodeValue = oprName;
-                }
+                selected.childNodes[0].nodeValue = oprName;
 
                 properties = selected.children[0];
                 properties.setAttribute("oprname", oprName);
@@ -163,11 +150,7 @@ $(document).ready(function(){
                 // Code to Change the name of the node to user entered name
 
                 var source = $(selected).attr("source");
-                if (source == "fromModelling") {
-                    selected.children[1].innerHTML = conditionVal;
-                } else {
-                    selected.childNodes[0].nodeValue = conditionVal;
-                }
+                selected.childNodes[0].nodeValue = conditionVal;
 
                 properties = selected.children[0];
                 properties.setAttribute("conditionname", conditionVal);
@@ -219,11 +202,7 @@ $(document).ready(function(){
                 // Code to Change the name of the node to user entered name
 
                 var source = $(selected).attr("source");
-                if (source == "fromModelling") {
-                    selected.children[1].innerHTML = contextVal;
-                } else {
-                    selected.childNodes[0].nodeValue = contextVal;
-                }
+                selected.childNodes[0].nodeValue = contextVal;
 
                 properties = selected.children[0];
                 properties.setAttribute("contextName", contextVal);
