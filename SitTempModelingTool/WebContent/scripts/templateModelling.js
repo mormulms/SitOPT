@@ -29,7 +29,7 @@ function makeDraggable(dragObj) {
             jsPlumb.addEndpoint(dragObjId,
                 {
                     anchor:"Top",
-                    uuid: dragObjId
+                    uuid: dragObjId + "_top"
                 }, commonSrc);
             jsPlumb.addEndpoint(dragObjId,
                 {

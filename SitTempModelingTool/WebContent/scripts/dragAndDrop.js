@@ -1,7 +1,7 @@
 var countSituation = 0;
-var countCntxtCond = 0;
+var countCondition = 0;
+var countContext = 0;
 var countOpr = 0;
-var sitNodeCtr = 0;
 
 $(document).ready(function() {
 
@@ -93,16 +93,14 @@ $(document).ready(function() {
                                     tempClone.attr("id", "Situation" + ++countSituation);
                                     tempClone.attr("inDrawingArea", 'true');
                                     tempClone.addClass("nodeTemplateSituation");
-                                    // Var sitNodeCtr is used to track the number of situation nodes. When greater than 1, error displayed
-                                    sitNodeCtr++;
                                 } else if (ui.helper[0].getAttribute("type") == "conditionnode") {
                                     tempClone = $("#nodeCondition").clone();
-                                    tempClone.attr("id", "Condition" + ++countCntxtCond);
+                                    tempClone.attr("id", "Condition" + ++countCondition);
                                     tempClone.attr("inDrawingArea", 'true');
                                     tempClone.addClass("nodeTemplateCondition");
                                 } else if (ui.helper[0].getAttribute("type") == "contextnode") {
                                     tempClone = $("#nodeContext").clone();
-                                    tempClone.attr("id", "Context" + ++countCntxtCond);
+                                    tempClone.attr("id", "Context" + ++countContext);
                                     tempClone.attr("inDrawingArea", 'true');
                                     tempClone.addClass("nodeTemplateContext");
                                 } else if (ui.helper[0].getAttribute("type") == "operationnode") {

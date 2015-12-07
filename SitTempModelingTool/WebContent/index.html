@@ -13,6 +13,7 @@
     <script type="text/javascript" src="scripts/buttons.js"></script>
 
     <script type="text/javascript" src="scripts/jquery-1.11.3.min.js"></script>
+    <script type="text/javascript" src="scripts/jquery.xpath.min.js"></script>
     <script type="text/javascript" src="scripts/jquery-ui.min.js"></script>
     <script type="text/javascript" src="scripts/bootstrap.min.css"></script>
     <script type="text/javascript" src="scripts/bootstrap.min.js"></script>
@@ -234,7 +235,6 @@
                         $("#oprForm").addClass("hidden");
                         $("#contCondForm").addClass("hidden");
                         // Decrement the Nodecounter when situation node is deleted using del key
-                        sitNodeCtr--;
                     });
                 }
             });
@@ -302,7 +302,6 @@
             $("#contextForm").addClass("hidden");
             $("#conditionForm").addClass("hidden");
             // Set the situation Nodecounter to null when clearAll is executed
-            sitNodeCtr = 0;
         }
     </script>
 

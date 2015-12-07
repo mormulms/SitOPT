@@ -75,9 +75,12 @@ $(document).ready(function(){
             // Code to display the properties when Node selected
             selectedNode = $(".selected div")[0];
 
-            document.getElementById("oprName").value = $(selectedNode).attr("oprname");
-            document.getElementById("oprType").value = $(selectedNode).attr("oprvalue");
-            document.getElementById("oprNegated").value = $(selectedNode).attr("oprnegated");
+            var name = $(selectedNode).attr("oprname");
+            var type = $(selectedNode).attr("oprvalue");
+            var neg = $(selectedNode).attr("oprnegated");
+            document.getElementById("oprName").value = name == undefined || name === "undefined" ? "" : name;
+            document.getElementById("oprType").value = type == undefined || type === "undefined" ? "" : type;
+            document.getElementById("oprNegated").value = ned == undefined || neg === "undefined" ? "" : neg;
 
             // Code to process save button click on the form
             $("#oprButton").click(function() {
