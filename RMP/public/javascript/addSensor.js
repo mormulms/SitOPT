@@ -19,6 +19,7 @@ function save() {
         }, function (res, code) {
             console.log(res);
             if (code == "success") {
+                navbarClick($, document, 'listSensors');
             } else {
                 console.log(JSON.stringify(res));
             }
