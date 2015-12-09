@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "actionhero": "latest",
+    "async": "^1.5.0",
     "grunt": "latest",
     "mongoose": "^4.1.8",
     "ws": "latest"
