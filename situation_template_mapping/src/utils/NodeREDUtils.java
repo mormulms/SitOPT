@@ -7,7 +7,6 @@ import org.json.simple.JSONObject;
 
 import mapping.ObjectIdSensorIdMapping;
 import situationtemplate.model.TContextNode;
-import situationtemplate.model.TSituation;
 import situationtemplate.model.TSituationTemplate;
 
 /**
@@ -113,14 +112,12 @@ public class NodeREDUtils {
 		JSONArray connections = new JSONArray();
 
 		// TODO
-		for (TSituation situation : situationTemplate.getSituation()) {
-			for (TContextNode sensorNode : situation.getContextNode()) {
+			for (TContextNode sensorNode : situationTemplate.getContextNode()) {
 				for (String object : sensorMapping.getObjects(sensorNode.getId())) {
 					String sensorNodeId = sensorNode.getId() + object;
 					connections.add(situationTemplate.getId() + "." + sensorNodeId);
 				}
 			}
-		}
 
 		connections.add(debugNode.get("id"));
 

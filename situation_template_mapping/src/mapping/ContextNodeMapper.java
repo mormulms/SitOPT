@@ -10,7 +10,6 @@ import situationtemplate.model.TConditionNode;
 import situationtemplate.model.TContextNode;
 import situationtemplate.model.TOperationNode;
 import situationtemplate.model.TParent;
-import situationtemplate.model.TSituation;
 import situationtemplate.model.TSituationTemplate;
 import utils.NodeREDUtils;
 
@@ -57,8 +56,7 @@ public class ContextNodeMapper {
 		builder.append("rmp/sensordata/");
 		url = builder.toString();
 
-		for (TSituation situation : situationTemplate.getSituation()) {
-			for (TContextNode sensorNode : situation.getContextNode()) {
+			for (TContextNode sensorNode : situationTemplate.getContextNode()) {
 				Properties.getContextNodes().add(sensorNode);
 
 				String sensorURL = url + "%s/" + sensorNode.getType();
@@ -107,7 +105,6 @@ public class ContextNodeMapper {
 				}
 
 			}
-		}
 
 		return nodeREDModel;
 	}

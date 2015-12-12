@@ -3,7 +3,6 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:noNamespaceSchemaLocation="situation_template_draft01.xsd"
 	name="SystemObservation">
-	<Situation id="A1" name="SystemFailure">
 		<operationNode id="A15" name="hyper combine">
 			<type>xor</type>
 			<parent parentID="A10"/>
@@ -74,5 +73,4 @@
 			<parent parentID="A9"/>
 		</contextNode>
 		<situationNode name="machine_failed" id="A10"/>
-	</Situation>
 </SituationTemplate>

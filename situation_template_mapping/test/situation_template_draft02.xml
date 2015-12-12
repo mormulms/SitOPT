@@ -3,7 +3,6 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:noNamespaceSchemaLocation="situation_template_draft01.xsd"
 	name="SystemObservation">
-	<Situation id="A1" name="SystemFailure">
 		<operationNode id="A2" name="AND (CPU and RAM sensor)">
 			<parent parentID="A3"/>
 			<type>and</type>
@@ -40,5 +39,4 @@
 			<parent parentID="A3"/>
 		</contextNode>
 		<situationNode name="machine_failed" id="A9"/>	
-	</Situation>
 </SituationTemplate>

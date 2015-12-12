@@ -3,6 +3,7 @@ package constants;
 import java.util.ArrayList;
 import java.util.List;
 
+import mapping.ObjectIdSensorIdMapping;
 import situationtemplate.model.TContextNode;
 
 /**
@@ -28,9 +29,9 @@ public class Nodes {
 			+ "    %s\n"
 			+ "  }\n\n"
 			+ "  if (returnValue) {\n"
-			+ "    msg.situation.push({'thing':'%s', 'timestamp':new Date(), 'situationtemplate':'%s' , 'occured':true});\n"
+			+ "    msg.situation.push({'thing':[%s], 'timestamp':new Date(), 'situationtemplate':'%s' , 'occured':true});\n"
 			+ "  } else {\n"
-			+ "    msg.situation.push({'thing':'%s', 'timestamp':new Date(), 'situationtemplate':'%s' , 'occured':false});\n"
+			+ "    msg.situation.push({'thing':[%s], 'timestamp':new Date(), 'situationtemplate':'%s' , 'occured':false});\n"
 			+ "  }\n"
 			+ "  context.values = null;\n"
 			+ "  context.sensorValues = null;\n\n"
@@ -65,9 +66,9 @@ public class Nodes {
             + "%s"
             + "}\n\n"
             + "if (returnValue) {\n"
-            + "    msg.situation.push({'thing':'test', 'timestamp':new Date(), 'situationtemplate':'A0' , 'occured':true});\n"
+            + "    msg.situation.push({'thing':[%s], 'timestamp':new Date(), 'situationtemplate':'A0' , 'occured':true});\n"
             + "} else {\n"
-            + "    msg.situation.push({'thing':'test', 'timestamp':new Date(), 'situationtemplate':'A0' , 'occured':false});\n"
+            + "    msg.situation.push({'thing':[%s], 'timestamp':new Date(), 'situationtemplate':'A0' , 'occured':false});\n"
             + "}\n\n"
             + "if (context.values.length > 1000) {\n"
             + "    context.values = context.values.slice(context.values.length - intervals, context.values.length);\n"
@@ -164,12 +165,16 @@ public class Nodes {
 	 * 
 	 * @return the AND Node in JavaScript
 	 */
-	public static String getANDNode(String numberOfInputs, String objectID, String situationTemplateID) {
+	public static String getANDNode(String numberOfInputs, String objectID, String situationTemplateID, ObjectIdSensorIdMapping mapping) {
 		final String immediateReturnValue = "if (context.values[context.values.length - 1 - i]) {\n"
 				+ "      counter++;\n"
 				+ "    }\n"
 				+ "    returnValue = counter == " + numberOfInputs + ";\n";
-		return String.format(accumulationString, numberOfInputs, immediateReturnValue, objectID, situationTemplateID, objectID, situationTemplateID);
+        String things = mapping.getObjects();
+        if (things.equals("")) {
+            things = '\'' + objectID + '\'';
+        }
+        return String.format(accumulationString, numberOfInputs, immediateReturnValue, things, situationTemplateID, things, situationTemplateID);
 	}
 	
 	/**
@@ -178,9 +183,13 @@ public class Nodes {
 	 * @return the OR Node in JavaScript
 	 */
 	
-	public static Object getORNode(String numberOfInputs, String objectID, String situationTemplateID) {
+	public static Object getORNode(String numberOfInputs, String objectID, String situationTemplateID, ObjectIdSensorIdMapping mapping) {
 		final String immediateReturnValue = "if (context.values[i]) {\n	  		counter++;}\n                returnValue = counter >= 1;\n";
-		return String.format(accumulationString, numberOfInputs, immediateReturnValue, objectID, situationTemplateID, objectID, situationTemplateID);
+        String things = mapping.getObjects();
+        if (things.equals("")) {
+            things = '\'' + objectID + '\'';
+        }
+        return String.format(accumulationString, numberOfInputs, immediateReturnValue, things, situationTemplateID, things, situationTemplateID);
 	}
 	
 	/**
@@ -188,9 +197,13 @@ public class Nodes {
 	 * 
 	 * @return the XOR Node in JavaScript
 	 */
-	public static Object getXORNode(String numberOfInputs, String objectID, String situationTemplateID) {
+	public static Object getXORNode(String numberOfInputs, String objectID, String situationTemplateID, ObjectIdSensorIdMapping mapping) {
 		final String immediateReturnValue = "if (!context.values[i]) {\n            counter++;}\n            returnValue = counter == 1;\n";
-		return String.format(accumulationString, numberOfInputs, immediateReturnValue, objectID, situationTemplateID, objectID, situationTemplateID);
+        String things = mapping.getObjects();
+        if (things.equals("")) {
+            things = '\'' + objectID + '\'';
+        }
+        return String.format(accumulationString, numberOfInputs, immediateReturnValue, things, situationTemplateID, things, situationTemplateID);
 	}
 	
 	/**
@@ -198,9 +211,13 @@ public class Nodes {
 	 * 
 	 * @return the AND Node in JavaScript
 	 */
-	public static String getANDNotNode(String numberOfInputs, String objectID, String situationTemplateID) {
+	public static String getANDNotNode(String numberOfInputs, String objectID, String situationTemplateID, ObjectIdSensorIdMapping mapping) {
 		final String immediateReturnValue = "if (context.values[i]) {\n	  		counter++;}\n            returnValue = counter < " + numberOfInputs + ";\n";
-		return String.format(accumulationString, numberOfInputs, immediateReturnValue, objectID, situationTemplateID, objectID, situationTemplateID);
+        String things = mapping.getObjects();
+        if (things.equals("")) {
+            things = '\'' + objectID + '\'';
+        }
+        return String.format(accumulationString, numberOfInputs, immediateReturnValue, things, situationTemplateID, things, situationTemplateID);
 	}
 	
 	/**
@@ -208,9 +225,13 @@ public class Nodes {
 	 * 
 	 * @return the OR Node in JavaScript
 	 */
-	public static Object getORNotNode(String numberOfInputs, String objectID, String situationTemplateID) {
+	public static Object getORNotNode(String numberOfInputs, String objectID, String situationTemplateID, ObjectIdSensorIdMapping mapping) {
 		final String immediateReturnValue = "if (context.values[i]) {\n	  		counter++;}\n            returnValue = counter == 0;\n";
-		return String.format(accumulationString, numberOfInputs, immediateReturnValue, objectID, situationTemplateID, objectID, situationTemplateID);
+        String things = mapping.getObjects();
+        if (things.equals("")) {
+            things = '\'' + objectID + '\'';
+        }
+        return String.format(accumulationString, numberOfInputs, immediateReturnValue, things, situationTemplateID, things, situationTemplateID);
 	}
 	
 	/**
@@ -218,9 +239,13 @@ public class Nodes {
 	 * 
 	 * @return the XOR Node in JavaScript
 	 */
-	public static Object getXORNotNode(String numberOfInputs, String objectID, String situationTemplateID) {
+	public static Object getXORNotNode(String numberOfInputs, String objectID, String situationTemplateID, ObjectIdSensorIdMapping mapping) {
 		final String immediateReturnValue = "if (context.values[i]) {\n            counter++;}\n            returnValue = counter != 1;\n";
-		return String.format(accumulationString, numberOfInputs, immediateReturnValue, objectID, situationTemplateID, objectID, situationTemplateID);
+		String things = mapping.getObjects();
+		if (things.equals("")) {
+		    things = '\'' + objectID + '\'';
+		}
+		return String.format(accumulationString, numberOfInputs, immediateReturnValue, things, situationTemplateID, things, situationTemplateID);
 	}
 	
 	/**
@@ -228,11 +253,13 @@ public class Nodes {
 	 * 
 	 * @return the Average Node in JavaScript
 	 */
-	public static Object getAVERAGENode(String intervals, String value, String objectID, String situationTemplateID) {
+	public static Object getAVERAGENode(String intervals, String value, String objectID, String situationTemplateID, ObjectIdSensorIdMapping mapping) {
 		final String immediateReturnValue = 
 	                    "    counter += parseInt(context.values[i]);\n"
 	                    + "    returnValue = counter / (max - min);\n";
-		return String.format(timeString, intervals, "''", immediateReturnValue);
+        final String things = mapping.getObjects();
+        
+        return String.format(timeString, intervals, value, immediateReturnValue, things.equals("") ? ('\'' + objectID + '\'') : things, things.equals("") ? ('\'' + objectID + '\'') : things);
 	}
 
 	/**
@@ -240,14 +267,16 @@ public class Nodes {
 	 * 
 	 * @return the Min Node in JavaScript
 	 */
-	public static Object getMINNode(String intervals, String value, String objectID, String situationTemplateID) {
+	public static Object getMINNode(String intervals, String value, String objectID, String situationTemplateID, ObjectIdSensorIdMapping mapping) {
 		final String immediateReturnValue = 
 				"    if (context.min > context.values[i]) {\n"
 				+ "        context.min = context.values[i];\n"
 				+ "    }\n"
 				+ "    returnValue = context.max;\n";
-		
-		return String.format(timeString, intervals, "Number.MAX_VALUE", immediateReturnValue);
+
+        final String things = mapping.getObjects();
+        
+        return String.format(timeString, intervals, value, immediateReturnValue, things.equals("") ? ('\'' + objectID + '\'') : things, things.equals("") ? ('\'' + objectID + '\'') : things);
 	}
 
 	/**
@@ -255,14 +284,16 @@ public class Nodes {
 	 * 
 	 * @return the Max Node in JavaScript
 	 */
-	public static Object getMAXNode(String intervals, String value, String objectID, String situationTemplateID) {
+	public static Object getMAXNode(String intervals, String value, String objectID, String situationTemplateID, ObjectIdSensorIdMapping mapping) {
 		final String immediateReturnValue = 
 				"    if (context.max < context.values[i]) {\n"
 				+ "        context.max = context.values[i];\n"
 				+ "    }\n"
 				+ "    returnValue = context.max;\n";
-		
-		return String.format(timeString, intervals, "Number.MIN_VALUE", immediateReturnValue);
+
+        final String things = mapping.getObjects();
+        
+        return String.format(timeString, intervals, value, immediateReturnValue, things.equals("") ? ('\'' + objectID + '\'') : things, things.equals("") ? ('\'' + objectID + '\'') : things);
 	}
 
 	/**
@@ -270,14 +301,16 @@ public class Nodes {
 	 * 
 	 * @return the Interval Node in JavaScript
 	 */
-	public static Object getINTERVALMINEQUALNode(String intervals, String value, String objectID, String situationTemplateID) {
+	public static Object getINTERVALMINEQUALNode(String intervals, String value, String objectID, String situationTemplateID, ObjectIdSensorIdMapping mapping) {
 		final String immediateReturnValue = 
 				"    if (context.values[i] == true) {\n"
 				+ "        counter++;\n"
 				+ "    }\n"
 				+ "    returnValue = counter >= intervals;\n";
-		
-		return String.format(timeString, intervals, value, immediateReturnValue);
+
+        final String things = mapping.getObjects();
+        
+        return String.format(timeString, intervals, value, immediateReturnValue, things.equals("") ? ('\'' + objectID + '\'') : things, things.equals("") ? ('\'' + objectID + '\'') : things);
 	}
 	
 	/**
@@ -285,14 +318,16 @@ public class Nodes {
 	 * 
 	 * @return the Interval Node in JavaScript
 	 */
-	public static Object getINTERVALMINNode(String intervals, String value, String objectID, String situationTemplateID) {
+	public static Object getINTERVALMINNode(String intervals, String value, String objectID, String situationTemplateID, ObjectIdSensorIdMapping mapping) {
 		final String immediateReturnValue = 
 				"    if (context.values[i] == true) {\n"
 				+ "        counter++;\n"
 				+ "    }\n"
 				+ "    returnValue = counter > intervals;\n";
-		
-		return String.format(timeString, intervals, value, immediateReturnValue);
+
+        final String things = mapping.getObjects();
+        
+        return String.format(timeString, intervals, value, immediateReturnValue, things.equals("") ? ('\'' + objectID + '\'') : things, things.equals("") ? ('\'' + objectID + '\'') : things);
 	}
 	
 	/**
@@ -300,14 +335,16 @@ public class Nodes {
 	 * 
 	 * @return the Interval Node in JavaScript
 	 */
-	public static Object getINTERVALMAXEQUALNode(String intervals, String value, String objectID, String situationTemplateID) {
+	public static Object getINTERVALMAXEQUALNode(String intervals, String value, String objectID, String situationTemplateID, ObjectIdSensorIdMapping mapping) {
 		final String immediateReturnValue = 
 				"    if (context.values[i] == true) {\n"
 				+ "        counter++;\n"
 				+ "    }\n"
 				+ "    returnValue = counter <= intervals;\n";
-		
-		return String.format(timeString, intervals, value, immediateReturnValue);
+
+        final String things = mapping.getObjects();
+        
+        return String.format(timeString, intervals, value, immediateReturnValue, things.equals("") ? ('\'' + objectID + '\'') : things, things.equals("") ? ('\'' + objectID + '\'') : things);
 	}
 	
 	/**
@@ -315,14 +352,16 @@ public class Nodes {
 	 * 
 	 * @return the Interval Node in JavaScript
 	 */
-	public static Object getINTERVALMAXNode(String intervals, String value, String objectID, String situationTemplateID) {
+	public static Object getINTERVALMAXNode(String intervals, String value, String objectID, String situationTemplateID, ObjectIdSensorIdMapping mapping) {
 		final String immediateReturnValue = 
 				"    if (context.values[i] == true) {\n"
 				+ "        counter++;\n"
 				+ "    }\n"
 				+ "    returnValue = counter < intervals;\n";
 		
-		return String.format(timeString, intervals, value, immediateReturnValue);
+		final String things = mapping.getObjects();
+		
+		return String.format(timeString, intervals, value, immediateReturnValue, things.equals("") ? ('\'' + objectID + '\'') : things, things.equals("") ? ('\'' + objectID + '\'') : things);
 	}
 
 	/**

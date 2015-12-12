@@ -3,7 +3,6 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:noNamespaceSchemaLocation="situation_template_draft01.xsd"
 	name="SystemObservation">
-	<Situation id="A1" name="SystemFailure">
 		<operationNode id="A6" name="AND">
 			<parent parentID="A10" />
 			<type>and</type>
@@ -22,5 +21,4 @@
 			<parent parentID="A4"/>
 		</contextNode>
 		<situationNode name="machine_failed" id="A10"/>
-	</Situation>
 </SituationTemplate>

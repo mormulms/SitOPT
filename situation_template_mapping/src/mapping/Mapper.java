@@ -4,10 +4,6 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 
-import situationtemplate.model.TConditionNode;
-import situationtemplate.model.TContextNode;
-import situationtemplate.model.TParent;
-import situationtemplate.model.TSituation;
 import situationtemplate.model.TSituationTemplate;
 import utils.IOUtils;
 import utils.NodeREDUtils;

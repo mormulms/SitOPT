@@ -13,7 +13,6 @@ import situationtemplate.model.TConditionNode;
 import situationtemplate.model.TContextNode;
 import situationtemplate.model.TOperationNode;
 import situationtemplate.model.TParent;
-import situationtemplate.model.TSituation;
 import situationtemplate.model.TSituationNode;
 import situationtemplate.model.TSituationTemplate;
 import utils.NodeREDUtils;
@@ -45,9 +44,8 @@ public class OperationNodeMapper {
 
 		// get the number of children of the operation node
 		int children = 0;
-		for (TSituation situation : situationTemplate.getSituation()) {
-		for (TOperationNode logicNode : situation.getOperationNode()) {
-			for (TConditionNode node: situation.getConditionNode()) {
+		for (TOperationNode logicNode : situationTemplate.getOperationNode()) {
+			for (TConditionNode node: situationTemplate.getConditionNode()) {
 				for (TParent parent: node.getParent()) {
 					
 					if (parent.getParentID() instanceof TConditionNode) {
@@ -56,7 +54,7 @@ public class OperationNodeMapper {
 						}
 					} else if (parent.getParentID() instanceof TOperationNode) {
 						if (((TOperationNode) parent.getParentID()).getId().equals(logicNode.getId())) {
-							for (TContextNode snode : situation.getContextNode()) {
+							for (TContextNode snode : situationTemplate.getContextNode()) {
 								for (TParent sparent : snode.getParent()) {
 									if (((TConditionNode)sparent.getParentID()).getId().equals(node.getId())) {
 										for (String object : sensorMapping.getObjects(snode.getId())) {
@@ -77,7 +75,7 @@ public class OperationNodeMapper {
 			parentIds.add(logicNode.getId());
 			ArrayList<TContextNode> sensors = new ArrayList<>();
 			
-			for (TOperationNode node : situation.getOperationNode()) {
+			for (TOperationNode node : situationTemplate.getOperationNode()) {
 				for (TParent parent : node.getParent()) {
 					if (parentIds.contains(parent.getParentID())) {
 						parentIds.add(node.getId());
@@ -85,7 +83,7 @@ public class OperationNodeMapper {
 					}
 				}
 			}
-			for (TConditionNode node : situation.getConditionNode()) {
+			for (TConditionNode node : situationTemplate.getConditionNode()) {
 				for (TParent parent : node.getParent()) {
 					if (parentIds.contains(parent.getParentID())) {
 						parentIds.add(node.getId());
@@ -93,7 +91,7 @@ public class OperationNodeMapper {
 					}
 				}
 			}
-			for (TContextNode node : situation.getContextNode()) {
+			for (TContextNode node : situationTemplate.getContextNode()) {
 				for (TParent parent : node.getParent()) {
 					if (parentIds.contains(parent.getParentID())) {
 						sensors.add(node);
@@ -105,14 +103,14 @@ public class OperationNodeMapper {
 			String sensorIdMapping = sensorMapping.map(sensors);
 			
 			try {
-				m = Nodes.class.getMethod("get" + logicNode.getType().toUpperCase() + (logicNode.isNegated() ? "Not" : "") + "Node", String.class, String.class, String.class);
+				m = Nodes.class.getMethod("get" + logicNode.getType().toUpperCase() + (logicNode.isNegated() ? "Not" : "") + "Node", String.class, String.class, String.class, ObjectIdSensorIdMapping.class);
 			} catch (NoSuchMethodException | SecurityException e) {
 				e.printStackTrace();
 				throw new RuntimeException(e);
 			}
 			
 			try {
-				nodeREDNode.put("func", m.invoke(null, Integer.toString(children), sensorIdMapping, situationTemplate.getId()));
+				nodeREDNode.put("func", m.invoke(null, Integer.toString(children), sensorIdMapping, situationTemplate.getId(), sensorMapping));
 			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 				e.printStackTrace();
 				throw new RuntimeException(e);
@@ -176,7 +174,6 @@ public class OperationNodeMapper {
 			nodeREDModel.add(nodeREDNode);
 			
 			yCoordinate += 100;
-		}
 		}
 		
 		return nodeREDModel;

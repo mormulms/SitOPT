@@ -8,15 +8,8 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.transform.stream.StreamSource;
 
-import situationtemplate.model.TConditionNode;
-import situationtemplate.model.TConditionNode.CondValue;
-import situationtemplate.model.TContextNode;
-import situationtemplate.model.TOperationNode;
-import situationtemplate.model.TParent;
-import situationtemplate.model.TSituation;
 import situationtemplate.model.TSituationTemplate;
 import utils.IOUtils;
-import utils.NodeREDUtils;
 
 public class Main {
 

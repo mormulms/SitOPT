@@ -56,7 +56,6 @@ public class ObjectIdSensorIdMapping {
 	public String map(ArrayList<TContextNode> sensors) {
 		if (json != null) {
 			StringBuilder builder = new StringBuilder();
-			builder.append('[');
 			HashSet<String> set = new HashSet<>();
 			for (TContextNode node : sensors) {
 				for (String o : getObjects(node.getId())) {
@@ -71,11 +70,33 @@ public class ObjectIdSensorIdMapping {
 				builder.append("',");
 			}
 			builder.setLength(builder.length() - 1);
-			builder.append(']');
 			return builder.toString();
 		} else {
-			return "[" + object + "]";
+			return object;
 		}
 	}
+
+    public String getObjects() {
+        ArrayList<Object> things = new ArrayList<>();
+        if (json != null) {
+            for (Object key : json.keySet()) {
+                JSONArray array = (JSONArray) json.get(key);
+                for (Object thing : array) {
+                    if (things.indexOf(thing) == -1) {
+                        things.add(thing);
+                    }
+                }
+            }
+            StringBuilder builder = new StringBuilder();
+            for (Object thing : things) {
+                builder.append('\'');
+                builder.append(thing.toString());
+                builder.append("', ");
+            }
+            builder.setLength(builder.length() - 2);
+            return builder.toString();
+        }
+        return "";
+    }
 
 }
