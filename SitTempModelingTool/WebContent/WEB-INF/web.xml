@@ -25,6 +25,10 @@
     <servlet-name>loadsituationtemplate</servlet-name>
     <servlet-class>servlets.LoadSituationTemplate</servlet-class>
   </servlet>
+  <servlet>
+    <servlet-name>startRec</servlet-name>
+    <servlet-class>servlets.StartRec</servlet-class>
+  </servlet>
   <servlet-mapping>
     <servlet-name>save</servlet-name>
     <url-pattern>/save</url-pattern>
@@ -40,5 +44,9 @@
   <servlet-mapping>
     <servlet-name>loadsituationtemplate</servlet-name>
     <url-pattern>/loadsituationtemplate</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>startRec</servlet-name>
+    <url-pattern>/StartRec</url-pattern>
   </servlet-mapping>
 </web-app>

@@ -80,7 +80,7 @@ $(document).ready(function(){
             var neg = $(selectedNode).attr("oprnegated");
             document.getElementById("oprName").value = name == undefined || name === "undefined" ? "" : name;
             document.getElementById("oprType").value = type == undefined || type === "undefined" ? "" : type;
-            document.getElementById("oprNegated").value = ned == undefined || neg === "undefined" ? "" : neg;
+            document.getElementById("oprNegated").value = neg == undefined || neg === "undefined" ? "" : neg;
 
             // Code to process save button click on the form
             $("#oprButton").click(function() {

@@ -67,6 +67,7 @@ function parseAndTraverseXML(contents) {
         var div = document.createElement("div");
         $(div).addClass("nodeTemplateOperation");
         div.setAttribute("indrawingarea", "true");
+        div.setAttribute("type", "operationnode");
         div.setAttribute("source", "fromModelling");
 
         topVal = parseInt(topVal, 10);
