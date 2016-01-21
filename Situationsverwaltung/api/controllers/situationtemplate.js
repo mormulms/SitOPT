@@ -1,15 +1,13 @@
 
 var express = require('express');
 var app = express();
-var cradle = require('cradle');
 var bodyParser = require('body-parser');
 var multiparty = require('multiparty');
 var http = require('http');
-var util = require('util');
+var assert = require('assert');
 
-//create connection to CouchDB (default = localhost:5984)
-var conn = new(cradle.Connection);
-var database = conn.database('situationtemplates');
+
+
 
 app.use(bodyParser());
 
@@ -33,18 +31,19 @@ module.exports = {
 //Returns 404 if document not found
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 function deleteTemplateByID(req, res){
-
-	var id = req.swagger.params.ID.value;
-	database.remove(id, function(err,doc){
-		if (err){
-			res.statusCode = 404;
-			res.json("Not found");
-		}else{
-			res.statusCode = 200;
-			res.json("Situation template with ID: '" + id +"' deleted")
-		}
+	removeDocument(req.swagger.params.ID.value, function() {
+	    res.json("Deleted");
 	});
 }
+function removeDocument(id, callback) {
+   db.collection('Situationtemplates').deleteOne(
+      { "_id": new require('mongodb').ObjectID(id) },
+      function(err, results) {
+         callback();
+      }
+   );
+};
+
 	
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 //getAttachment
@@ -53,16 +52,13 @@ function deleteTemplateByID(req, res){
 //not fully implemented
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 function getAttachment(req, res){
-	database.getAttachment(req.swagger.params.ID.value, req.swagger.params.templatename.value, function (err, reply) {
-	  if (err) {
-	    console.dir("Error")
-	    res.json(err);
-	    return
-	  }else{
-	  	console.dir(reply);
-	  	res.json("OK");
-	  }
-	  
+	queryID(req.swagger.params.ID.value, function(doc){
+		if (doc[0].xml == null){
+			res.json("No xml data attached");
+		}else{
+			res.json(doc[0].xml);
+		}
+		
 	})
 }
 
@@ -72,8 +68,54 @@ function getAttachment(req, res){
 //Upload XML file to situation template as an attachment
 //Returns 404 if document not found
 /////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/*function updateDocument(document, oldDoc, template, callback) {
+
+   	db.collection('Situationtemplates').updateOne( 
+   		{"_id" :  new require('mongodb').ObjectID(oldDoc._id) },
+   		{
+   			$set: { "thing" : document.thing,
+			      "timestamp" : document.timestamp,
+			      "situationtemplate" : document.situationtemplate,
+			      "occured" : document.occured,
+			      "name" : template.situation,
+			      "quality": 100},
+			$currentDate: {"lastModified": true}
+   		}, function(err, result) {
+	    assert.equal(err, null);
+	    callback();
+  	});
+};*/
+
+function attachFile(document, xml, callback){
+	db.collection('Situationtemplates').updateOne( 
+   		{"_id" :  new require('mongodb').ObjectID(document._id) },
+   		{
+   			$set: {"xml" : xml},
+   			$currentDate: {"lastModified":true}
+   		}, function(err, result){
+   			assert.equal(err,null);
+   			callback();
+   		}
+   	);
+}
+
 function uploadAttachment(req, res){
 
+	console.log(req.files.file.buffer.toString());
+	console.log(req.swagger.params.ID.value);
+	console.log(req.swagger.params.templatename.value);
+
+	queryID(req.swagger.params.ID.value, function(doc){
+		if(doc[0] == null){
+			res.json("Situationtemplate not found");
+		}else{
+			attachFile(doc[0], req.files.file.buffer.toString(), function(){
+				res.json("File attached");
+			});
+		}
+
+	})
 	var filename = '';
 	if (req.swagger.params.templatename.value == undefined){
 		filename = 'situationtemplate.xml';
@@ -86,32 +128,6 @@ function uploadAttachment(req, res){
 		'Content-Type': 'text/xml',
 		body: req.files.file.buffer.toString()
 	}
-
-	checkID(req.swagger.params.ID.value, 'situationtemplates', function(situationTemplateExists){
-		if (!situationTemplateExists){
-			res.statusCode = 404;
-			res.json("Not found");
-		}else{
-			database.view('situationtemplates/idAndRev', { key: req.swagger.params.ID.value }, function (err, doc) {
-				var idAndRevData = {
-				  id: req.swagger.params.ID.value,
-				  rev: doc[0].value
-				}
-				console.log(doc[0].value)
-				database.saveAttachment(idAndRevData, attachmentData, function (err, reply) {
-				  if (err) {
-				    console.dir(err)
-				    res.json("Error");
-				    return
-				  }
-				  console.dir(reply);
-				  res.json("OK");
-				  
-				})
-			});
-		}
-	});
-
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -121,16 +137,22 @@ function uploadAttachment(req, res){
 //Returns 404 if document not found
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 function getTemplateByID(req, res) {
-	var id = req.swagger.params.ID.value;
-	database.get(id, function (err, doc) {	
-		if (err) {
-			res.statusCode = 404;
-			res.json("Not found");
-		} else {
-			res.statusCode = 200;
-			res.json(doc);
-		}	
-	});	
+	queryID(req.swagger.params.ID.value, function(doc){
+		res.json(doc[0]);
+	})
+}
+
+function queryID(id, callback){
+	var array = [];
+	var cursor = db.collection('Situationtemplates').find({"_id": new require('mongodb').ObjectID(id)});
+	cursor.each(function(err, doc) {
+      	assert.equal(err, null);
+      	if (doc != null) {
+         	array.push(doc);
+      	}else{
+      		callback(array);
+      	}
+   	});
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -140,17 +162,25 @@ function getTemplateByID(req, res) {
 //Returns 404 if document not found
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 function getTemplateByName(req, res) {
-
-	var array = [];
-	database.view('situationtemplates/byName', { key: req.swagger.params.name.value }, function (err, doc) {
-		console.log("Length of array: " + doc.length);
-		
-		for (i = 0; i < doc.length; i++){
-			array.push(doc[i].value);
-		}
+	queryName(req.swagger.params.name.value, function(array){
 		res.json(array);
 	});
 }
+
+function queryName(name, callback){
+	var array = [];
+	var cursor = db.collection('Situationtemplates').find( { "name": name  } );
+   	cursor.each(function(err, doc) {
+      	assert.equal(err, null);
+      	if (doc != null) {
+         	array.push(doc);
+      	}else{
+      		callback(array);
+      	}
+   	});
+}
+
+
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 //allTemplates
@@ -159,16 +189,22 @@ function getTemplateByName(req, res) {
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 function allTemplates(req, res) {
 
-	res.header("Access-Control-Allow-Origin", "*");
-	res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-	var array = [];
-	database.view('situationtemplates/all', { key: null }, function (err, doc) {	
-		for (var i = 0; i < doc.length; i++){
-			array.push(doc[i].value);
-		}
-		res.json(array);	
+	getAll(function(all) {
+	    res.json(all);
 	});
 }
+function getAll(callback) {
+   var cursor =db.collection('Situationtemplates').find( );
+   var array = [];
+   cursor.each(function(err, doc) {
+      assert.equal(err, null);
+      if (doc != null) {
+         array.push(doc);
+      } else {
+         callback(array);
+      }
+   });
+};
 
 
 
@@ -198,44 +234,22 @@ function checkID(documentID, databaseID , callback){
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 function saveTemplate(req, res){
 
-	var startTime = new Date().getTime();
-	//check if referenced _id of thing exists
-	if (req.body.name&&req.body.description&&
-	req.body.situation){
-		if (req.body.id){
-			database.save(req.body.id,{
-				name: req.body.name,
-				url: req.body.url,
-				situation: req.body.situation,
-				description: req.body.description
-			}, function (err, response) {
-				if (err) {
-					res.statusCode = 504;
-					res.json("Error");
-				} else {
-					res.statusCode = 201;
-					res.json("Created");
-				}
-			});
-		}else{
-			database.save({
-				name: req.body.name,
-				url: req.body.url,
-				situation: req.body.situation,
-				description: req.body.description
-			}, function (err, response) {
-				if (err) {
-					res.statusCode = 504;
-					res.json("Error");
-				} else {
-					res.statusCode = 201;
-					res.json("Created");
-				}
-			});
-		}
-		
-	}else{
-		res.statusCode = 400;
-		res.json("Missing JSON attributes");
-	}	
+	insertDocument(req.body, function() {
+	    res.json("Created");
+	});
 }
+
+function insertDocument(document, callback) {
+   db.collection('Situationtemplates').insertOne( {
+      "objecttype" : "Situationtemplate",
+      "name" : document.name,
+      "situation" : document.situation,
+      "description" : document.description,
+      "timestamp" : (new Date).getTime()
+   }, function(err, result) {
+    assert.equal(err, null);
+    //console.log(result);
+    callback(result);
+  });
+};
+

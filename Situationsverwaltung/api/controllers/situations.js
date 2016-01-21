@@ -2,13 +2,14 @@
 
 var express = require('express');
 var app = express();
-var cradle = require('cradle');
 var bodyParser = require('body-parser');
+var assert = require('assert');
 
 var httpSend = require('request');
-//create connection to CouchDB (default = localhost:5984)
-var conn = new(cradle.Connection);
-var database = conn.database('situations');
+
+
+
+
 
 
 app.use(bodyParser());
@@ -24,7 +25,8 @@ module.exports = {
   situationChange: situationChange,
   situationChangeDelete: situationChangeDelete,
   situationOccured: situationOccured,
-  deleteSituationByID: deleteSituationByID
+  deleteSituationByID: deleteSituationByID,
+  allRegistrations: allRegistrations
 };
 
 var callbackArray = [];
@@ -35,7 +37,7 @@ var callbackArray = [];
 //registrate to CouchDB _changes resource
 //if changes occur, call checkCallbacks()
 /////////////////////////////////////////////////////////////////////////////////////////////////////
-var feed = database.changes({ 'include\_docs' : true, since: 'now'});
+/*var feed = database.changes({ 'include\_docs' : true, since: 'now'});
 feed.on('change', function (change) {	  
 	//transformations to enable access to JSON attributes
 	var stringifiedChange = JSON.stringify(change);
@@ -45,6 +47,7 @@ feed.on('change', function (change) {
 		checkCallbacks(JSONchange.doc);
 	}	 
 });
+*/
 
 Array.prototype.remove = function(from, to) {
   var rest = this.slice((to || from) + 1 || this.length);
@@ -63,25 +66,38 @@ Array.prototype.remove = function(from, to) {
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 function checkCallbacks(document){
 	var callbacks = [];
+	console.log(document);
 	for (var i=0; i<callbackArray.length;i++){
-		
-		if (callbackArray[i].id == document._id || callbackArray[i].id == ""){
+
+		console.log("----------");
+		console.log("DOCUMENT");
+		console.log(callbackArray[i]);
+		console.log("----------");
+		console.log(callbackArray[i].ThingID);
+		console.log(document.thing);
+		console.log(callbackArray[i].TemplateID);
+		console.log(document.template);
+		console.log("----------");
+		if ((callbackArray[i].ThingID == document.thing && callbackArray[i].TemplateID == document.template)
+		 || callbackArray[i].ThingID == ""){
 			callbacks.push(i);	
 		}
 	}
 	for (var i=callbacks.length-1; i>=0;i--){
-		console.log(callbackArray[callbacks[i]].callbackURL);
+		console.log("Test" + callbackArray[callbacks[i]].callbackURL);
 		
-		httpSend.post(
-
-			callbackArray[callbacks[i]].callbackURL,
-			{ form: { doc: document}},
-			function (error, response, body) {
-				if (!error && response.statusCode == 200) {
-					console.log(body)
-				}
+		var JSON = {doc: document};
+		httpSend({
+			url: callbackArray[callbacks[i]].callbackURL,
+			method: "POST",
+			json: true,
+			body: document
+		}, function(error, response, body){
+			if (!error && response.statusCode == 200){
+				console.log(body);
 			}
-		);	
+		})
+
 		if (callbackArray[callbacks[i]].once){
 			callbackArray.remove([callbacks[i]]);
 			console.log("deleted");
@@ -90,6 +106,40 @@ function checkCallbacks(document){
 }
 
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+//allRegistrations
+//
+//Returns all registrations by the Situation Handler
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+function allRegistrations(req, res){
+	
+	if (req.swagger.params.CallbackURL.value == undefined){
+		res.statusCode = 200;
+		if (callbackArray.length == 0){
+			res.json("No registrations");
+		}else{
+			res.json(callbackArray);
+		}
+		
+	}else{
+		var URLArray = [];
+		for (var i = 0; i < callbackArray.length; i++){
+
+			if (req.swagger.params.CallbackURL.value == callbackArray[i].callbackURL){
+				URLArray.push(callbackArray[i]);
+			}
+		}
+		if(URLArray.length == 0){
+			res.statusCode = 404;
+			res.json("No registrations under this URL found");
+		}else{
+			res.statusCode = 200;
+			res.json(URLArray);
+		}
+		
+	}
+	
+}
 
 
 
@@ -101,32 +151,52 @@ function checkCallbacks(document){
 //Returns 404 if situation is not found
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 function situationOccured(req, res){
-
+	var id = req.swagger.params.ID.value;
 	if (!req.swagger.params.ID.value){
 		//Change all situations			
 	}else{
-		database.get(req.swagger.params.ID.value, function (err, doc) {	
+		/*bucket.get(id, function (err, doc) {
+			console.log(doc);
 			if (err) {
 				res.statusCode = 404;
 				res.json("Not found");
 			} else {
 				res.statusCode = 200;
-
-				database.save(doc._id,{
-					thing: doc.thing,
+				res.json ("OK");
+				bucket.upsert(req.body.id,
+					{thing: doc.thing,
 					timestamp: doc.timestamp,
 					situationtemplate: doc.situationtemplate,
 					occured: !doc.occured,
 					name: doc.name,
 					quality: doc.quality,
 					sensorvalues: doc.sensorvalues
+				}, function (err, response) {
+					if (err) {
+						res.statusCode = 504;
+						res.json("Error");
+					} else {
+						res.statusCode = 201;
+						res.json("Created");
+					}
 				});
-				res.json("Document updated");
-			}	
-		});	
+			}
+		});	*/
+		res.json("not implemented");
 		
 	}
 }
+/*var updateOccured = function(db, callback) {
+   db.collection('Situations').updateOne(
+      { "_id": new require('mongodb').ObjectID(id) },
+      {
+        $set: { "occured": "American (New)" },
+        $currentDate: { "lastModified": true }
+      }, function(err, results) {
+      console.log(results);
+      callback();
+   });
+};*/
 
 
 
@@ -158,36 +228,65 @@ function situationChangeDelete(req, res){
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 function situationChange(req, res){
 
+	//XOR not allowerd
 	if (!(req.swagger.params.SitTempID.value==undefined)&&req.swagger.params.ThingID.value==undefined || 
 		req.swagger.params.SitTempID.value==undefined&&!(req.swagger.params.ThingID.value==undefined)){
-		//fehlerhaft
-		res.status(404);
+		res.statusCode = 400;
 		res.json("Specify both IDs or none.");
-
-	//registration to all situation changes
+		console.log("Case1");
+	//Registration for all situations
 	} else if (req.swagger.params.SitTempID.value==undefined&&req.swagger.params.ThingID.value==undefined){
-		res.statusCode = 200;
-		res.json("Registration successful");
-		var id = "";
-		SaveURL(id, 'situations', req.swagger.params.CallbackURL.value,
-			req.swagger.params.once.value);
-
-	//registration to a specific situation, specified by ThingID and TemplateID
+		console.log("Case2");
+		
+		
+		var registrated = false;
+		for (var i=callbackArray.length-1; i >=0; i--){
+			if (callbackArray[i].callbackURL == req.swagger.params.CallbackURL.value){
+				registrated = true;
+				callbackArray.remove(i);
+			}
+		}
+		
+		SaveURL("", "", req.swagger.params.CallbackURL.value, req.swagger.params.once.value);
+		
+		if (!registrated){
+			res.statusCode = 200;
+			res.json("Registration successful");	
+		}else{
+			res.statusCode = 200;
+			res.json("Previous registration deleted. New registration successful");
+		}
+	//Registration for specified situation
 	}else{
-		database.view('situations/existing', { key: [req.swagger.params.ThingID.value, req.swagger.params.SitTempID.value] }, function (err, doc) {
-		//if array not empty (_id exists), pass the existing _id for the situation to update a document
-			console.log(doc);
-			if (doc == "[]"){
+		queryThingAndTemplate(req.body.thing,
+						req.body.situationtemplate, function(doc){
+
+			if (doc[0] == null){
 				res.statusCode = 404;
 				res.json("File not found");
 			}else{
-				SaveURL(doc[0].id, 'situations', req.swagger.params.CallbackURL.value,
-						req.swagger.params.once.value);
-				res.statusCode = 200;
-				res.json("Registration successful");
+				var registrated = false;
+				for (var i = 0; i < callbackArray.length; i++){
+					if ((callbackArray[i].callbackURL == req.swagger.params.CallbackURL.value && callbackArray[i].ThingID == doc[0].thing && callbackArray[i].TemplateID == doc[0].situationtemplate) ||
+						(callbackArray[i].callbackURL == req.swagger.params.CallbackURL.value && callbackArray[i].ThingID == "")){
+						registrated = true;
+					}
+				}	
+				if (!registrated){
+					SaveURL(doc[0].thing, doc[0].situationtemplate, req.swagger.params.CallbackURL.value, req.swagger.params.once.value);
+					res.statusCode = 200;
+					res.json("Registration successful");
+				}else{
+					res.statusCode = 400;
+					res.json("Already registered");
+				}
+				
 			}
 		});
 	}
+
+	
+	
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -195,8 +294,8 @@ function situationChange(req, res){
 //
 //Stores registration in array "callbackArray"
 /////////////////////////////////////////////////////////////////////////////////////////////////////
-function SaveURL(documentID, database, url, continued){
-	var tuple = {id : documentID, db : database, callbackURL: url, once : continued};
+function SaveURL(thingID, templateID, url, continued){
+	var tuple = {ThingID : thingID, TemplateID: templateID, callbackURL: url, once : continued};
     callbackArray.push(tuple);
 }
 
@@ -213,17 +312,18 @@ function SaveURL(documentID, database, url, continued){
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 function deleteSituationByID(req, res){
 
-	var id = req.swagger.params.ID.value;
-	database.remove(id, function(err,doc){
-		if (err){
-			res.statusCode = 404;
-			res.json("Not found");
-		}else{
-			res.statusCode = 200;
-			res.json("Situation with ID: '" + id +"' deleted")
-		}
+	removeDocument(req.swagger.params.ID.value, function() {
+	    res.json("Deleted");
 	});
 }
+function removeDocument(id, callback) {
+   db.collection('Situations').deleteOne(
+      { "_id": new require('mongodb').ObjectID(id) },
+      function(err, results) {
+         callback();
+      }
+   );
+};
 
 
 
@@ -233,20 +333,21 @@ function deleteSituationByID(req, res){
 //Returns an array with situations filtered by name
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 function situationByName(req, res){
-	var array = [];
-	database.view('situations/byName', { key: req.swagger.params.name.value }, function (err, doc) {
-		console.log("Length of array: " + doc.length);
-		
-		for (var i = 0; i < doc.length; i++){
-			array.push(doc[i].value);
-		}
-		if (array.length == 0){
-			res.statusCode = 404;
-			res.json("Not found");
-		}else{
-			res.json(array);
-		}	
+	queryName(req.swagger.params.name.value, function(array){
+		res.json(array);
 	});
+}
+function queryName(name, callback){
+	var array = [];
+	var cursor = db.collection('Situations').find( { "name": name  } );
+   	cursor.each(function(err, doc) {
+      	assert.equal(err, null);
+      	if (doc != null) {
+         	array.push(doc);
+      	}else{
+      		callback(array);
+      	}
+   	});
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -255,19 +356,23 @@ function situationByName(req, res){
 //Returns situation identified by thingID and situationtemplateID
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 function situationByThingAndTemplate(req, res){
-	database.view('situations/byThingAndTemplate', 
-	{ key: [req.swagger.params.thing.value, 
-			req.swagger.params.situationtemplate.value] }, function (err, doc) {
-		
-		if (doc.length == 0){
-			res.statusCode = 404;
-			res.json("Not found");
-		}else{
-			res.json(doc[0].value);
-		}
-
+	queryThingAndTemplate(req.swagger.params.thing.value, 
+		req.swagger.params.situationtemplate.value, function(array){
+		res.json(array);
 	});
 	
+}
+function queryThingAndTemplate(thing, template, callback){
+	var array = [];
+	var cursor = db.collection('Situations').find( { "thing": thing, "situationtemplate": template } );
+   	cursor.each(function(err, doc) {
+      	assert.equal(err, null);
+      	if (doc != null) {
+         	array.push(doc);
+      	}else{
+      		callback(array);
+      	}
+   	});
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -277,21 +382,23 @@ function situationByThingAndTemplate(req, res){
 //Returns 404 if document not found
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 function situationByID(req, res) {
-	var id = req.swagger.params.ID.value;
-	database.get(id, function (err, doc) {	
-		if (err) {
-			res.statusCode = 404;
-			res.json("Not found");
-		} else {
-			res.statusCode = 200;	
-			var stringifiedChange = JSON.stringify(doc);
-			var JSONchange = JSON.parse(stringifiedChange);
-			res.json(doc);
-		}	
-	});	
-	
-	
+	queryID(req.swagger.params.ID.value, function(doc){
+		res.json(doc[0]);
+	})
 }
+function queryID(id, callback){
+	var array = [];
+	var cursor = db.collection('Situations').find({"_id": new require('mongodb').ObjectID(id)});
+	cursor.each(function(err, doc) {
+      	assert.equal(err, null);
+      	if (doc != null) {
+         	array.push(doc);
+      	}else{
+      		callback(array);
+      	}
+   	});
+}
+
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 //allSituations
@@ -299,72 +406,25 @@ function situationByID(req, res) {
 //Returns array with all situations
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 function allSituations(req, res) {
-	res.header("Access-Control-Allow-Origin", "*");
-	res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-	var array = [];
-	database.view('situations/all', { key: null }, function (err, doc) {
-		for (var i = 0; i < doc.length; i++){
-			array.push(doc[i].value);
-		}	
-		res.json(array);
-		
+	getAll(function(allThings) {
+	    res.json(allThings);
 	});
 }
+function getAll(callback) {
+   var cursor =db.collection('Situations').find( );
+   var array = [];
+   cursor.each(function(err, doc) {
+      assert.equal(err, null);
+      if (doc != null) {
+         array.push(doc);
+      } else {
+         callback(array);
+      }
+   });
+};
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////
-//saveSVs
-//
-//Store sensor values of situations and return their IDs
-/////////////////////////////////////////////////////////////////////////////////////////////////////
-function saveSVs(sensorValueArray,index,sensorValueIDs, callback){
-	var db = conn.database('sensorvalues');
-	db.view('sensorvalues/existing', { key: sensorValueArray[index].sensor}, function (err, doc) {
-		if (doc != "[]"){
-			db.save(doc[0].id,{
-				sensor: sensorValueArray[index].sensor,
-				value: sensorValueArray[index].value,
-				timestamp: sensorValueArray[index].timestamp,
-				quality: sensorValueArray[index].sensorquality
-		
-			}, function (err, response) {
-				if (err) {	  
-				}else {	
-					sensorValueIDs.push(response.id);
-				    if(index != sensorValueArray.length-1){
-						saveSVs(sensorValueArray, index + 1, sensorValueIDs, function(array){
-							callback(array);
-						});
-					}else{				
-						callback(sensorValueIDs);
-					}
-				}
-			});
-		//array is empty. Passing no _id results in CouchDB creating one
-		}else{
-			db.save({		
-				sensor: sensorValueArray[index].sensor,
-				value: sensorValueArray[index].value,
-				timestamp: sensorValueArray[index].timestamp,
-				quality: sensorValueArray[index].sensorquality
-				
-			}, function (err, response) {
-				if (err) {
-					
-				}else {
-					sensorValueIDs.push(response.id);
-					
-					if(index != sensorValueArray.length-1){
-						saveSVs(sensorValueArray, index + 1, sensorValueIDs, function(array){
-							callback(array);
-						});
-					}else{
-						callback(sensorValueIDs);
-					}
-				}
-			});
-		}
-	});
-}
+
+
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 //called when a situation to a specific thing is recognized
@@ -388,27 +448,92 @@ function stopThingMonitoring(documentID){
   	});
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////
-//checkID
-//
-//checks metadata of document to check if ID exists
-//faster than to query the complete document
-/////////////////////////////////////////////////////////////////////////////////////////////////////
-function checkID(documentID, databaseID , callback){
-	var db = conn.database(databaseID);
-	db.head(documentID, function(err, opt1, opt2){ 
-		if(opt2!='404') {				
-			callback(true);
-		}else{
-			
-			callback(false);
-		}
-	})
-}
 
 //for testing purposes only
 var timeArray = [];
 var counter = 0;
+
+function queryThingID(id, callback){
+	var array = [];
+	var cursor = db.collection('Things').find({"_id": new require('mongodb').ObjectID(id)});
+	cursor.each(function(err, doc) {
+      	assert.equal(err, null);
+      	if (doc != null) {
+         	array.push(doc);
+      	}else{
+      		callback(array);
+      	}
+   	});
+}
+function queryTemplateID(id, callback){
+	var array = [];
+	var cursor = db.collection('Situationtemplates').find({"_id": new require('mongodb').ObjectID(id)});
+	cursor.each(function(err, doc) {
+      	assert.equal(err, null);
+      	if (doc != null) {
+         	array.push(doc);
+      	}else{
+      		callback(array);
+      	}
+   	});
+}
+
+function insertDocument(document,template, callback) {
+
+	var sensorvalues = [];
+	var occurence = 0;
+	for (var i = 0; i < document.sensorvalues.length; i++){
+		var sensor = document.sensorvalues[i].sensor;
+		var tuple = { sensor : document.sensorvalues[i].value};
+		sensorvalues.push(tuple);
+	}
+
+	if (document.occured){
+		occurence = 1;
+	}
+    db.collection('Situations').insertOne( {
+      "objecttype" : "Situation",
+      "thing" : document.thing,
+      "timestamp" : document.timestamp,
+      "situationtemplate" : document.situationtemplate,
+      "occured" : document.occured,
+      "name" : template.situation,
+      "quality": 100,
+      "sensorvalues": sensorvalues,
+
+
+    }, function(err, result) {
+    assert.equal(err, null);
+    //console.log(result);
+    callback(result);
+  });
+};
+
+function updateDocument(document, oldDoc, template, callback) {
+	var sensorvalues = [];
+	for (var i = 0; i < document.sensorvalues.length; i++){
+		var sensor = document.sensorvalues[i].sensor;
+		var tuple = { sensor : document.sensorvalues[i].value};
+		sensorvalues.push(tuple);
+	}
+   	db.collection('Situations').updateOne( 
+   		{"_id" :  new require('mongodb').ObjectID(oldDoc._id) },
+   		{
+   			$set: { "thing" : document.thing,
+			      "timestamp" : document.timestamp,
+			      "situationtemplate" : document.situationtemplate,
+			      "occured" : document.occured,
+			      "name" : template.situation,
+			      "quality": 100,
+     			  "sensorvalues": sensorvalues
+     			  }
+   		}, function(err, result) {
+	    assert.equal(err, null);
+	    //console.log(result);
+	    callback();
+  	});
+};
+
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -419,107 +544,48 @@ var counter = 0;
 //Returns 504 if CouchDB does not respond
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 function saveSituation(req, res){
-
-	//for testing purpose only
-	var nodeREDtime = new Date(req.body.timestamp);
-	var startTime = new Date(); //.getTime();
-
-	var sitTempDatabase = conn.database('situationtemplates');
 	//check if referenced id of thing exists
-	checkID(req.body.thing, 'things', function(thingExists){	
-		if(!thingExists){
-			res.statusCode = 404;
-			res.json("Reference error: thing not found");
+	queryThingID(req.body.thing, function(thing){
+		if(thing[0] == null){
+			res.json("Reference error: Thing not found");
 		}else{
-			//get situation template for metadata (name of situation)
-			sitTempDatabase.get(req.body.situationtemplate, function (err, template) {	
-				if (err) {
-					res.statusCode = 404;
-					res.json("Not found");
+			queryTemplateID(req.body.situationtemplate, function(template){
+				if (template[0] == null){
+					res.json("Reference Error: Situationtemplate not found");
 				}else{
-					//Set thing.monitored to true
-					startThingMonitoring(req.body.thing);
-					//Store sensor values of situations. saveSVs returns list of IDs of sensor values to reference them in the situation
-					saveSVs(req.body.sensorvalues, 0,[], function(sensorValues){
-						
-						//call view to check if the situation already exists (combination of thing._id & situationtemplate._id)
-						database.view('situations/existing', { key: [req.body.thing, req.body.situationtemplate] }, function (err, doc) {
-							//if array not empty (_id exists), pass the existing _id for the situation to update a document
-							if (doc != "[]"){
-								//check if occured-attribute changed (should be set by user when starting situation recognition)
-								if (doc[0].value.occured!= req.body.occured){
-
-									database.save(doc[0].id,{
-									thing: req.body.thing,
-									timestamp: req.body.timestamp,
-									situationtemplate: req.body.situationtemplate,
-									occured: req.body.occured,
-									name: template.situation,
-									quality: 1,
-									sensorvalues: sensorValues
-										
-									}, function (err, response) {
-										if (err) {
-											res.statusCode = 504;
-											res.json("Error");
-										}else {
-											res.statusCode = 200;
-
-
-											//for testing purpose only
-											var endTime = new Date().getTime();
-											var diff = endTime-startTime;
-											var nodeDiff = endTime-nodeREDtime;
-											var time = {timeNodeRed: nodeDiff, timeSitVer: diff, transferTime: startTime-nodeREDtime};
-											timeArray.push(time);
-											counter++;
-
-
-											res.json("Updated");
-										}
-									});
-								}
-								
-							//array is empty. Passing no _id results in CouchDB creating one
-							}else{
-								database.save({
-									thing: req.body.thing,
-									timestamp: req.body.timestamp,
-									situationtemplate: req.body.situationtemplate,
-									occured: req.body.occured,
-									name: template.situation,
-									quality: 1,
-									sensorvalues: sensorValues
-									
-									
-								}, function (err, response) {
-									if (err) {
-										res.statusCode = 504;
-										res.json("Error");
-									}else {
-										res.statusCode = 201;
-
-										//for testing purpose only
-										var endTime = new Date().getTime();
-										var diff = endTime-startTime;
-										var nodeDiff = endTime-nodeREDtime;
-										var time = {timeNodeRed: nodeDiff, timeSitVer: diff, transferTime: startTime-nodeREDtime};
-										timeArray.push(time);
-										counter++;
-
-
-										res.json("Created");
-
-									}
+					queryThingAndTemplate(req.body.thing,
+						req.body.situationtemplate, function(doc){
+							//console.log(doc);
+						if (doc[0] == null){
+							insertDocument(req.body,template[0], function() {
+								checkCallbacks(req.body);
+							    res.json("Created");
+							});
+						}else{
+							if (doc[0].occured != req.body.occured){
+								checkCallbacks(req.body);
+								updateDocument(req.body,doc[0], template[0], function(){
+									res.json("Updated");
 								});
-							}					
-						});
-					});			
+							}else{
+								res.json("No Update");
+
+							}	
+						}
+					});
 				}
 			});
 		}
-	});	
+	});
 }
+
+
+
+
+
+
+
+
 
 //for testing purposes only
 process.on('SIGINT', function () {

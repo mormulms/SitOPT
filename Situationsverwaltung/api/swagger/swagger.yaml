@@ -14,9 +14,11 @@ schemes:
 # format of bodies a client can send (Content-Type)
 consumes:
   - application/json
+
 # format of the responses to the client (Accepts)
 produces:
   - application/json
+  - text/html
 
 paths:
 
@@ -171,6 +173,38 @@ paths:
       
   /situations/changes:
     x-swagger-router-controller: situations
+    
+    
+    get:
+      tags:
+        - situation
+      summary: Get registrations
+      description: Specify CallbackURL to get only those registrations with the specified CallbackURL. If emtpy, returns all registrations.
+      operationId: allRegistrations
+      
+      parameters:
+        - name: CallbackURL
+          in: query
+          description: URL the changes are sent to.
+          required: false
+          type: string
+          
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GetModel"
+        # responses may fall through to errors
+        "404":
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
+
+    
+    
+    
     post:
       tags:
         - situation
@@ -213,6 +247,10 @@ paths:
         # responses may fall through to errors
         "404":
           description: Not found
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        "400":
+          description: Bad Content
           schema:
             $ref: "#/definitions/ErrorResponse"
     
@@ -441,109 +479,35 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
-    
-    
-    
-  /sensorvalues/byID:
-  # binds a127 app logic to a route
-    x-swagger-router-controller: sensorvalues
-  
-    get:
-      tags:
-        - sensor value
-      summary: Get all sensorvalues
-      description: Returns an array of all sensorvalues
-      operationId: sensorvalueByID
-      parameters:
-        - name: ID
-          in: query
-          description: ID of thing
-          required: true
-          type: string
-      
-      responses:
-        "200":
-          description: Success
-          schema:
-            # a pointer to a definition
-            $ref: "#/definitions/GetModel"
-        # responses may fall through to errors
-        "404":
-          description: Error
-          schema:
-            $ref: "#/definitions/ErrorResponse"
             
-            
-    delete:
-      tags:
-        - sensor value
-      summary: Delete specific sensorvalues
-      description: Deletes specified sensorvalue
-      operationId: deleteSensorvalueByID
-      parameters:
-        - name: ID
-          in: query
-          description: ID of sensorvalue
-          required: true
-          type: string
-      
-      responses:
-        "200":
-          description: Success
-          schema:
-            # a pointer to a definition
-            $ref: "#/definitions/GetModel"
-        # responses may fall through to errors
-        "404":
-          description: Error
-          schema:
-            $ref: "#/definitions/ErrorResponse"
-            
-                
-                      
-  /sensorvalues:
-  # binds a127 app logic to a route
-    x-swagger-router-controller: sensorvalues
-    
-    
-    
-    get:
-      tags:
-        - sensor value
-      summary: Get all sensorvalues
-      description: Returns an array of all sensorvalues
-      operationId: allSensorvalues
-      
-      responses:
-        "200":
-          description: Success
-          schema:
-            # a pointer to a definition
-            $ref: "#/definitions/GetModel"
-        # responses may fall through to errors
-        "404":
-          description: Error
-          schema:
-            $ref: "#/definitions/ErrorResponse"
-            
-            
-    
+  /things/{ID}/{attribute}/{value}:
+   # binds a127 app logic to a route
+    x-swagger-router-controller: things
     
     post:
       tags:
-        - sensor value
-      summary: Store sensorvalue
-      description: Stores sensorvalues in database. Not needed. Used sensorvalues will be stored when saving the corresponding situation.
-      operationId: saveSensorvalue
+        - thing
+      summary: Update attribute
+      description: Update or create attribute of Thing
+      operationId: updateAttribute
       # used as the method name of the controller
       parameters:
-        - in: body
-          name: body
-          description: input
-          required: false
-          schema:
-            $ref: "#/definitions/SensorvalueModel"
-          
+        - name: "ID"
+          in: "path"
+          description: "ID of Thing"
+          required: true
+          type: "string"
+        - name: "attribute"
+          in: "path"
+          description: "Name of attribute"
+          required: true
+          type: "string"
+        - name: "value"
+          in: "path"
+          description: "Value of attribute"
+          required: true
+          type: "string"
+     
       responses:
         "200":
           description: Success
@@ -555,7 +519,112 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
-          
+            
+  /actuators:
+  # binds a127 app logic to a route
+    x-swagger-router-controller: actuators
+    
+    get:
+      tags:
+        - actuator
+      summary: Get all actuators
+      description: Get all actuators
+      operationId: allActuators
+      
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GetModel"
+        # responses may fall through to errors
+        "404":
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+            
+            
+    post:
+      tags:
+        - actuator
+      summary: Save actuator
+      description: Save actuator in the database
+      operationId: saveActuator
+      # used as the method name of the controller
+      parameters:
+        - in: body
+          name: body
+          description: input
+          required: false
+          schema:
+            $ref: "#/definitions/ActuatorModel"
+            
+     
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/Response"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+    
+    
+  /agents:
+  # binds a127 app logic to a route
+    x-swagger-router-controller: agents
+    
+    get:
+      tags:
+        - agent
+      summary: Get all agent
+      description: Get all agents
+      operationId: allAgents
+      
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GetModel"
+        # responses may fall through to errors
+        "404":
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+            
+            
+    post:
+      tags:
+        - agent
+      summary: Save agent
+      description: Save agent in the database
+      operationId: saveAgent
+      # used as the method name of the controller
+      parameters:
+        - in: body
+          name: body
+          description: input
+          required: false
+          schema:
+            $ref: "#/definitions/AgentModel"
+            
+     
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/Response"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+    
   
   /situationtemplates/ByName:
     x-swagger-router-controller: situationtemplate
@@ -643,7 +712,35 @@ paths:
             
   
   
-  
+  /situationtemplateFiles/{ID}:
+    x-swagger-router-controller: situationtemplate
+    get:
+      tags:
+        - situation template
+      summary: Returns situationtemplate 
+      description: Returns the attached situation template - data of .xml-file. Returns the first attached document of the situation template (=> only 1 XML file / situation template allowed!)
+      operationId: getAttachment
+      # used as the method name of the controller
+
+      parameters:
+      - name: "ID"
+        in: "path"
+        description: "ID of situation template"
+        required: true
+        type: "string"
+
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/Response"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+ 
   
   /situationtemplates/{ID}/{templatename}:
     x-swagger-router-controller: situationtemplate
@@ -672,11 +769,11 @@ paths:
         type: "string"
 
       - in: "formData"
-        description: "Additional data to pass to server"
-        required: false
-        type: "string"
+        #description: "Additional data to pass to server"
+        #required: false
+        #type: "string"
         name: "file"
-        in: "formData"
+        #in: "formData"
         description: "file to upload"
         required: true
         type: "file"
@@ -694,41 +791,7 @@ paths:
           schema:
             $ref: "#/definitions/ErrorResponse"
             
-    get:
-      tags:
-        - situation template
-      summary: Returns situationtemplate - not fully implemented
-      description: Returns the attached situation template - data of .xml-file
-      operationId: getAttachment
-      # used as the method name of the controller
-
-      parameters:
-      - name: "ID"
-        in: "path"
-        description: "ID of situation template"
-        required: true
-        type: "string"
-     
-      - name: "templatename"
-        in: "path"
-        description: "Name of .xml-file"
-        required: true
-        type: "string"
-
-        
-          
-      responses:
-        "200":
-          description: Success
-          schema:
-            # a pointer to a definition
-            $ref: "#/definitions/Response"
-        # responses may fall through to errors
-        default:
-          description: Error
-          schema:
-            $ref: "#/definitions/ErrorResponse"
- 
+    
   
   
   /situationtemplates:
@@ -950,9 +1013,9 @@ definitions:
         
   GetModel:
     required:
-      - _id
+      - name
     properties:
-      _id:
+      name:
         type: string
 
          
@@ -961,43 +1024,58 @@ definitions:
   ThingModel:
     required:
       - name
+      - sensors
+      - location
+      - owners
       - url
-      - coordinates
-      - description
-      - sensor
     properties:
-      id:
-        type: string
+      state:
+        type: array
+        items:
+          type: string
       name:
         type: string
       url:
         type: string
-      coordinates:
-        type: string
       description:
         type: string
-      sensor:
+      sensors:
+        type: array
+        items:
+          type: string
+      location:
         type: string
+      owners:
+        type: array
+        items:
+          type: string
+
         
        
   SensorModel:
     required:
       - name
+      - sensortype
       - url
       - quality
-      - description
+      - location
     properties:
-      id:
-        type: string
       name:
+        type: string
+      sensortype:
         type: string
       url:
         type: string
       quality:
         type: number
-        format: float
+        format: integer
       description:
         type: string
+      location:
+        type: string
+        
+    
+        
              
  
         
@@ -1005,15 +1083,46 @@ definitions:
     required:
       - name
       - situation
-      - description
     properties:
-      id:
-        type: string
       name:
         type: string
       situation:
         type: string
       description:
+        type: string
+        
+  AgentModel:
+    required:
+      - name
+      - state
+      - location
+      
+    properties:
+      name:
+        type: string
+      state: 
+        type: string
+      location:
+        type: string
+        
+  ActuatorModel:
+    required:
+      - actions
+      - things
+      - name
+      - location
+    properties:
+      actions:
+        type: array
+        items:
+          type: string
+      things:
+        type: array
+        items:
+          type: string
+      name:
+        type: string
+      location:
         type: string
       
     
@@ -1035,6 +1144,8 @@ definitions:
         type: number
         format: float
         
+
+        
         
   Response:
     required:
@@ -1048,3 +1159,5 @@ definitions:
     properties:
       message:
         type: string
+        
+        

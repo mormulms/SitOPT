@@ -8,6 +8,19 @@ module.exports = app; // for testing
  
 });*/
 
+var MongoClient = require('mongodb').MongoClient;
+var assert = require('assert');
+var ObjectId = require('mongodb').ObjectID;
+var url = 'mongodb://localhost:27017/SitDB';
+
+global.name = "MongoConn";
+
+MongoClient.connect(url, function(err, database) {
+  	assert.equal(null, err);
+    global.db = database;  
+});
+
+
 var config = {
   appRoot: __dirname // required config
 };
