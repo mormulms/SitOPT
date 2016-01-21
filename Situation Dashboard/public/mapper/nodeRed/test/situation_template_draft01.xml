@@ -13,7 +13,7 @@
 			<measureName>measureName</measureName>
 			<opType>greaterThan</opType>
 			<condValue>
-				<value>70</value>
+				<value>25</value>
 			</condValue>
 			<parent parentID="A3"/>
 		</conditionNode>
