@@ -4,22 +4,27 @@
     <property environment="env"/>
     <property name="srcDir" value="."/>
     <property name="debuglevel" value="source,lines,vars"/>
-    <property name="target" value="1.7"/>
-    <property name="source" value="1.7"/>
+    <property name="target" value="1.8"/>
+    <property name="source" value="1.8"/>
     <property name="ARCHIVE_DIR" value="."/>
 	<property name="jarname" value= "situation_template_v01.jar"/>
     <path id="classpathDir">
         <pathelement location="build/classes"/>
+        <pathelement location="lib/json-simple-1.1.1.jar"/>
+        <pathelement location="lib/gson-2.3.1.jar"/>
     </path>
     <target name="init">
         <mkdir dir="build/classes"/>
     </target>
     <target name="clean">
         <delete dir="build/classes"/>
-		<delete file="${ARCHIVE_DIR}/${jarname}" />		
+	<delete file="${ARCHIVE_DIR}/${jarname}" />		
     </target>
+
     <target name="build" depends="build-project,build-jar"/>
+
     <target name="cleanall" depends="clean"/>
+
     <target name="build-project" depends="clean,init">
     	<copy todir="${ARCHIVE_DIR}">
 	      <fileset file="manifest.yml" />
@@ -27,13 +32,18 @@
         <echo message="${ant.project.name}: ${ant.file}"/>
         <javac debug="true" debuglevel="${debuglevel}" destdir="build/classes" source="${source}" target="${target}"
 		includeantruntime="false">
-            <src path="src/situationtemplate/model/"/>
+            <src path="src/"/>
             <classpath refid="classpathDir"/>
         </javac>
     </target>
  
    <target name="build-jar" depends="build-project">
-	  <jar destfile="${ARCHIVE_DIR}/${jarname}" basedir="build/classes"/>
+	  <jar destfile="${ARCHIVE_DIR}/${jarname}" basedir="build/classes">
+	  	<manifest>
+	  		<attribute name="Main-Class" value="mapping.Main"/>
+	  	</manifest>
+	  	<zipgroupfileset dir="lib" includes="**/*.jar" />
+	  </jar>
    </target>
 
 </project>

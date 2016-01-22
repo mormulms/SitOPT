@@ -87,19 +87,13 @@ public class IOUtils {
 		String body = flow.toJSONString();
 
 		URL url;
-		
-		Properties prop = new Properties();
 
-		String server = "localhost";
-		String protocol = "http";
-		String port = "1880";
-		
-		try (InputStream input = new FileInputStream("settings.properties")) {
-			prop.load(input);
-			server = prop.getProperty("server");
-			protocol = prop.getProperty("protocol");
-			port = prop.getProperty("port");
-		}
+		String server = constants.Properties.getServer();
+		server = server == null ? "localhost" : server;
+		String protocol = constants.Properties.getProtocol();
+		protocol = protocol == null ? "http" : protocol;
+		String port = constants.Properties.getPort();
+		port = port == null ? "1880" : port;
 
 		url = new URL(String.format("%s://%s:%s/flows", protocol, server, port));
 

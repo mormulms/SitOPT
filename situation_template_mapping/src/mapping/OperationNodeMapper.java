@@ -57,7 +57,7 @@ public class OperationNodeMapper {
 							for (TContextNode snode : situationTemplate.getContextNode()) {
 								for (TParent sparent : snode.getParent()) {
 									if (((TConditionNode)sparent.getParentID()).getId().equals(node.getId())) {
-										for (String object : sensorMapping.getObjects(snode.getId())) {
+										for (@SuppressWarnings("unused") String object : sensorMapping.getObjects(snode.getId())) {
 											children++;
 										}
 									}
@@ -77,25 +77,32 @@ public class OperationNodeMapper {
 			
 			for (TOperationNode node : situationTemplate.getOperationNode()) {
 				for (TParent parent : node.getParent()) {
-					if (parentIds.contains(parent.getParentID())) {
-						parentIds.add(node.getId());
-						break;
-					}
+				    if (parent.getParentID() instanceof TSituationNode) {
+    					if (parentIds.contains(((TSituationNode)parent.getParentID()).getId())) {
+    						parentIds.add(node.getId());
+    						continue;
+    					}
+				    } else {
+				        if (parentIds.contains(((TOperationNode)parent.getParentID()).getId())) {
+				            parentIds.add(node.getId());
+				            continue;
+				        }
+				    }
 				}
 			}
 			for (TConditionNode node : situationTemplate.getConditionNode()) {
 				for (TParent parent : node.getParent()) {
-					if (parentIds.contains(parent.getParentID())) {
+					if (parentIds.contains(((TOperationNode)parent.getParentID()).getId())) {
 						parentIds.add(node.getId());
-						break;
+						continue;
 					}
 				}
 			}
 			for (TContextNode node : situationTemplate.getContextNode()) {
 				for (TParent parent : node.getParent()) {
-					if (parentIds.contains(parent.getParentID())) {
+					if (parentIds.contains(((TConditionNode)parent.getParentID()).getId())) {
 						sensors.add(node);
-						break;
+						continue;
 					}
 				}
 			}

@@ -59,7 +59,7 @@ public class ConditionNodeMapper {
             }
 
             for (String object : objects) {
-                List<String> conditionValues = node.getCondValue().getValue();
+                List<String> conditionValues = node.getCondValues().getValue();
                 JSONObject nodeREDNode = NodeREDUtils.createNodeREDNode(
                         situationTemplate.getId() + "." + node.getId() + object, node.getName() + " for " + object,
                         "function", xCoordinate, Integer.toString(yCoordinate), situationTemplate.getId());

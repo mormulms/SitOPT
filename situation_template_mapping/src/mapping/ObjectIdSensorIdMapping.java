@@ -48,9 +48,8 @@ public class ObjectIdSensorIdMapping {
 				values.add((String) o);
 			}
 			return values.toArray(new String[0]);
-		} else {
-			return new String[] { object };
 		}
+        return new String[] { object };
 	}
 
 	public String map(ArrayList<TContextNode> sensors) {
@@ -71,9 +70,8 @@ public class ObjectIdSensorIdMapping {
 			}
 			builder.setLength(builder.length() - 1);
 			return builder.toString();
-		} else {
-			return object;
 		}
+        return object;
 	}
 
     public String getObjects() {

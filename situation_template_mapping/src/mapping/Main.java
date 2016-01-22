@@ -1,6 +1,7 @@
 package mapping;
 
 import java.io.File;
+import java.io.StringReader;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
@@ -26,7 +27,12 @@ public class Main {
 			
 			// connects each node to a corresponding debug node
 			// deactivate this flag for measurements
-			boolean debug = Boolean.getBoolean(args[2]);
+		    boolean debug;
+		    if (args.length < 3) {
+		        debug = false;
+		    } else {
+		        debug = Boolean.getBoolean(args[2]);
+		    }
 			
 			java.util.Date date= new java.util.Date();
 			
@@ -104,8 +110,13 @@ public class Main {
 				// input is defined, parse the XML model
 				JAXBContext jc = JAXBContext.newInstance(TSituationTemplate.class);
 				Unmarshaller u = jc.createUnmarshaller();
-				File file = new File(args[1]);
-				JAXBElement<TSituationTemplate> root = u.unmarshal(new StreamSource(file), TSituationTemplate.class);
+				JAXBElement<TSituationTemplate> root;
+				if (args[1].toLowerCase().endsWith(".xml")) {
+				    File file = new File(args[1]);
+	                root = u.unmarshal(new StreamSource(file), TSituationTemplate.class);
+				} else {
+				    root = u.unmarshal(new StreamSource(new StringReader(args[1])), TSituationTemplate.class);
+				}
 				
 				TSituationTemplate situationTemplate = root.getValue();
 				// begin load test

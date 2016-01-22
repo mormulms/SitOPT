@@ -52,7 +52,16 @@
 	<!-- TODO (?): set use="required" on parent element of sensor nodes, each sensor should be processed -->
 	<xs:complexType name="tContextNode">
 		<xs:sequence>
-			<xs:element name="parent" type="tParent" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="parent" type="tParent" minOccurs="1" maxOccurs="unbounded"/>
+			<xs:element name="inputType" minOccurs="1" maxOccurs="1">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="sensor" />
+						<xs:enumeration value="situation" />
+						<xs:enumeration value="static" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
 		</xs:sequence>
 		<xs:attribute name="id" type="xs:ID" use="required"/>
 		<xs:attribute name="name" type="xs:string"/>
@@ -85,7 +94,7 @@
 					</xs:restriction>
 				</xs:simpleType>
 			</xs:element>
-			<xs:element name="condValue">
+			<xs:element name="condValues">
 				<xs:complexType>
 					<xs:sequence>
 						<xs:element name="value" type="xs:string" maxOccurs="2"/>
