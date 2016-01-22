@@ -5,6 +5,19 @@ var path = require('path');
 var sitopt = require('./router/sitopt');
 var app = express();
 
+
+/*var MongoClient = require('mongodb').MongoClient;
+var assert = require('assert');
+var ObjectId = require('mongodb').ObjectID;
+var url = 'mongodb://localhost:27017/SitDB';
+
+global.name = "MongoConn";
+
+MongoClient.connect(url, function(err, database) {
+    assert.equal(null, err);
+    global.db = database;  
+});*/
+
 app.configure(function(){
   app.set('port', process.env.PORT || 3001);
   app.set('views', __dirname + '/views');
@@ -19,6 +32,9 @@ app.configure(function(){
   app.use(require('stylus').middleware(__dirname + '/public'));
   app.use(express.static(path.join(__dirname, 'public')));
 });
+
+
+
 
 app.get('/', sitopt.home);
 app.get('/api', sitopt.api);

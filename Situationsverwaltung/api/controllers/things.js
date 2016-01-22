@@ -1,12 +1,10 @@
 
 var express = require('express');
 var app = express();
-var cradle = require('cradle');
-var bodyParser = require('body-parser');
 
-//create connection to CouchDB (default = localhost:5984)
-var conn = new(cradle.Connection);
-var database = conn.database('things');
+var bodyParser = require('body-parser');
+var assert = require('assert');
+var gjv = require("geojson-validation");
 
 app.use(bodyParser());
 
@@ -17,8 +15,50 @@ module.exports = {
   allThings: allThings,
   saveThing: saveThing,
   getThingByName: getThingByName,
-  deleteThingByID: deleteThingByID
+  deleteThingByID: deleteThingByID,
+  updateAttribute: updateAttribute
 };
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+//saveThing
+//
+//Stores a thing in CouchDB
+//Returns 404 if thing or situation template are not found
+//Returns 504 if CouchDB does not respond
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+function saveThing(req, res){
+	//console.log(req.body.id);
+  validateGeoJSON(req.body.location, function(valid){
+    if (valid){
+      insertDocument(req.body, function() {
+        res.json("Created");
+      });
+    }else{
+      res.json("GeoJSON not valid");
+    }
+  });
+
+	
+}
+
+function insertDocument(document, callback) {
+   db.collection('Things').insertOne( {
+      
+      "name" : document.name,
+      "url" : document.url,
+      "location" : JSON.parse(document.location),
+      "description" : document.description,
+      "sensor" : document.sensor,
+      "monitored" : false,
+      "timestamp": (new Date).getTime()
+   }, function(err, result) {
+    assert.equal(err, null);
+    //console.log(result);
+    callback(result);
+  });
+};
+
 
 
 
@@ -29,18 +69,78 @@ module.exports = {
 //Returns 404 if thing is not found
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 function deleteThingByID(req, res){
-	
-	var id = req.swagger.params.ID.value;
-	database.remove(id, function(err,doc){
-		if (err){
-			res.statusCode = 404;
-			res.json("Not found");
-		}else{
-			res.statusCode = 200;
-			res.json("Object with ID: " + id +" deleted")
-		}
+	console.log(req.swagger.params.ID.value);
+
+	removeDocument(req.swagger.params.ID.value, function() {
+	    res.json("Deleted");
 	});
 }
+function removeDocument(id, callback) {
+   db.collection('Things').deleteOne(
+      { "_id": new require('mongodb').ObjectID(id) },
+      function(err, results) {
+         callback();
+      }
+   );
+};
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+//updateAttribute
+//
+//Updates or creates attribute of thing
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+function updateAttribute(req, res){
+  update(req.swagger.params, function(doc){
+    res.json("Updated");
+  })
+
+}
+function update(params, callback){
+
+  var tuple = {};
+  tuple[params.attribute.value] = params.value.value;
+  db.collection('Things').updateOne( 
+
+      {"_id" :  new require('mongodb').ObjectID(params.ID.value) },
+      {
+
+        $set: tuple
+      }, function(err, result) {
+      assert.equal(err, null);
+      //console.log(result);
+      callback();
+    });
+}
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+//allThings
+//
+//Returns array of all things
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+function allThings(req, res) {
+	getAll(function(allThings) {
+	    res.json(allThings);
+	});
+}
+
+function getAll(callback) {
+   var cursor =db.collection('Things').find( );
+   var array = [];
+   cursor.each(function(err, doc) {
+      assert.equal(err, null);
+      if (doc != null) {
+         array.push(doc);
+      } else {
+         callback(array);
+      }
+   });
+};
+
+
+
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 //getThingByID
@@ -49,19 +149,25 @@ function deleteThingByID(req, res){
 //Returns 404 if thing is not found
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 function getThingByID(req, res) {
-
-	var id = req.swagger.params.ID.value;
-	console.log(id);
-	database.get(id, function (err, doc) {	
-		if (err) {
-			res.statusCode = 404;
-			res.json("Not found");
-		} else {
-			res.statusCode = 200;
-			res.json(doc);
-		}	
-	});	
+	queryID(req.swagger.params.ID.value, function(doc){
+		res.json(doc[0]);
+	})
 }
+function queryID(id, callback){
+	var array = [];
+	var cursor = db.collection('Things').find({"_id": new require('mongodb').ObjectID(id)});
+	cursor.each(function(err, doc) {
+      	assert.equal(err, null);
+      	if (doc != null) {
+         	array.push(doc);
+      	}else{
+      		callback(array);
+      	}
+   	});
+}
+
+
+
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 //getThingByName
@@ -69,101 +175,57 @@ function getThingByID(req, res) {
 //Returns array of documents filtered by name
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 function getThingByName(req, res) {
-
-	var array = [];
-	database.view('things/byName', { key: req.swagger.params.name.value }, function (err, doc) {
-		console.log("Length of array: " + doc.length);
-		
-		for (i = 0; i < doc.length; i++){
-			array.push(doc[i].value);
-		}
+	console.log(req.swagger.params.name.value);
+	queryName(req.swagger.params.name.value, function(array){
 		res.json(array);
 	});
-}
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////
-//allThings
-//
-//Returns array of all things
-/////////////////////////////////////////////////////////////////////////////////////////////////////
-function allThings(req, res) {
-
-	res.header("Access-Control-Allow-Origin", "*");
-	res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+};
+function queryName(name, callback){
 	var array = [];
-	database.view('things/all', { key: null }, function (err, doc) {	
-		for (var i = 0; i < doc.length; i++){
-			array.push(doc[i].value);
-		}
-		res.json(array);	
-	});
+	var cursor = db.collection('Things').find( { "name": name  } );
+   	cursor.each(function(err, doc) {
+      	assert.equal(err, null);
+      	if (doc != null) {
+         	array.push(doc);
+      	}else{
+      		callback(array);
+      	}
+   	});
 }
 
 
 
 
-function checkID(documentID, databaseID , callback){
-	var datab = conn.database(databaseID);
-	datab.head(documentID, function(err, opt1, opt2){ 
-		if(opt2!='404') {				
-			callback(true);
-		}else{
-			
-			callback(false);
-		}
-	})
+
+function validateGeoJSON(geoJson, callback){
+  console.log(geoJson);
+  var parsedGeoJson;
+  try{
+    parsedGeoJson = JSON.parse(geoJson);
+  }catch(exception){
+    callback(false);
+  }
+  
+  var featureCollection = {
+    "type": "FeatureCollection",
+    "features": [
+      {
+        "type": "Feature",
+        "geometry": JSON.parse(geoJson),
+        "properties": {}
+      }
+    ]
+  }
+  console.log(featureCollection);
+  if (gjv.valid(featureCollection)){
+    callback(true);
+  }else{
+    callback(false);
+  }
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////
-//saveThing
-//
-//Stores a thing in CouchDB
-//Returns 404 if thing or situation template are not found
-//Returns 504 if CouchDB does not respond
-/////////////////////////////////////////////////////////////////////////////////////////////////////
-function saveThing(req, res){
 
-	var startTime = new Date().getTime();
-	var database = conn.database('things');
-	//check if referenced _id of thing exists
-	if (req.body.name&&req.body.url&&
-		req.body.description&&req.body.description){
-		if (req.body.id){
-				database.save(req.body.id,{
-				name: req.body.name,
-				url: req.body.url,
-				coordinates: req.body.coordinates,
-				description: req.body.description,
-				monitored: false
-			}, function (err, response) {
-				if (err) {
-					res.statusCode = 504;
-					res.json("Error");
-				} else {
-					res.statusCode = 201;
-					res.json("Created");
-				}
-			});
-		}else{
-			database.save({
-				name: req.body.name,
-				url: req.body.url,
-				coordinates: req.body.coordinates,
-				description: req.body.description,
-				monitored: false
-			}, function (err, response) {
-				if (err) {
-					res.statusCode = 504;
-					res.json("Error");
-				} else {
-					res.statusCode = 201;
-					res.json("Created");
-				}
-			});
-		}
-		
-	}else{
-		res.statusCode = 400;
-		res.json("Missing JSON attributes");
-	}	
-}
+
+
+

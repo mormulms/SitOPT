@@ -1,14 +1,12 @@
 
 var express = require('express');
 var app = express();
-var cradle = require('cradle');
-var bodyParser = require('body-parser');
 
-//create connection to CouchDB (default = localhost:5984)
-var conn = new(cradle.Connection);
-var database = conn.database('sensors');
+var bodyParser = require('body-parser');
+var assert = require('assert');
 
 app.use(bodyParser());
+
 
 
 //exporting modules to swagger editor
@@ -28,17 +26,20 @@ module.exports = {
 //Returns 404 if situation is not found
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 function deleteSensorByID(req, res){
-	var id = req.swagger.params.ID.value;
-	database.remove(id, function(err,doc){
-		if (err){
-			res.statusCode = 404;
-			res.json("Not found");
-		}else{
-			res.statusCode = 200;
-			res.json("Sensor with ID: '" + id +"' deleted")
-		}
+	console.log(req.swagger.params.ID.value);
+
+	removeDocument(req.swagger.params.ID.value, function() {
+	    res.json("Deleted");
 	});
 }
+function removeDocument(id, callback) {
+   db.collection('Sensors').deleteOne(
+      { "_id": new require('mongodb').ObjectID(id) },
+      function(err, results) {
+         callback();
+      }
+   );
+};
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -49,17 +50,21 @@ function deleteSensorByID(req, res){
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 function getSensorByID(req, res) {
 	
-	var id = req.swagger.params.ID.value;
-	console.log(id);
-	database.get(id, function (err, doc) {	
-		if (err) {
-			res.statusCode = 404;
-			res.json("Not found");
-		} else {
-			res.statusCode = 200;
-			res.json(doc);
-		}	
-	});	
+	queryID(req.swagger.params.ID.value, function(doc){
+		res.json(doc[0]);
+	})
+}
+function queryID(id, callback){
+	var array = [];
+	var cursor = db.collection('Sensors').find({"_id": new require('mongodb').ObjectID(id)});
+	cursor.each(function(err, doc) {
+      	assert.equal(err, null);
+      	if (doc != null) {
+         	array.push(doc);
+      	}else{
+      		callback(array);
+      	}
+   	});
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -69,19 +74,21 @@ function getSensorByID(req, res) {
 //Returns 404 if sensor is not found
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 function getSensorByName(req, res) {
-	var array = [];
-	database.view('sensors/byName', { key: req.swagger.params.name.value }, function (err, doc) {
-		if (doc != "[]"){
-			for (i = 0; i < doc.length; i++){
-				array.push(doc[i].value);
-			}
-			res.statusCode = 200;
-			res.json(array);
-		}else{
-			res.statusCode = 404;
-			res.json("Not found");
-		}
+	queryName(req.swagger.params.name.value, function(array){
+		res.json(array);
 	});
+}
+function queryName(name, callback){
+	var array = [];
+	var cursor = db.collection('Sensors').find( { "name": name  } );
+   	cursor.each(function(err, doc) {
+      	assert.equal(err, null);
+      	if (doc != null) {
+         	array.push(doc);
+      	}else{
+      		callback(array);
+      	}
+   	});
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -90,35 +97,23 @@ function getSensorByName(req, res) {
 //Returns array of all sensors
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 function allSensors(req, res) {
-	res.header("Access-Control-Allow-Origin", "*");
-	res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-	var array = [];
-	database.view('sensors/all', { key: null }, function (err, doc) {	
-		for (var i = 0; i < doc.length; i++){
-			array.push(doc[i].value);
-		}
-		res.json(array);	
+	getAllSensors(function(allSensors) {
+	    res.json(allSensors);
 	});
 }
+function getAllSensors(callback) {
+   var cursor =db.collection('Sensors').find( );
+   var array = [];
+   cursor.each(function(err, doc) {
+      assert.equal(err, null);
+      if (doc != null) {
+         array.push(doc);
+      } else {
+         callback(array);
+      }
+   });
+};
 
-
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////
-//checkID
-//
-//checks metadata of document to check if ID exists
-//faster than to query the complete document
-/////////////////////////////////////////////////////////////////////////////////////////////////////
-function checkID(documentID, databaseID , callback){
-	database.head(documentID, function(err, opt1, opt2){ 
-		if(opt2!='404') {				
-			callback(true);
-		}else{
-			
-			callback(false);
-		}
-	})
-}
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 //saveSensor
@@ -126,48 +121,24 @@ function checkID(documentID, databaseID , callback){
 //Stores sensor in CouchDB
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 function saveSensor(req, res){
-	console.log("ID: "+req.body.id);
-	var startTime = new Date().getTime();
-	//check if referenced _id of thing exists
-	if (req.body.name&&req.body.url&&req.body.quality!=-1
-	&&req.body.description){
-		if (req.body.id){
-			database.save(req.body.id,{
-				name: req.body.name,
-				url: req.body.url,
-				quality: req.body.quality,
-				thing: req.body.thing,
-				description: req.body.description
-			}, function (err, response) {
-				if (err) {
-					res.statusCode = 504;
-					res.json("Error");
-				} else {
-					res.statusCode = 201;
-					res.json("Created");
-				}
-			});
-		}else{
-			database.save({
-				name: req.body.name,
-				url: req.body.url,
-				quality: req.body.quality,
-				thing: req.body.thing,
-				description: req.body.description
-			}, function (err, response) {
-				if (err) {
-					res.statusCode = 504;
-					res.json("Error");
-				} else {
-					res.statusCode = 201;
-					res.json("Created");
-				}
-			});
-		}
-		
-	}else{
-		console.log("not test");
-		res.statusCode = 400;
-		res.json("Missing JSON attributes");
-	}	
+	insertDocument(req.body, function() {
+	    res.json("Created");
+	});
 }
+function insertDocument(document, callback) {
+   db.collection('Sensors').insertOne( {
+      "ObjectType" : "Sensor",
+      "SensorType" : document.sensortype,
+      "name" : document.name,
+      "url" : document.url,
+      "quality" : document.quality,
+      "description" : document.description,
+      "timestamp" : (new Date).getTime()
+   }, function(err, result) {
+    assert.equal(err, null);
+    //console.log(result);
+    callback(result);
+  });
+};
+
+
