@@ -20,6 +20,7 @@
         <pathelement location="lib/httpmime-4.5.1.jar" />
         <pathelement location="lib/jna-4.1.0.jar" />
         <pathelement location="lib/jna-platform-4.1.0.jar" />
+        <pathelement location="lib/situation_template_v01.jar" />
     </path>
     <target name="init">
         <mkdir dir="bin"/>

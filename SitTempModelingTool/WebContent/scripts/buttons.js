@@ -64,11 +64,33 @@ function startRec() {
         alert("Geben Sie einen Namen ein");
         name = prompt("Unter welchen Namen soll das Template gespeichert werden?", "Unbenannt");
     }
+    var contexts = $("[type='contextnode']").not(".hidden");
+    var mapping = new Array(contexts.length);
+    for (var i = 0; i < contexts.length; i++) {
+        var con = contexts[i];
+        mapping[i] = prompt("Für welche Sensoren soll der Context \"" + $(con.children[0]).attr("contextname") + "\" verwendet werden?", "")
+    }
+    for (var i = 0; i < mapping.length; i++) {
+        var result1 = mapping[i].split(",");
+        mapping[i] = [];
+        for (var j = 0; j < result1.length; j++) {
+            var result2 = result1[j].trim();
+            if (result2 !== "") {
+                mapping[i].push(result2);
+            }
+        }
+    }
+    if (!mapping) {
+        mapping = [];
+    }
 
     $.ajax({
-        type: "POST",
-        url: "StartRec",
-        data: {"xml":getSituationTemplateAsXML(name)}
+        "type": "POST",
+        "url": "StartRec",
+        "data": {
+            "xml":getSituationTemplateAsXML(name).replace(/\r/g, "").replace(/\n/g, "").replace(/\t/g, ""),
+            "mapping": mapping
+        }
     }).done(function( msg ) {
         alert(msg)
 
