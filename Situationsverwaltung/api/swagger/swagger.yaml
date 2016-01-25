@@ -1,6 +1,6 @@
 swagger: "2.0"
 info:
-  version: "1.0.0"
+  version: "1.0.2"
   title: SitOPT API Reference
 # during dev, should point to your local machine
 host: 192.168.209.248:10010
