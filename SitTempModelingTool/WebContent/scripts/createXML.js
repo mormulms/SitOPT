@@ -91,12 +91,14 @@ function getSituationTemplateAsXML(templateName) {
         var contextName = $("#" + id + " div").attr("contextname");
         var sensorType = $("#" + id + " div").attr("sensortype");
         var measureName = $("#" + id + " div").attr("sensorunit");
+        var inputtype = $("#" + id + ' div').attr('inputtype');
 
         xmlw.writeStartElement("contextNode");
         xmlw.writeAttributeString("id", id);
         xmlw.writeAttributeString("name", contextName);
         xmlw.writeAttributeString("type", sensorType);
         xmlw.writeElementString("measureName", measureName);
+        xmlw.writeElementString('inputType', inputtype);
 
         cons = jsPlumb.getConnections().filter(function (con) {
             return con.sourceId === id;

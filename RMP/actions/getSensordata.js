@@ -23,9 +23,8 @@ exports.action = {
                     ids.push(sensors[i].sensorID);
                 }
                 api.sensorCache.find({sensorID: { $in: ids }}, function (error, cache) {
+                    console.log(cache.length)
                     var val = cache[0];
-                    var start = new Date();
-                    var end = new Date(start - 60000);
                     for (var i = 1; i < cache.length; i++) {
                         if (val.timeStamp < cache[i].timeStamp) {
                             val = cache[i];

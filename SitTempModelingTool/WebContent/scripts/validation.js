@@ -157,6 +157,8 @@ function validateContext(id, div, starts, ends, errors) {
     var name = div.getAttribute("contextname");
     var type = div.getAttribute("sensortype");
     var unit = div.getAttribute("sensorunit");
+    var inputtype = div.getAttribute('inputtype');
+    var inputtypevalues = ['sensor', 'situation', 'static'];
 
     if (name == null || name == "") {
         errors.push("At least one context does not have a name");
@@ -166,6 +168,10 @@ function validateContext(id, div, starts, ends, errors) {
         errors.push("Context " + name + " does not have a unit");
     } else if (starts.indexOf(id) == -1) {
         errors.push("Context " + name + " is never used");
+    } else if (inputtype == null || inputtype == '') {
+        errors.push('Context ' + name + ' has no input type');
+    } else if (inputtypevalues.indexOf(inputtype) == -1) {
+        errors.push('Context ' + name + ' has invalid input type');
     }
     return errors;
 }

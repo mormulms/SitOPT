@@ -153,6 +153,7 @@ function parseAndTraverseXML(contents) {
         propDiv.setAttribute("contextname", $(context).attr("name"));
         propDiv.setAttribute("sensortype", $(context).attr("type"));
         propDiv.setAttribute("sensorunit", $(context).xpath("measureName").text());
+        propDiv.setAttribute("inputtype", $(context).xpath("inputType").text());
         $(div).text($(context).attr("name"));
         var count = parseInt($(context).attr("id").match(/\d+$/));
         if (count != 'NaN') {
