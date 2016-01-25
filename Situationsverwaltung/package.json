@@ -8,7 +8,6 @@
   "license": "",
   "main": "app.js",
   "dependencies": {
-<<<<<<< HEAD
     "async": "^1.0.0",
     "assert": "1.3.0",
     "body-parser": "^1.12.4",
@@ -21,6 +20,7 @@
     "request": "^2.58.0",
     "should": "^5.2.0",
     "supertest": "^0.15.0",
+    "swagger": "^0.7.5",
     "swagger-express-mw": "^0.0.4"
   },
   "devDependencies": {
