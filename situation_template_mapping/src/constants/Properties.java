@@ -4,7 +4,11 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
 import java.util.ArrayList;
+import java.util.Enumeration;
 
 import situationtemplate.model.TContextNode;
 
@@ -96,6 +100,53 @@ public class Properties {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }
+    }
+    
+    public static String[] getLocalIpAddresses() {
+        ArrayList<String> ips = new ArrayList<>();
+        Enumeration<NetworkInterface> n = null;
+        try {
+            n = NetworkInterface.getNetworkInterfaces();
+        } catch (SocketException e1) {
+            return new String[0];
+        }
+        for (; n.hasMoreElements();)
+        {
+            NetworkInterface e = n.nextElement();
+
+            Enumeration<InetAddress> a = e.getInetAddresses();
+            for (; a.hasMoreElements();)
+            {
+                InetAddress addr = a.nextElement();
+                ips.add(addr.getHostAddress());
+            }
+        }
+        return ips.toArray(new String[ips.size()]);
+    }
+    
+    public static String getRemoteIp(String ip) {
+        if (ip.equals("127.0.0.1") || ip.equals("localhost")) {
+            return "localhost";
+        } else {
+            String[] orig = ip.split(".");
+            String[] ips = getLocalIpAddresses();
+            int maxMatches = 0;
+            String bestmatch = null;
+            for (String i : ips) {
+                int counter = 0;
+                String[] splits = i.split(".");
+                for (int j = 0; j < 4; j++) {
+                    if (splits[j].equals(orig[j])) {
+                        counter++;
+                    }
+                }
+                if (counter > maxMatches) {
+                    maxMatches = counter;
+                    bestmatch = i;
+                }
+            }
+            return bestmatch;
         }
     }
 }

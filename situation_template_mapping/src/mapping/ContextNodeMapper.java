@@ -1,5 +1,11 @@
 package mapping;
 
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 
 import org.json.simple.JSONArray;
@@ -53,14 +59,16 @@ public class ContextNodeMapper {
 		builder.append(':');
 		builder.append(Properties.getResourcePort());
 		builder.append(builder.charAt(builder.length() - 1) == '/' ? "" : '/');
-		builder.append("rmp/sensordata/");
+		builder.append("rmp/sensordata/%s");
 		url = builder.toString();
 
 			for (TContextNode sensorNode : situationTemplate.getContextNode()) {
 				Properties.getContextNodes().add(sensorNode);
 
-				String sensorURL = url + "%s/" + sensorNode.getType();
-
+				String sensorURL = url;
+				if (sensorNode.getInputType().toLowerCase().equals("sensor")) {
+				    sensorURL += "/" + sensorNode.getType();
+				}
 				// create the corresponding NodeRED JSON node
 				ArrayList<JSONObject> nodeREDNodes = new ArrayList<>();
 				String[] objects = sensorMapping.getObjects(sensorNode.getId());
@@ -74,6 +82,30 @@ public class ContextNodeMapper {
 					nodeREDNode.put("url", String.format(sensorURL, object));
 					nodeREDNodes.add(nodeREDNode);
 					yCoordinate += 100;
+					
+					if (!sensorNode.getInputType().toLowerCase().equals("sensor")) {
+					    URL u = null;
+					    try {
+                            u = new URL(Properties.getSituationServer() + ":" + Properties.getSituationPort() + "/situations/changes");
+                            HttpURLConnection conn = (HttpURLConnection) u.openConnection();
+                            String s = "{\"SitTempID\":\"%s\",\"ThingID\":\"%s\",\"CallbackURL\":\"%s\",\"once\":\"false\"}";
+                            s = String.format(s, 
+                                    sensorMapping.getObjects(sensorNode.getId())[0].split(".")[0], 
+                                    sensorMapping.getObjects(sensorNode.getId())[0].split(".")[1], 
+                                    Properties.getRemoteIp(Properties.getSituationServer()));
+                            s = URLEncoder.encode(s,
+                                    java.nio.charset.StandardCharsets.UTF_8.toString());
+                            conn.setDoOutput(true);
+                            conn.setRequestMethod("POST");
+                            conn.setRequestProperty("Content-Type", "application/json");
+                            conn.setRequestProperty("Content-Length", String.valueOf(s.length()));
+                            OutputStream stream = conn.getOutputStream();
+                            stream.write(s.getBytes());
+                        } catch (IOException e) {
+                            // TODO Auto-generated catch block
+                            e.printStackTrace();
+                        }
+					}
 
 					// now connect the node to the flow
 					JSONArray wiresNode = new JSONArray();

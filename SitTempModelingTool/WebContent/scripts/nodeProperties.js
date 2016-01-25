@@ -196,6 +196,7 @@ $(document).ready(function(){
                 var contextVal = $("#contextType").val();
                 var senTyp = $("#sensorType").val();
                 var unit = $("#unit").val();
+                var inputtype = $('#inputtype').val();
                 unit = unit == null ? "" : unit;
 
 
@@ -211,6 +212,11 @@ $(document).ready(function(){
                 properties.setAttribute("contextName", contextVal);
                 properties.setAttribute("sensortype", senTyp);
                 properties.setAttribute("sensorunit", unit);
+                if (inputtype.toLowerCase() == 'static context') {
+                    properties.setAttribute('inputtype', 'static');
+                } else {
+                    properties.setAttribute('inputtype', inputtype.toLowerCase());
+                }
 
                 $("#contextForm").addClass("hidden");
             });
