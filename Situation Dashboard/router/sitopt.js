@@ -200,7 +200,7 @@ var startSRS = function(templateID){
 		} else {*/
 			console.log(JSON.stringify(doc[0]));
 			var exec = require('child_process').exec, child;
-			child = exec('java -jar public/mapper/nodeRed/mappingString.jar '+JSON.stringify(doc[0].xml)+' "false" "http://localhost:8080" "false"',
+			child = exec('java -jar public/nodeRed/mappingString.jar ' + 'public/nodeRed/test.json'   +JSON.stringify(doc[0].xml)+' "false" ',
 				function (error, stdout, stderr){
 		  			//open('http://localhost:1880');
 		    		console.log('stdout: ' + stdout);
