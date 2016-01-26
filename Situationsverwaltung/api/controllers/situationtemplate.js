@@ -20,9 +20,41 @@ module.exports = {
   getTemplateByName: getTemplateByName,
   uploadAttachment: uploadAttachment,
   getAttachment: getAttachment,
-  deleteTemplateByID: deleteTemplateByID
-
+  deleteTemplateByID: deleteTemplateByID,
+  updateXML: updateXML
 };
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+//updateAttribute
+//
+//Updates or creates XML of situationTemplate
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+function updateXML(req, res){
+  update(req.swagger.params, function(doc){
+    res.json("Added");
+  })
+
+}
+function update(params, callback){
+
+  var tuple = {xml: params.xml.value};
+  //tuple[params.attribute.value] = params.value.value;
+  db.collection('Situationtemplates').updateOne( 
+
+      {"_id" :  new require('mongodb').ObjectID(params.ID.value) },
+      {
+
+        $set: tuple
+      }, function(err, result) {
+      assert.equal(err, null);
+      //console.log(result);
+      callback();
+    });
+}
+
+
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 //deleteTemplateByID

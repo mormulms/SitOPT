@@ -654,8 +654,39 @@ paths:
           schema:
             $ref: "#/definitions/ErrorResponse"
   
-  
-            
+  /situationstemplates/{ID}/{xml}:
+    x-swagger-router-controller: situationtemplate
+    post:
+      tags:
+        - situation template
+      summary: Set XML of situation template
+      description: Set or update the XML data of a situation templte
+      operationId: updateXML
+      
+      parameters:
+        - name: ID
+          in: path
+          description: XML data
+          required: true
+          type: string
+        - name: xml
+          in: path
+          description: XML data
+          required: true
+          type: string
+
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/GetModel"
+        # responses may fall through to errors
+        "404":
+          description: Not found
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+         
   /situationtemplates/ByID:
     x-swagger-router-controller: situationtemplate
     get:
