@@ -32,21 +32,20 @@ module.exports = {
 //Updates or creates XML of situationTemplate
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 function updateXML(req, res){
-  update(req.swagger.params, function(doc){
+  update(req.swagger.params.ID, req.body, function(doc){
     res.json("Added");
   })
 
 }
-function update(params, callback){
+function update(id, xml, callback){
 
-  var tuple = {xml: params.xml.value};
   //tuple[params.attribute.value] = params.value.value;
   db.collection('Situationtemplates').updateOne( 
 
-      {"_id" :  new require('mongodb').ObjectID(params.ID.value) },
+      {"_id" :  new require('mongodb').ObjectID(id.value) },
       {
 
-        $set: tuple
+        $set: xml
       }, function(err, result) {
       assert.equal(err, null);
       //console.log(result);

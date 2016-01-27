@@ -654,7 +654,7 @@ paths:
           schema:
             $ref: "#/definitions/ErrorResponse"
   
-  /situationstemplates/{ID}/{xml}:
+  /situationtemplates/{ID}:
     x-swagger-router-controller: situationtemplate
     post:
       tags:
@@ -669,11 +669,13 @@ paths:
           description: XML data
           required: true
           type: string
-        - name: xml
-          in: path
-          description: XML data
+    
+        - in: body
+          name: xml
+          description: XML of the situation template
           required: true
-          type: string
+          schema:
+            $ref: "#/definitions/XMLModel"
 
       responses:
         "200":
@@ -1174,6 +1176,13 @@ definitions:
       quality:
         type: number
         format: float
+        
+  XMLModel:
+    required:
+      - xml
+    properties:
+      xml:
+        type: string
         
 
         
