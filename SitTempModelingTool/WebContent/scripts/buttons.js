@@ -43,13 +43,18 @@ function save() {
         alert("Geben sie einen Namen ein!");
     } else {
         var xml = getSituationTemplateAsXML(savename);
+        xml = xml.replace(/\n/g, '').replace(/\r/g, '').replace(/\t/g, '');
+        
+        var config = require('../config.js');
 
         $.ajax({
-            type: "POST",
-            url: "save",
-            data: {sitTemplate: xml, name: savename, saveId: savename, sitTempName: savename, description: savename}
-        }).done(function( msg ) {
-            alert(msg)
+            type: "post",
+            url: config.protocol + "://" + config.server + '/situationtemplates/' + savename,
+            contentType: 'application/json',
+            data: JSON.stringify({"xml": xml}),
+            success: function() {
+                alert("Template successfully saved");
+            }
         });
     }
 }

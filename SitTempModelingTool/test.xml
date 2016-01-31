@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<SituationTemplate name="serious" id="serious" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="situation_template.xsd">
+		<situationNode id="Situation1" name="scaleDown" />
+		<operationNode id="Operation1" name="o1">
+			<parent parentID="Situation1" />
+			<type>OR</type>
+			<negated>false</negated>
+		</operationNode>
+		<conditionNode id="Condition2" name="cond2">
+			<opType>lowerThan</opType>
+			<parent parentID="Operation1" />
+			<condValues>
+				<value>30</value>
+			</condValues>
+		</conditionNode>
+		<contextNode name="cont1" id="Context1" type="RAM Sensor">
+			<measureName>MB RAM</measureName>
+			<inputType>sensor</inputType>
+			<parent parentID="Condition2" />
+			<parent parentID="Condition3" />
+		</contextNode>
+		<situationNode id="Situation2" name="scaleUp" />
+		<operationNode id="Operation2" name="o2">
+			<parent parentID="Situation2" />
+			<type>OR</type>
+			<negated>false</negated>
+		</operationNode>
+		<conditionNode id="Condition3" name="cond3">
+			<opType>greaterThan</opType>
+			<parent parentID="Operation2" />
+			<condValues>
+				<value>85</value>
+			</condValues>
+		</conditionNode>
+</SituationTemplate>
