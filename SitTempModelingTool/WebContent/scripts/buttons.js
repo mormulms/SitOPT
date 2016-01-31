@@ -45,15 +45,34 @@ function save() {
         var xml = getSituationTemplateAsXML(savename);
         xml = xml.replace(/\n/g, '').replace(/\r/g, '').replace(/\t/g, '');
         
-        var config = require('../config.js');
+        var config = require('../config/sitopt.js');
 
         $.ajax({
-            type: "post",
-            url: config.protocol + "://" + config.server + '/situationtemplates/' + savename,
+            type: 'post',
+            url: config.protocol + "://" + config.server + ":" + config.port + "/situationtemplates/ByID",
             contentType: 'application/json',
-            data: JSON.stringify({"xml": xml}),
+            data: JSON.stringify({ID: savename}),
             success: function() {
-                alert("Template successfully saved");
+                $.ajax({
+                    type: "post",
+                    url: config.protocol + "://" + config.server + ':' + config.port + '/situationtemplates/' + savename,
+                    contentType: 'application/json',
+                    data: JSON.stringify({"xml": xml}),
+                    success: function() {
+                        alert("Template successfully saved");
+                    }
+                });
+            },
+            error: function () {
+                $.ajax({
+                    type: "post",
+                    url: config.protocol + "://" + config.server + ':' + config.port + '/situationtemplates',
+                    contentType: 'application/json',
+                    data: JSON.stringify({"name": savename, "situation": savename, "xml": xml}),
+                    success: function() {
+                        alert("Template successfully saved");
+                    }
+                });
             }
         });
     }
