@@ -14,7 +14,9 @@ exports.action = {
         sensorUrl: {required: true},
         sensorType: {required: true},
         timeStamp: {required: false},
-        quality: {required: true}
+        quality: {required: true},
+        unit: {required: true},
+        unitSymbol: {required: true}
     },
 
     run: function(api, data, next){
@@ -32,8 +34,10 @@ exports.action = {
                     objectID: data.params.objectID,
                     sensorType: data.params.sensorType,
                     sensorUrl: sensorUrl,
-                    timestamp: timestamp,
-                    quality: data.params.quality
+                    timestamp: timestamp.toString(),
+                    quality: data.params.quality,
+                    unit: data.params.unit,
+                    unitSymbol: data.params.unitSymbol
                 });
                 var save = function () {
                     sensor.save(function (err) {
@@ -41,7 +45,7 @@ exports.action = {
                             next(err);
                         }
                     });
-                }
+                };
                 async.waterfall([
                     save,
                     function () {

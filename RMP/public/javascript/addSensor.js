@@ -9,13 +9,17 @@ function save() {
     var sensorUrl = $('#sensorUrl').val();
     var sensorType = $('#sensorType').val();
     var quality = $('#sensorQuality').val();
+    var unit = $('#unit').val();
+    var unitSymbol = $('#unitSymbol').val();
     if (!(sensorUrl == null || sensorUrl == "" || sensorID == null || sensorID == "" || sensorType == null || sensorType == "" || objectID == null || objectID == "" || quality == null || quality == "")) {
         $.post(url, {
             objectID: objectID,
             sensorID: sensorID,
             sensorUrl: sensorUrl,
             sensorType: sensorType,
-            quality: quality
+            quality: quality,
+            unit: unit,
+            unitSymbol: unitSymbol
         }, function (res, code) {
             console.log(res);
             if (code == "success") {

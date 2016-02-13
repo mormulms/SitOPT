@@ -32,7 +32,9 @@ module.exports = {
                 sensorUrl: String,
                 timestamp: Date,
                 quality: Number,
-                sensorType: String
+                sensorType: String,
+                unit: String,
+                unitSymbol: String
             });
 
             api.sensor = mongoose.model('Sensor', sensorSchema);
