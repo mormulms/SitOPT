@@ -9,8 +9,6 @@ exports.action = {
     middleware:             [],
 
     inputs: {
-        thingID: {required: true},
-        sitTempID: {required: true},
         thing: {required: true},
         situationtemplate: {required: true},
         occured: {required: true},
@@ -18,10 +16,16 @@ exports.action = {
     },
 
     run: function(api, data, next){
-        data.params.sensorID = data.params.thing + "." + data.params.situationtemplate;
-        data.params.quality = 100; //TODO: find real object structure
-        data.params.timeStamp = data.params.timestamp || new Date().toString();
-        data.params.value = data.params.occured;
-        require('./setSensordata.js').action.run(api, data, next);
+        var id = data.params.thing + "." + data.params.situationtemplate;
+        var quality = 100; //TODO: find real object structure
+        var timeStamp = new Date(data.params.timestamp) || new Date().toString();
+        var value = data.params.occured;
+        api.sensorCache.findOneAndUpdate({sensorID: id}, {objectID: data.params.thing, value: value, timeStamp: timeStamp, quality: quality}, {upsert: true}, function (error, rows, raw) {
+            if (error) {
+                next(error);
+            } else {
+                next();
+            }
+        });
     }
 };
