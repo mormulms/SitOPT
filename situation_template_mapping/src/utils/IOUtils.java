@@ -155,7 +155,7 @@ public class IOUtils {
 			} else {
 				String currentFlows = getHTML(String.format("%s://%s:%s/flows", protocol, server, port));
 				JSONParser parser = new JSONParser();
-				flow = (JSONArray) parser.parse(currentFlows);
+				flow = new JSONArray();//(JSONArray) parser.parse(currentFlows);
 				
 				List<JSONObject> toBeRemoved = new ArrayList<>();
 
@@ -205,6 +205,7 @@ public class IOUtils {
 
 			URL url = new URL(String.format("%s://%s:%s/flows", protocol, server, port));
 			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+			System.out.println(url.getProtocol() + " " + url.getHost() + " " + url.getHost() + " " + url.getPath());
 			connection.setRequestMethod("POST");
 			connection.setDoInput(true);
 			connection.setDoOutput(true);
@@ -226,7 +227,7 @@ public class IOUtils {
 		} catch (IOException e) {
 			System.err.println("Could not process HTTP request.");
 			e.printStackTrace();
-		} catch (ParseException e) {
+		} catch (/*Parse*/Exception e) {
 			System.err.println("Could not parse JSON.");
 			e.printStackTrace();
 		}

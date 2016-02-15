@@ -19,6 +19,7 @@ exports.action = {
                 next(err);
             } else {
                 data.response.payload = sensor;
+                next();
             }
         });
     }

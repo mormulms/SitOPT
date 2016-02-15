@@ -90,8 +90,8 @@ public class ContextNodeMapper {
                             HttpURLConnection conn = (HttpURLConnection) u.openConnection();
                             String s = "{\"SitTempID\":\"%s\",\"ThingID\":\"%s\",\"CallbackURL\":\"%s\",\"once\":\"false\"}";
                             s = String.format(s, 
-                                    sensorMapping.getObjects(sensorNode.getId())[0].split(".")[0], 
                                     sensorMapping.getObjects(sensorNode.getId())[0].split(".")[1], 
+                                    sensorMapping.getObjects(sensorNode.getId())[0].split(".")[0], 
                                     Properties.getRemoteIp(Properties.getSituationServer()));
                             s = URLEncoder.encode(s,
                                     java.nio.charset.StandardCharsets.UTF_8.toString());
@@ -100,6 +100,7 @@ public class ContextNodeMapper {
                             conn.setRequestProperty("Content-Type", "application/json");
                             conn.setRequestProperty("Content-Length", String.valueOf(s.length()));
                             OutputStream stream = conn.getOutputStream();
+                            System.out.println(s);
                             stream.write(s.getBytes());
                         } catch (IOException e) {
                             // TODO Auto-generated catch block

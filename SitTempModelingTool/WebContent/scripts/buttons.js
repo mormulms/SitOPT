@@ -43,13 +43,37 @@ function save() {
         alert("Geben sie einen Namen ein!");
     } else {
         var xml = getSituationTemplateAsXML(savename);
+        xml = xml.replace(/\n/g, '').replace(/\r/g, '').replace(/\t/g, '');
+        
+        var config = require('../config/sitopt.js');
 
         $.ajax({
-            type: "POST",
-            url: "save",
-            data: {sitTemplate: xml, name: savename, saveId: savename, sitTempName: savename, description: savename}
-        }).done(function( msg ) {
-            alert(msg)
+            type: 'post',
+            url: config.protocol + "://" + config.server + ":" + config.port + "/situationtemplates/ByID",
+            contentType: 'application/json',
+            data: JSON.stringify({ID: savename}),
+            success: function() {
+                $.ajax({
+                    type: "post",
+                    url: config.protocol + "://" + config.server + ':' + config.port + '/situationtemplates/' + savename,
+                    contentType: 'application/json',
+                    data: JSON.stringify({"xml": xml}),
+                    success: function() {
+                        alert("Template successfully saved");
+                    }
+                });
+            },
+            error: function () {
+                $.ajax({
+                    type: "post",
+                    url: config.protocol + "://" + config.server + ':' + config.port + '/situationtemplates',
+                    contentType: 'application/json',
+                    data: JSON.stringify({"name": savename, "situation": savename, "xml": xml}),
+                    success: function() {
+                        alert("Template successfully saved");
+                    }
+                });
+            }
         });
     }
 }

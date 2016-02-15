@@ -36,7 +36,8 @@ exports.default = {
 
             post : [
                 { path: '/value', action: 'setSensordata'},
-                { path: '/sensor', action: 'addSensor' }
+                { path: '/sensor', action: 'addSensor' },
+                { path: '/situation', action: 'setSituationData' }
             ],
 
             put: [

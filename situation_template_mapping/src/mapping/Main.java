@@ -1,6 +1,9 @@
 package mapping;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.StringReader;
 
 import javax.xml.bind.JAXBContext;
@@ -115,7 +118,15 @@ public class Main {
 				    File file = new File(args[1]);
 	                root = u.unmarshal(new StreamSource(file), TSituationTemplate.class);
 				} else {
-				    root = u.unmarshal(new StreamSource(new StringReader(args[1])), TSituationTemplate.class);
+				    try (FileOutputStream s = new FileOutputStream(System.getProperty("user.home") + File.separator + "mapping.xml")) {
+                        s.write(args[1].getBytes());
+                    } catch (IOException e) {
+                        e.getMessage();
+                        e.getStackTrace()[0].toString().getBytes();
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
+				    root = u.unmarshal(new StreamSource(new StringReader(args[1].replace("\n", "").replace("\r", "").replace("\t", ""))), TSituationTemplate.class);
 				}
 				
 				TSituationTemplate situationTemplate = root.getValue();
@@ -131,7 +142,6 @@ public class Main {
 //				}
 			}
 		} catch (JAXBException e) {
-			System.err.println("Could not parse JAXB object.");
 			e.printStackTrace();
 		}
 	}
