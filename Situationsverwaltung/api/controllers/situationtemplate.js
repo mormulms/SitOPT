@@ -33,6 +33,7 @@ module.exports = {
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 function updateXML(req, res){
   update(req.swagger.params.ID, req.body, function(doc){
+    res.setHeader('Content-Type', 'application/json');
     res.json("Added");
   })
 
@@ -132,7 +133,7 @@ function attachFile(document, xml, callback){
 }
 
 function uploadAttachment(req, res){
-
+  res.setHeader('Content-Type', 'application/json');
 	console.log(req.files.file.buffer.toString());
 	console.log(req.swagger.params.ID.value);
 	console.log(req.swagger.params.templatename.value);
