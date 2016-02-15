@@ -34,6 +34,7 @@ module.exports = {
 function updateXML(req, res){
   update(req.swagger.params.ID, req.body, function(doc){
     res.setHeader('Content-Type', 'application/json');
+    res.statusCode = 200;
     res.json("Added");
   })
 
