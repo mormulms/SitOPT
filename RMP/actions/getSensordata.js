@@ -1,3 +1,6 @@
+/**
+ * returns the newest value of a sensortype for a thing
+ */
 exports.action = {
     name:                   'getSensordata',
     description:            'getSensordata',
@@ -23,7 +26,6 @@ exports.action = {
                     ids.push(sensors[i].sensorID);
                 }
                 api.sensorCache.find({sensorID: { $in: ids }}, function (error, cache) {
-                    console.log(cache.length)
                     var val = cache[0];
                     for (var i = 1; i < cache.length; i++) {
                         if (val.timeStamp < cache[i].timeStamp) {

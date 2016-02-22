@@ -13,10 +13,19 @@ import org.json.simple.parser.ParseException;
 
 import situationtemplate.model.TContextNode;
 
+/**
+ * Class for mapping sensors and their ids.
+ * This is needed when the mapping of a contextId is provided in a json file
+ */
 public class ObjectIdSensorIdMapping {
 	private JSONObject json = null;
 	private String object = null;
 
+	/**
+	 * Constructor.
+	 * Reads the json file
+	 * @param filePath the filepath where the json file is located
+	 */
 	public ObjectIdSensorIdMapping(String filePath) {
 		JSONParser parser = new JSONParser();
 		String file;
@@ -40,6 +49,11 @@ public class ObjectIdSensorIdMapping {
 		}
 	}
 
+	/**
+	 * Returns the sensors for a sensor id
+	 * @param sensor the sensor id whose sensors should be found
+	 * @return
+     */
 	public String[] getObjects(String sensor) {
 		if (json != null) {
 			JSONArray array = (JSONArray) json.get(sensor);
@@ -52,6 +66,11 @@ public class ObjectIdSensorIdMapping {
         return new String[] { object };
 	}
 
+	/**
+	 * Returns a string that represents the sensors in the list as comma seperated list.
+	 * @param sensors list containing sensor ids
+	 * @return
+     */
 	public String map(ArrayList<TContextNode> sensors) {
 		if (json != null) {
 			StringBuilder builder = new StringBuilder();
@@ -74,6 +93,10 @@ public class ObjectIdSensorIdMapping {
         return object;
 	}
 
+	/**
+	 *
+	 * @return Returns all things in the json file
+     */
     public String getObjects() {
         ArrayList<Object> things = new ArrayList<>();
         if (json != null) {

@@ -1,3 +1,6 @@
+/**
+ * used for setting the value of a situation. not to be used, situations are queried from the SitDB.
+ */
 exports.action = {
     name:                   'setSituationData',
     description:            'setSituationData',

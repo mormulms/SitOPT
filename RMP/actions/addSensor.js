@@ -1,3 +1,6 @@
+/**
+ * Adds a sensor to the MongoDB, in the Sensor Registration part.
+ */
 exports.action = {
     name:                   'addSensor',
     description:            'addSensor',
@@ -27,8 +30,10 @@ exports.action = {
             if (err) {
                 next(err);
             } else if (result.length > 0) {
+                //Sensor does not need to be added.
                 next('Sensor already exists');
             } else {
+                // Add Sensor
                 var sensor = new api.sensor({
                     sensorID: data.params.sensorID,
                     objectID: data.params.objectID,

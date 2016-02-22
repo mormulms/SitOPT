@@ -158,6 +158,11 @@ public class ConditionNodeMapper {
         return nodeREDModel;
     }
 
+    /**
+     * Returns the sensor nodes of a condition node
+     * @param node the condition node, whose sensors should be found.
+     * @return
+     */
     private ArrayList<TContextNode> getSensorNodes(TConditionNode node) {
         String id = node.getId();
         ArrayList<TContextNode> returnValue = new ArrayList<>();

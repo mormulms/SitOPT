@@ -1,3 +1,6 @@
+/**
+ * Returns all registered sensors.
+ */
 exports.action = {
     name:                   'getAllSensors',
     description:            'getAllSensors',

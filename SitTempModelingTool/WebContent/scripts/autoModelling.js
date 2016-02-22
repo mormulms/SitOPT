@@ -22,23 +22,28 @@ function readSingleFile(evt) {
 }
 
 function parseAndTraverseXML(contents) {
+    // parse xml with jquery to allow xpath
     var xml = $($.parseXML(contents));
     var leftVal = 10 + "px";
     var topVal = 10 + "px";
     var leftDiff = 100;
 
+    // get all nodes
     var situations = xml.xpath("//situationNode");
     var operations = xml.xpath("//operationNode");
     var conditions = xml.xpath("//conditionNode");
     var contexts = xml.xpath("//contextNode");
 
+    // iterate over situations
     for (var i = 0; i < situations.length; i++) {
         var situation = situations[i];
+        // create div and set attributes
         var div = document.createElement("div");
         $(div).addClass("nodeTemplateSituation");
         div.setAttribute("indrawingarea", "true");
         div.setAttribute("type", "situationnode");
 
+        // set location
         topVal = parseInt(topVal, 10);
         div.style.top = (topVal) + "px";
 
@@ -46,6 +51,7 @@ function parseAndTraverseXML(contents) {
         div.style.left = (leftVal + leftDiff) + "px";
         leftDiff = leftDiff + 300;
 
+        // create div, which saves the properties of a node
         var propDiv = document.createElement("div");
         $(propDiv).hide();
         div.setAttribute("id", $(situation).attr("id"));
@@ -54,6 +60,7 @@ function parseAndTraverseXML(contents) {
         $(div).append(propDiv);
         $(div).appendTo($(".drawingArea"));
         var count = parseInt($(situation).attr("id").match(/\d+$/));
+        // set the amount of situations to hte highest index of situations.
         if (count != 'NaN') {
             countSituation = count > countSituation ? count : countSituation;
         }
@@ -62,14 +69,17 @@ function parseAndTraverseXML(contents) {
 
     leftDiff = 100;
 
+    // iterate over operations
     for (var i = 0; i < operations.length; i++) {
         var operation = operations[i];
+        // create div and set attributes
         var div = document.createElement("div");
         $(div).addClass("nodeTemplateOperation");
         div.setAttribute("indrawingarea", "true");
         div.setAttribute("type", "operationnode");
         div.setAttribute("source", "fromModelling");
 
+        // set location
         topVal = parseInt(topVal, 10);
         div.style.top = (topVal + 200) + "px";
 
@@ -77,6 +87,7 @@ function parseAndTraverseXML(contents) {
         div.style.left = (leftVal + leftDiff) + "px";
         leftDiff = leftDiff + 300;
 
+        // create div, which saves the properties of a node
         var propDiv = document.createElement("div");
         $(propDiv).hide();
         div.setAttribute("id", $(operation).attr("id"));
@@ -85,6 +96,7 @@ function parseAndTraverseXML(contents) {
         propDiv.setAttribute("oprnegated", $(operation).xpath("negated").text());
         $(div).text($(operation).attr("name"));
         var count = parseInt($(operation).attr("id").match(/\d+$/));
+        // set the amount of situations to hte highest index of operations.
         if (count != 'NaN') {
             countOpr = count > countOpr ? count : countOpr;
         }
@@ -95,8 +107,10 @@ function parseAndTraverseXML(contents) {
 
     leftDiff = 100;
 
+    // iterate over conditions
     for (var i = 0; i < conditions.length; i++) {
         var condition = conditions[i];
+        // create div and set attributes
         var div = document.createElement("div");
         var propDiv = document.createElement("div");
         $(div).addClass("nodeTemplateCondition");
@@ -104,12 +118,14 @@ function parseAndTraverseXML(contents) {
         div.setAttribute("type", "conditionnode");
         div.setAttribute("id", $(condition).attr("id"));
 
+        // set location
         topVal = parseInt(topVal, 10);
         div.style.top = (topVal + 400) + "px";
         leftVal = parseInt(leftVal, 10);
         div.style.left = (leftVal + leftDiff) + "px";
         leftDiff = leftDiff + 300;
 
+        // create div, which saves the properties of a node
         $(propDiv).hide();
         propDiv.setAttribute("conditionname", $(condition).attr("name"));
         propDiv.setAttribute("operator", $(condition).xpath("opType").text());
@@ -123,6 +139,7 @@ function parseAndTraverseXML(contents) {
             propDiv.setAttribute("numberofintervals", $(numIntervals).text());
         }
         var count = parseInt($(condition).attr("id").match(/\d+$/));
+        // set the amount of situations to hte highest index of conditions.
         if (count != 'NaN') {
             countCondition = count > countCondition ? count : countCondition;
         }
@@ -134,8 +151,10 @@ function parseAndTraverseXML(contents) {
 
     leftDiff = 100;
 
+    // iterate over contexts
     for (var i = 0; i < contexts.length; i++) {
         var context = contexts[i];
+        // create div and set attributes
         var div = document.createElement("div");
         var propDiv = document.createElement("div");
         $(div).addClass("nodeTemplateContext");
@@ -143,12 +162,14 @@ function parseAndTraverseXML(contents) {
         div.setAttribute("type", "contextnode");
         div.setAttribute("id", $(context).attr("id"));
 
+        // set location
         topVal = parseInt(topVal, 10);
         div.style.top = (topVal + 600) + "px";
         leftVal = parseInt(leftVal, 10);
         div.style.left = (leftVal + leftDiff) + "px";
         leftDiff = leftDiff + 300;
 
+        // create div, which saves the properties of a node
         $(propDiv).hide();
         propDiv.setAttribute("contextname", $(context).attr("name"));
         propDiv.setAttribute("sensortype", $(context).attr("type"));
@@ -156,6 +177,7 @@ function parseAndTraverseXML(contents) {
         propDiv.setAttribute("inputtype", $(context).xpath("inputType").text());
         $(div).text($(context).attr("name"));
         var count = parseInt($(context).attr("id").match(/\d+$/));
+        // set the amount of situations to hte highest index of conditions.
         if (count != 'NaN') {
             countContext = count > countContext ? count : countContext;
         }
@@ -164,6 +186,7 @@ function parseAndTraverseXML(contents) {
         makeDraggable($(div));
     }
 
+    // set connections that go into operations
     for (var i = 0; i < operations.length; i++) {
         var current = $(operations[i]).attr("id") + "_top";
         var parents = $(operations[i]).xpath("parent");
@@ -175,6 +198,7 @@ function parseAndTraverseXML(contents) {
         }
     }
 
+    // set connections that go into conditions
     for (var i = 0; i < conditions.length; i++) {
         var current = $(conditions[i]).attr("id") + "_top";
         var parents = $(conditions[i]).xpath("parent");
@@ -186,6 +210,7 @@ function parseAndTraverseXML(contents) {
         }
     }
 
+    // set connections that go into contexts
     for (var i = 0; i < contexts.length; i++) {
         var current = $(contexts[i]).attr("id");
         var parents = $(contexts[i]).xpath("parent");

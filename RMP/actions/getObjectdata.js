@@ -1,3 +1,6 @@
+/**
+ * Returns the newest value for each sensor of an object.
+ */
 exports.action = {
     name:                   'getObjectdata',
     description:            'getObjectdata',
@@ -22,12 +25,14 @@ exports.action = {
                 var keyValues = {};
                 for (var index in cache) {
                     var value = JSON.parse(JSON.stringify(cache[index]));
+                    // check if sensorType already checked.
                     if (keys.indexOf(value.sensorType) > -1) {
                         if (keyValues[value.sensorType].timestamp < value.timestamp) {
                             keyValues[value.sensorType] = value;
                         }
                     } else {
                         keyValues[value.sensorType] = value;
+                        keys.push(value.sensorType);
                     }
                 }
                 data.response.payload = keyValues;

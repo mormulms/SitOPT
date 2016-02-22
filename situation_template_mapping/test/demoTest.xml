@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SituationTemplate id="A0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="situation_template_draft01.xsd"
+	name="SystemObservation">
+		<operationNode id="A3" name="combine Sensors">
+			<type>and</type>
+			<parent parentID="A10"/>
+			<negated>false</negated>
+		</operationNode>
+		<conditionNode id="A9" name="% CPU load">
+			<type>type</type>
+			<measureName>measureName</measureName>
+			<opType>greaterThan</opType>
+			<condValues>
+				<value>0</value>
+			</condValues>
+			<parent parentID="A3"/>
+		</conditionNode>
+		<contextNode id="A7" type="watchdogSensor">
+			<parent parentID="A9"/>
+			<inputType>sensor</inputType>
+		</contextNode>
+		<situationNode name="machine_failed" id="A10"/>
+</SituationTemplate>

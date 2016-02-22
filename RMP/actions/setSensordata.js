@@ -1,3 +1,6 @@
+/**
+ * sets the data of a single sensor.
+ */
 exports.action = {
     name:                   'setSensordata',
     description:            'setSensordata',

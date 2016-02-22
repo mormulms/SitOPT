@@ -1,3 +1,6 @@
+/**
+ * updates an already existing sensor.
+ */
 exports.action = {
     name:                   'updateSensor',
     description:            'updateSensor',

@@ -1,3 +1,6 @@
+/**
+ * used for registering a situation as sensor. not to be used, situations are queried from the SitDB.
+ */
 exports.action = {
     name:                   'registerSituation',
     description:            'registerSituation',

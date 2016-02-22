@@ -1,3 +1,6 @@
+/**
+ * Returns a s single sensor.
+ */
 exports.action = {
     name:                   'getSensor',
     description:            'getSensor',

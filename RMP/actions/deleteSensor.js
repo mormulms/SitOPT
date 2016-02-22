@@ -1,3 +1,6 @@
+/**
+ * Deletes a sensor from the Sensor Registration.
+ */
 exports.action = {
     name:                   'deleteSensor',
     description:            'deleteSensor',

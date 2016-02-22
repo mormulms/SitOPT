@@ -6,12 +6,17 @@ function validate() {
     var starts = [];
     var ends = [];
     var connections = jsPlumb.getConnections();
+    // iterate over all connections
     for (var i = 0; i < connections.length; i++) {
         var connection = connections[i];
         var start = connection.sourceId;
         starts.push(start);
         var end = connection.targetId;
         ends.push(end);
+        // check for illegal connections
+        // Condition -> (Condition | Situation)
+        // Operation -> Condition
+        // Context -> (Operation | Situation)
         if (start.startsWith("Condition") && !end.startsWith("Operation")) {
             errors.push("Illegal Connection: " + $("#" + start).text() + " -> " + $("#" + end).text())
         } else if (start.startsWith("Operation") && !(end.startsWith("Operation") || end.startsWith("Situation"))) {
@@ -23,6 +28,7 @@ function validate() {
 
     var draggables = $(".ui-draggable");
 
+    // iterate over all nodes
     for (var i = 0; i < draggables.length; i++) {
         var drag = draggables[i];
         if ($(drag).hasClass("ui-droppable") || $(drag).hasClass("unselectable")) {
@@ -30,6 +36,7 @@ function validate() {
         }
         var id = $(drag).attr("id");
         var div = $("#" + id + " div")[0];
+        // validate the attributes
         if (id.startsWith("Situation")) {
             errors = validateSituation(id, div, starts, ends, errors);
         } else if (id.startsWith("Operation")) {
@@ -51,11 +58,17 @@ function validate() {
     return errors.length == 0;
 }
 
+/**
+ * Recognizes cycles in Operations since those are the only ones, which can produce a cycle in an otherwise valid template.
+ * @param errors array, that contains the error messages
+ * @returns {*}
+ */
 function recognizeCycles(errors) {
     var ops = $('div[type^="operation"]:not(.hidden)');
     var visited = {};
     var finished = {};
 
+    // preparations, sets all nodes to not visited and not finished (all outgoing connections tested)
     for (var i = 0; i < ops.length; i++) {
         var op = ops[i];
         var id = $(op).attr("id");
@@ -65,8 +78,9 @@ function recognizeCycles(errors) {
 
     for (var i = 0; i < ops.length; i++) {
         var op = ops[i];
-            if (!(function dfs(o) {
-                    var id = $(o).attr("id");
+        // recursive depth first search.
+        if (!(function dfs(o) {
+                var id = $(o).attr("id");
                 if (id in finished && finished[id]) {
                     return true;
                 }
@@ -88,12 +102,22 @@ function recognizeCycles(errors) {
                 finished[id] = true;
                 return true;
             })(op)) {
+            // add error to errors.
             errors.push("Invalid Operation Node: Cycle detected in " + $(op).attr("id"));
         }
     }
     return errors;
 }
 
+/**
+ * Checks if the situation node has unset attributes.
+ * @param id
+ * @param div
+ * @param starts
+ * @param ends
+ * @param errors
+ * @returns {*}
+ */
 function validateSituation(id, div, starts, ends, errors) {
     var value = div.getAttribute("sitvalue");
     if (value == null || value == "") {
@@ -106,6 +130,15 @@ function validateSituation(id, div, starts, ends, errors) {
     return errors;
 }
 
+/**
+ * Checks if the operation node has unset attributes.
+ * @param id
+ * @param div
+ * @param starts
+ * @param ends
+ * @param errors
+ * @returns {*}
+ */
 function validateOperation(id, div, starts, ends, errors) {
     var name = div.getAttribute("oprname");
     var oprvalue = div.getAttribute("oprvalue");
@@ -125,6 +158,15 @@ function validateOperation(id, div, starts, ends, errors) {
     return errors;
 }
 
+/**
+ * Checks if the condition node has unset attributes.
+ * @param id
+ * @param div
+ * @param starts
+ * @param ends
+ * @param errors
+ * @returns {*}
+ */
 function validateCondition(id, div, starts, ends, errors) {
     var intervalTypes = ["intervalMinEqual", "intervalMin", "intervalMaxEqual", "intervalMax"];
     var name = div.getAttribute("conditionname");
@@ -153,6 +195,15 @@ function validateCondition(id, div, starts, ends, errors) {
     return errors;
 }
 
+/**
+ * Checks if the context node has unset attributes.
+ * @param id
+ * @param div
+ * @param starts
+ * @param ends
+ * @param errors
+ * @returns {*}
+ */
 function validateContext(id, div, starts, ends, errors) {
     var name = div.getAttribute("contextname");
     var type = div.getAttribute("sensortype");
