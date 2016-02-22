@@ -1,3 +1,4 @@
+
 swagger: "2.0"
 info:
   version: "1.0.2"
@@ -1088,8 +1089,6 @@ definitions:
         type: string
       description:
         type: string
-      xml:
-        type: string
         
   AgentModel:
     required:
@@ -1160,5 +1159,3 @@ definitions:
     properties:
       message:
         type: string
-        
-        
