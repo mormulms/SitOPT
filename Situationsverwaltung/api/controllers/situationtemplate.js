@@ -20,8 +20,7 @@ module.exports = {
   getTemplateByName: getTemplateByName,
   uploadAttachment: uploadAttachment,
   getAttachment: getAttachment,
-  deleteTemplateByID: deleteTemplateByID,
-  updateXML: updateXML
+  deleteTemplateByID: deleteTemplateByID
 };
 
 
@@ -31,7 +30,7 @@ module.exports = {
 //
 //Updates or creates XML of situationTemplate
 /////////////////////////////////////////////////////////////////////////////////////////////////////
-function updateXML(req, res){
+/*function updateXML(req, res){
   update(req.swagger.params.ID, req.body, function(doc){
     res.setHeader('Content-Type', 'application/json');
     res.statusCode = 200;
@@ -53,7 +52,7 @@ function update(id, xml, callback){
       //console.log(result);
       callback();
     });
-}
+}*/
 
 
 
@@ -137,7 +136,7 @@ function uploadAttachment(req, res){
  // res.setHeader('Content-Type', 'application/json');
 	console.log(req.files.file.buffer.toString());
 	console.log(req.swagger.params.ID.value);
-	console.log(req.swagger.params.templatename.value);
+	
 
 	queryID(req.swagger.params.ID.value, function(doc){
 		if(doc[0] == null){
@@ -277,6 +276,7 @@ function insertDocument(document, callback) {
       "objecttype" : "Situationtemplate",
       "name" : document.name,
       "situation" : document.situation,
+      "xml" : document.xml,
       "description" : document.description,
       "xml" : document.xml,
       "timestamp" : (new Date).getTime()
