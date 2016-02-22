@@ -278,6 +278,7 @@ function insertDocument(document, callback) {
       "name" : document.name,
       "situation" : document.situation,
       "description" : document.description,
+      "xml" : document.xml,
       "timestamp" : (new Date).getTime()
    }, function(err, result) {
     assert.equal(err, null);

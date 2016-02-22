@@ -76,13 +76,14 @@ function checkCallbacks(document){
 		console.log(callbackArray[i].ThingID);
 		console.log(document.thing);
 		console.log(callbackArray[i].TemplateID);
-		console.log(document.template);
+		console.log(document.situationtemplate);
 		console.log("----------");
-		if ((callbackArray[i].ThingID == document.thing && callbackArray[i].TemplateID == document.template)
+		if ((callbackArray[i].ThingID == document.thing && callbackArray[i].TemplateID == document.situationtemplate)
 		 || callbackArray[i].ThingID == ""){
 			callbacks.push(i);	
 		}
 	}
+	//console.log(callbacks.length);
 	for (var i=callbacks.length-1; i>=0;i--){
 		console.log("Test" + callbackArray[callbacks[i]].callbackURL);
 		
@@ -131,7 +132,7 @@ function allRegistrations(req, res){
 		}
 		if(URLArray.length == 0){
 			res.statusCode = 404;
-			res.json("No registrations under this URL found");
+			res.json("No registrations found for this URL");
 		}else{
 			res.statusCode = 200;
 			res.json(URLArray);
@@ -258,8 +259,8 @@ function situationChange(req, res){
 		}
 	//Registration for specified situation
 	}else{
-		queryThingAndTemplate(req.body.thing,
-						req.body.situationtemplate, function(doc){
+		queryThingAndTemplate(req.swagger.params.ThingID.value, 
+		req.swagger.params.SitTempID.value, function(doc){
 
 			if (doc[0] == null){
 				res.statusCode = 404;
@@ -273,6 +274,7 @@ function situationChange(req, res){
 					}
 				}	
 				if (!registrated){
+					console.log(doc[0].thing);
 					SaveURL(doc[0].thing, doc[0].situationtemplate, req.swagger.params.CallbackURL.value, req.swagger.params.once.value);
 					res.statusCode = 200;
 					res.json("Registration successful");

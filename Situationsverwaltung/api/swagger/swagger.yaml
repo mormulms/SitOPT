@@ -862,7 +862,7 @@ paths:
         - in: body
           name: body
           description: input
-          required: false
+          required: true
           schema:
             $ref: "#/definitions/SituationtemplateModel"
           
@@ -1117,12 +1117,15 @@ definitions:
     required:
       - name
       - situation
+      - xml
     properties:
       name:
         type: string
       situation:
         type: string
       description:
+        type: string
+      xml:
         type: string
         
   AgentModel:
