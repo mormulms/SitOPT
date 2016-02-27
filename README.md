@@ -38,6 +38,8 @@ following commands:
 
 ``sudo cp situation_template_mapping/settings.properties ~root/situation_mapping.properties``
 
+``./db_setup.sh``
+
 Everything is up and running now.
 
 ### ComputeSensor
