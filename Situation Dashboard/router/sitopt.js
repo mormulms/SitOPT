@@ -198,8 +198,9 @@ var startSRS = function(templateID){
 		/*if (err) {
 			console.log("Not found");
 		} else {*/
-			console.log(JSON.stringify(doc[0]));
+			//console.log(JSON.stringify(doc[0]));
 			var xml = JSON.stringify(doc[0].xml.substr(doc[0].xml.indexOf('<')));
+			console.log(xml);
 			var exec = require('child_process').exec, child;
 			child = exec('java -jar public/nodeRed/mappingString.jar public/nodeRed/test.json ' + xml + ' "false" ',
 				function (error, stdout, stderr){

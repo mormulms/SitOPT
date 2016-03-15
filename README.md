@@ -11,6 +11,7 @@
  - Java8
  - MongoDB
  - CouchDB
+ - Swagger
  
 ### Defaults
 
