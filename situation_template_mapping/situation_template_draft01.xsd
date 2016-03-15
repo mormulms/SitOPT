@@ -62,6 +62,8 @@
 					</xs:restriction>
 				</xs:simpleType>
 			</xs:element>
+			<xs:element name="measureName" type="xs:string" minOccurs="0" maxOccurs="1" />
+			<xs:element name="unit" type="xs:string" minOccurs="0" maxOccurs="1" />
 		</xs:sequence>
 		<xs:attribute name="id" type="xs:ID" use="required"/>
 		<xs:attribute name="name" type="xs:string"/>
@@ -71,8 +73,6 @@
 	<!-- main processing node. TODO: handle sub-situations -->
 	<xs:complexType name="tConditionNode">
 		<xs:sequence>
-			<xs:element name="type" type="xs:string"/> 
-			<xs:element name="measureName" type="xs:string"/>
 			<xs:element name="opType" maxOccurs="1" minOccurs="1">
 				<xs:simpleType>
 					<xs:restriction base="xs:string">
