@@ -17,3 +17,6 @@ mongo SitDB --host $(MONGO) --eval 'db.createCollection("Thing")'
 mongo SitDB --host $(MONGO) --eval 'db.createCollection("Situationstemplate")'
 mongo SitDB --host $(MONGO) --eval 'db.createCollection("Situation")'
 mongo SitDB --host $(MONGO) --eval 'db.createCollection("Actuator")'
+
+mongo RBS --host $(MONGO) --eval 'db.createCollection("caches")'
+mongo RBS --host $(MONGO) --eval 'db.createCollection("sensors")'
