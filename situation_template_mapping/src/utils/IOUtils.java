@@ -146,6 +146,8 @@ public class IOUtils {
 				server = prop.getProperty("server");
 				protocol = prop.getProperty("protocol");
 				port = prop.getProperty("port");
+			} catch (Exception e) {
+			    e.printStackTrace();
 			}
 					
 			JSONArray flow;
