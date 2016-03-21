@@ -1,35 +1,19 @@
 package servlets;
 
 
-import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
+import org.apache.http.entity.mime.HttpMultipartMode;
+import org.apache.http.entity.mime.MultipartEntity;
+import org.apache.http.entity.mime.content.StringBody;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.output.ByteArrayOutputStream;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.ContentType;
-import org.apache.http.entity.mime.HttpMultipartMode;
-import org.apache.http.entity.mime.MultipartEntity;
-import org.apache.http.entity.mime.MultipartEntityBuilder;
-import org.apache.http.entity.mime.content.ContentBody;  // java.lang.ClassNotFoundException
-import org.apache.http.entity.mime.content.FileBody;
-import org.apache.http.entity.mime.content.StringBody;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.util.EntityUtils;
-
-import java.nio.file.Files;
-import java.nio.file.Path;
+import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Properties;
 
 /**
@@ -52,6 +36,7 @@ public class Save extends HttpServlet {
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
+	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		try {
 			// dependent on client side
@@ -59,8 +44,7 @@ public class Save extends HttpServlet {
 	    	String saveId = request.getParameter("id");
 
 			MultipartEntity entity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
-			ContentBody body = new StringBody(situationTemplateXML);
-			entity.addPart("file", body);
+			entity.addPart("file", new StringBody(situationTemplateXML));
 
 			Properties properties = new Properties();
 			InputStream input = new FileInputStream(System.getProperty("user.home") + File.separator + "situation_mapping.properties");
@@ -75,8 +59,8 @@ public class Save extends HttpServlet {
 			connection.setDoInput(true);  // able to read
 			connection.setDoOutput(true);  // able to write
 			connection.setUseCaches(false);
-			connection.setRequestProperty("Content-Type", "application/json");
-			connection.setRequestProperty("charset", "UTF-8");
+			connection.setConnectTimeout(15000);
+			connection.setRequestProperty("Connection", "Keep-Alive");
 			connection.setRequestProperty("Content-Length", String.valueOf(entity.getContentLength()));
 			connection.setRequestProperty(entity.getContentType().getName(), entity.getContentType().getValue());
 
@@ -90,7 +74,7 @@ public class Save extends HttpServlet {
 			
 			writer.close();
 			reader.close();
-			
+
 			// next request
 			String msg = sendFileRequest(saveId, situationTemplateXML);
 			if (msg.equals("OK")) {
@@ -114,7 +98,11 @@ public class Save extends HttpServlet {
 		}
 		catch (Exception e) {
 			e.printStackTrace();
-			response.getWriter().write("Unexpected error. Error message: " + e.getMessage());
+			String stack = e.getMessage() + "\n";
+			for (StackTraceElement stackTraceElement : e.getStackTrace()) {
+				stack += stackTraceElement.toString() + "\n";
+			}
+			response.getWriter().write("Unexpected error. Error message: " + stack);
 		}
 	}
 
