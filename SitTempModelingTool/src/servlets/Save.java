@@ -106,6 +106,10 @@ public class Save extends HttpServlet {
 			e.printStackTrace();
 			response.getWriter().write("IOException occurred. Error message: " + e.getMessage());
 		}
+		catch (Exception e) {
+			e.printStackTrace();
+			response.getWriter().write("Unexpected error. Error message: " + e.getMessage());
+		}
 	}
 
 	

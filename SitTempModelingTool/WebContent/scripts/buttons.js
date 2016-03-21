@@ -47,14 +47,16 @@ function save() {
 
         $.ajax({
             type: 'post',
-            url: location.protocol + "//" + location.host + (location.port ? (":" + config.port) : "") + "/SitTempModelingTool/save",
+            url: location.protocol + "//" + location.host + (location.port ? (":" + location.port) : "") + "/SitTempModelingTool/save",
             contentType: 'application/json',
             data: JSON.stringify({xml: xml, id: savename}),
             success: function() {
                 alert("saved")
             },
-            error: function () {
+            error: function (request, status, error) {
                 alert("error occurred");
+                alert(error);
+                alert(status);
             }
         });
     }
