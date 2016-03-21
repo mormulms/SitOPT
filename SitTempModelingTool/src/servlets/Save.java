@@ -1,12 +1,7 @@
 package servlets;
 
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -18,17 +13,23 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
+import org.apache.http.entity.mime.HttpMultipartMode;
+import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.entity.mime.content.ContentBody;  // java.lang.ClassNotFoundException
 import org.apache.http.entity.mime.content.FileBody;
+import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
-import java.io.FileInputStream;
+
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Properties;
 
 /**
@@ -57,12 +58,16 @@ public class Save extends HttpServlet {
 	    	String situationTemplateXML  = request.getParameter("xml");
 	    	String saveId = request.getParameter("id");
 
+			MultipartEntity entity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
+			ContentBody body = new StringBody(situationTemplateXML);
+			entity.addPart("file", body);
+
 			Properties properties = new Properties();
 			InputStream input = new FileInputStream(System.getProperty("user.home") + File.separator + "situation_mapping.properties");
 			properties.load(input);
 			
 			URL url = new URL(properties.getProperty("protocol") + "://" + properties.getProperty("server") + ":" +
-					properties.getProperty("port") + "/situationTemplates/");
+					properties.getProperty("port") + "/situationtemplates/" + saveId);
 			HttpURLConnection connection = (HttpURLConnection) url.openConnection();  // get a URLConnection object
 			
 			// setup parameters and general request properties before connecting
@@ -72,12 +77,13 @@ public class Save extends HttpServlet {
 			connection.setUseCaches(false);
 			connection.setRequestProperty("Content-Type", "application/json");
 			connection.setRequestProperty("charset", "UTF-8");
+			connection.setRequestProperty("Content-Length", String.valueOf(entity.getContentLength()));
+			connection.setRequestProperty(entity.getContentType().getName(), entity.getContentType().getValue());
 
 			// creates an output stream on the connection and opens an OutputStreamWriter on it (implicitly opens the connection)
-			OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream());  
+			OutputStream writer = connection.getOutputStream();
 
-			writer.write("");
-			writer.flush();
+			entity.writeTo(writer);
 
 			BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 					
