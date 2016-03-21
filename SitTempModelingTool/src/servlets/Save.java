@@ -103,8 +103,8 @@ public class Save extends HttpServlet {
 		Properties properties = new Properties();
 		InputStream input = new FileInputStream(System.getProperty("user.home") + File.separator + "situation_mapping.properties");
 		properties.load(input);
-		HttpPost httppost = new HttpPost(properties.getProperty("protocol") + "://" + properties.getProperty("server") + ":" +
-				properties.getProperty("port") + "/situationtemplates/" + saveId);
+		HttpPost httppost = new HttpPost(properties.getProperty("situationProtocol") + "://" + properties.getProperty("situationServer") + ":" +
+				properties.getProperty("situationPort") + "/situationtemplates/" + saveId);
 
 		Path tempFile = Files.createTempFile("temp", "xml");
 		Files.write(tempFile, sitTemplate.getBytes());
