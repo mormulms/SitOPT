@@ -114,7 +114,7 @@ public class Save extends HttpServlet {
 
 	
 	private static String sendFileRequest(String saveId, String sitTemplate) {
-		String msg = "Something went wrong.";		
+		/*String msg = "Something went wrong.";
 		try {
 			CloseableHttpClient httpClient = HttpClientBuilder.create().build();
 
@@ -164,6 +164,6 @@ public class Save extends HttpServlet {
 			e.printStackTrace();
 			msg = "IOException occurred.";
 		}
-		return msg;
+		return msg;*/
 	}
 }
