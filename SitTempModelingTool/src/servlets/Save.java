@@ -25,6 +25,8 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Properties;
 
 /**
@@ -104,11 +106,11 @@ public class Save extends HttpServlet {
 		HttpPost httppost = new HttpPost(properties.getProperty("protocol") + "://" + properties.getProperty("server") + ":" +
 				properties.getProperty("port") + "/situationtemplates/" + saveId);
 
-		File file = new File("temp.xml");
-		FileUtils.writeStringToFile(file, sitTemplate);
+		Path tempFile = Files.createTempFile("temp", "xml");
+		Files.write(tempFile, sitTemplate.getBytes());
 
 		MultipartEntityBuilder builder = MultipartEntityBuilder.create();
-		ContentBody cbFile = new FileBody(file, ContentType.TEXT_XML);
+		ContentBody cbFile = new FileBody(tempFile.toFile(), ContentType.TEXT_XML);
 		builder.addPart("file", cbFile);
 
 		HttpEntity entity = builder.build();
@@ -136,7 +138,7 @@ public class Save extends HttpServlet {
 
 		httpClient.close();
 
-		FileUtils.deleteQuietly(file);
+		Files.delete(tempFile);
 		return msg;
 	}
 }
