@@ -47,7 +47,7 @@ function save() {
 
         $.ajax({
             type: 'post',
-            url: location.protocol + "//" + location.host + (location.port ? (":" + config.port) : "") + "/save",
+            url: location.protocol + "//" + location.host + (location.port ? (":" + config.port) : "") + "/SitTempModelingTool/save",
             contentType: 'application/json',
             data: JSON.stringify({xml: xml, id: savename}),
             success: function() {

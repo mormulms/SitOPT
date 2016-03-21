@@ -28,7 +28,7 @@ import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
-import java.io.FileOutputStream;
+import java.io.FileInputStream;
 import java.util.Properties;
 
 /**
