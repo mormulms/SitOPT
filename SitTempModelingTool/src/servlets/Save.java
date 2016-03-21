@@ -52,22 +52,15 @@ public class Save extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		try {
 			// dependent on client side
-	    	String situationTemplateXML  = request.getParameter("sitTemplate");
-	    	String saveId = request.getParameter("saveId");
-	    	String sitTemplateName = request.getParameter("sitTempName");
-	    	String name = request.getParameter("name");
-	    	String description = request.getParameter("description");  	
+	    	String situationTemplateXML  = request.getParameter("xml");
+	    	String saveId = request.getParameter("id");
+
+			Properties properties = new Properties();
+			InputStream input = new FileInputStream(System.getProperty("user.home") + File.separator + "settings.properties");
+			properties.load(input);
 			
-	    	System.out.println(situationTemplateXML);
-			
-			String body = "{"
-					+ "\"id\": \""          + saveId          + "\","
-					+ "\"name\": \""        + sitTemplateName + "\","
-					+ "\"situation\": \""   + name            + "\","
-					+ "\"description\": \"" + description     + "\""
-					+ "}";
-			
-			URL url = new URL("http://192.168.209.246:10010/situationTemplates/");
+			URL url = new URL(properties.getProperty("protocol") + "://" + properties.getProperty("server") + ":" +
+					properties.getProperty("port") + "/situationTemplates/");
 			HttpURLConnection connection = (HttpURLConnection) url.openConnection();  // get a URLConnection object
 			
 			// setup parameters and general request properties before connecting
@@ -81,7 +74,7 @@ public class Save extends HttpServlet {
 			// creates an output stream on the connection and opens an OutputStreamWriter on it (implicitly opens the connection)
 			OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream());  
 
-			writer.write(body);
+			writer.write("");
 			writer.flush();
 
 			BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
