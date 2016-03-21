@@ -68,12 +68,20 @@ public class Save extends HttpServlet {
 		catch (MalformedURLException e) {
 			// new URL() failed: the arguments to the constructor refer to a null or unknown protocol
 			e.printStackTrace();
-			response.getWriter().write("MalformedURLException occurred. Error message: " + e.getMessage());
+			String stack = e.getMessage() + "\n";
+			for (StackTraceElement stackTraceElement : e.getStackTrace()) {
+				stack += stackTraceElement.toString() + "\n";
+			}
+			response.getWriter().write("MalformedURLException occurred. Error message: " + stack);
 		}
 		catch (IOException e) {
 			// openConnection() failed
 			e.printStackTrace();
-			response.getWriter().write("IOException occurred. Error message: " + e.getMessage());
+			String stack = e.getMessage() + "\n";
+			for (StackTraceElement stackTraceElement : e.getStackTrace()) {
+				stack += stackTraceElement.toString() + "\n";
+			}
+			response.getWriter().write("IOException occurred. Error message: " + stack);
 		}
 		catch (Exception e) {
 			e.printStackTrace();
