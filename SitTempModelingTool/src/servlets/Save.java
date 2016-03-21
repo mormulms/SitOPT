@@ -58,7 +58,7 @@ public class Save extends HttpServlet {
 	    	String saveId = request.getParameter("id");
 
 			Properties properties = new Properties();
-			InputStream input = new FileInputStream(System.getProperty("user.home") + File.separator + "settings.properties");
+			InputStream input = new FileInputStream(System.getProperty("user.home") + File.separator + "situation_mapping.properties");
 			properties.load(input);
 			
 			URL url = new URL(properties.getProperty("protocol") + "://" + properties.getProperty("server") + ":" +
