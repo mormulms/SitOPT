@@ -19,7 +19,7 @@ module.exports = {
                 objectID: String,
                 sensorID: String,
                 value: String,
-                timeStamp: {type: Date, default: Date.now},
+                timeStamp: Number,
                 quality: Number,
                 sensorQuality: Number
             });
