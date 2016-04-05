@@ -115,6 +115,23 @@ Test*/
                 console.log(error);
 				console.log("error");
                 next(error);
+            } else if (sensor != null) {
+                api.sensorCache.findOneAndUpdate({sensorID: data.params.sensorID},
+                    {sensorID: data.params.sensorID,
+                        value: data.params.value,
+                        timeStamp: date,
+                        quality: data.params.quality,
+                        sensorQuality: sensor.quality,
+                        sensorType: sensor.sensorType
+                    }, {upsert: true}, function (err, c) {
+                        if (err) {
+                            console.log(err);
+                            next(err);
+                        } else {
+                            data.response.payload = c;
+                            next();
+                        }
+                    });
             } else {
 				if (typeof sensor != 'undefined') {
 					var val = new api.sensorCache({sensorID: data.params.sensorID,
@@ -142,6 +159,8 @@ Test*/
                         next();
                     }
                 })
+                console.log("Unknown sensor");
+                next("Unknown sensor");
             }
         });*/
     }
