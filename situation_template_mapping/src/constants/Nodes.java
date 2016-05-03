@@ -21,6 +21,7 @@ public class Nodes {
 			+ "} else {\n"
 			+ "  msg.payload = false;\n"
 			+ "}\n\n"
+                        + "msg.headers = {\"Content-Type\": \"application/json\"};\n"
 			+ "return msg;";
 	private final static String statusCodeString = "var curr = parseInt(JSON.parse(msg.payload).value);\n"
 	        + "msg.situation = {\n"
@@ -30,9 +31,11 @@ public class Nodes {
 			+ "};\n\n"
 			+ "if (msg.statusCode %s %s) {\n"
 			+ "  msg.payload = true;\n"
+                        + "  msgs[0].headers = {\"Content-Type\": \"application/json\"};\n"
 			+ "  return msg;\n"
 			+ "} else {\n"
 			+ "  msg.payload = false;\n"
+                        + "  msg.headers = {\"Content-Type\": \"application/json\"};\n"
 			+ "  return msg;\n"
 			+ "}"
 			+ "\n\nreturn null;";
@@ -54,12 +57,12 @@ public class Nodes {
 			+ "  if (returnValue) {\n"
 			+ "    var array = [%s];\n"
 			+ "    for (var index in array) {\n"
-			+ "      situations.push({'thing':array[index], 'timestamp':new Date().toString(), 'situationtemplate':'%s' , 'occured':true, 'sensorvalues': []});\n"
+			+ "      situations.push({'thing':array[index], 'timestamp':new Date().toString(), 'situationtemplate':'%s' , 'occured':true, 'sensorvalues': values});\n"
 			+ "    }\n"
 			+ "  } else {\n"
 			+ "    var array = [%s];\n"
 			+ "    for (var index in array) {\n"
-			+ "      situations.push({'thing':array[index], 'timestamp':new Date().toString(), 'situationtemplate':'%s' , 'occured':false, 'sensorvalues': []});\n"
+			+ "      situations.push({'thing':array[index], 'timestamp':new Date().toString(), 'situationtemplate':'%s' , 'occured':false, 'sensorvalues': values});\n"
 			+ "    }\n"
 			+ "  }\n"
 			+ "  context.values = null;\n"
@@ -74,6 +77,7 @@ public class Nodes {
 			+ "    msg.payload = situations[i];\n"
 			+ "    msgs.push(msg);\n"
 			+ "  }\n"
+			+ "  msgs[0].headers = {\"Content-Type\": \"application/json\"};\n"
 			+ "  return msgs[0];\n"
 			+ "} else {\n"
 			+ "  return null;\n"
@@ -87,9 +91,11 @@ public class Nodes {
 			+ "};\n"
 			+ "if (%s < msg.statusCode && msg.statusCode < %s) {\n"
 			+ "  msg.payload = true;\n"
+                        + "  msg.headers = {\"Content-Type\": \"application/json\"};\n"
 			+ "  return msg;\n"
 			+ "} else {\n"
 			+ "  msg.payload = false;\n"
+                        + "  msg.headers = {\"Content-Type\": \"application/json\"};\n"
 			+ "  return msg;\n"
 			+ "}\n\n"
 			+ "return null;";
@@ -124,6 +130,7 @@ public class Nodes {
             + "    context.values = context.values.slice(context.values.length - intervals, context.values.length);\n"
             + "}\n\n"
             + "msg.payload = returnValue;\n"
+            + "msg.headers = {\"Content-Type\": \"application/json\"};"
             + "return msg;";
 	
 	private final static String sensorComparisonString = 
@@ -143,6 +150,7 @@ public class Nodes {
 			+ "        bool &= (context.values[i] %s context.values[i+1]);\n"
 			+ "    }\n"
 			+ "}\n"
+                        + "msg.headers = {\"Content-Type\": \"application/json\"};"
 			+ "msg.payload = bool;\n"
 			+ "return msg;";
 	
