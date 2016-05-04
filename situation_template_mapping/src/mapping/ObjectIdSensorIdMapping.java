@@ -115,7 +115,7 @@ public class ObjectIdSensorIdMapping {
                 builder.append("', ");
             }
             builder.setLength(builder.length() - 2);
-            return builder.toString();
+            return "";
         }
         return "";
     }
