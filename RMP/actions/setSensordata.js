@@ -71,7 +71,7 @@ Test*/
 					});
 					next();
 				}else{
-					api.sensor.findOne({'sensorID':data.params.sensorID}, function(err, sensor) {
+					api.sensor.findOne({'sensorID':data.params.sensorID}, function(err, sensor) { //TODO: Frage: warum zweiter query?
 						if (err) {
 							console.log(err);
 							console.log("Third");

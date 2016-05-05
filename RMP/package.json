@@ -15,13 +15,14 @@
   },
   "devDependencies": {
     "mocha": "latest",
-    "should": "latest"
+    "should": "latest",
+    "request": "latest"
   },
   "scripts": {
     "help": "actionhero help",
     "start": "actionhero start",
     "actionhero": "actionhero",
     "startCluster": "actionhero startCluster",
-    "test": "mocha"
+    "test": "./node_modules/.bin/mocha --reporter spec ./test/server ./test/endpoints"
   }
 }

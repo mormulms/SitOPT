@@ -26,10 +26,13 @@ exports.action = {
         var async = require('async');
         var timestamp = data.params.timeStamp || new Date();
         var sensorUrl = data.params.sensorUrl;
+        console.log("id: " + data.params.sensorID);
         api.sensor.find({sensorID: data.params.sensorID}, function (err, result) {
             if (err) {
+                data.response.error = err;
                 next(err);
             } else if (result.length > 0) {
+                data.response.error = 'Sensor already exists';
                 //Sensor does not need to be added.
                 next('Sensor already exists');
             } else {
@@ -44,22 +47,16 @@ exports.action = {
                     unit: data.params.unit,
                     unitSymbol: data.params.unitSymbol
                 });
-                var save = function () {
-                    sensor.save(function (err) {
-                        if (err) {
-                            next(err);
-                        }
-                    });
-                };
-                async.waterfall([
-                    save,
-                    function () {
+                sensor.save(function (err) {
+                    if (err) {
+                        data.response.error = err;
+                        next(err);
+                    } else {
                         data.response.payload = sensor;
                         next();
                     }
-                ]);
-            }
-
+                });
+            };
         });
     }
 };
