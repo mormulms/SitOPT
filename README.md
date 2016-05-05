@@ -4,6 +4,8 @@
 
 ## Setup
 
+More details on the installation of the modules can be found in the corresponding directories.
+
 ### Requirements
 
  - Tomcat8
