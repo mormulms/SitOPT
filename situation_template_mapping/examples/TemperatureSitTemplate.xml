@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<SituationTemplate name="TemperaturSitTemplate" id="TemperaturSitTemplate" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="situation_template_draft01.xsd">
+	<situationNode id="A5" name="machine_overheated" />
+	<operationNode id="A4" name="combine Sensors">
+		<parent parentID="A5" />
+		<type>or</type>
+		<negated>false</negated>
+	</operationNode>
+	<conditionNode id="A2" name="Temperature in Celsius">
+		<opType>greaterThan</opType>
+		<condValues>
+			<value>29</value>
+		</condValues>
+		<parent parentID="A4" />
+	</conditionNode>
+	<conditionNode id="A3" name="Temperature in Celsius">
+		<opType>greaterThan</opType>
+		<condValues>
+			<value>29</value>
+		</condValues>
+		<parent parentID="A4" />
+	</conditionNode>
+	<contextNode id="A0" name="TemperatureSensor" type="TempSensor">
+		<measureName>Celcius</measureName>
+		<inputType>sensor</inputType>
+		<parent parentID="A2" />
+	</contextNode>
+	<contextNode id="A1" name="TemperatureSensor" type="TempSensor">
+		<measureName>Celcius</measureName>
+		<inputType>sensor</inputType>
+		<parent parentID="A3" />
+	</contextNode>
+</SituationTemplate>
