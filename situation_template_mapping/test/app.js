@@ -3,24 +3,21 @@ var os  = require('os-utils');
 var express = require('express');
 var app = express();
 
-app.get('/memoryusage/', function(req, res) {
+app.get('/rmp/sensordata/PC/memorySensor', function(req, res) {
   res.type('text/plain');
   os.cpuFree(function(value) {
-	var memoryUsage = 12000 - os.freemem();
-	res.send(memoryUsage.toString());
+  
+	var memoryUsage = '{"payload": {\"timestamp\": ' + new Date().getTime() +', \"value\":' + '\"' + Math.round(12000 - os.freemem()).toString() + '\"}}';
+	res.send(memoryUsage);
  });
 });
 
-app.get('/cpuusage/', function(req, res) {
+app.get('/rmp/sensordata/PC/cpuSensor', function(req, res) {
   res.type('text/plain');
   os.cpuFree(function(value) {
-	res.send(((1-value)*100).toString());
+    var cpuUsage = '{"payload": {\"timestamp\": ' + new Date().getTime() +', \"value\":' + '\"' + Math.round(((1-value)*100).toString()) + '\"}}';
+	res.send(cpuUsage);
  });
 });
 
-app.get('/ping/', function(req, res) {
-  res.type('text/plain');
-  res.send(false);
-});
-
-app.listen(process.env.PORT || 8080);
+app.listen(process.env.PORT || 1337);

@@ -144,40 +144,38 @@ public class OperationNodeMapper {
                         String parentId = ((TOperationNode) parent.getParentID()).getId();
                         connections.add(situationTemplate.getId() + "." + parentId);
                     } else if (parent.getParentID() instanceof TSituationNode) {
-                        for (int i = 0; i < children; i++) {
 
-                            JSONObject debugNode = NodeREDUtils.generateDebugNode("600", "500", zCoordinate);
-                            debugNode.put("name", situationTemplate.getName());
-                            nodeREDModel.add(debugNode);
+                        JSONObject debugNode = NodeREDUtils.generateDebugNode("600", "500", zCoordinate);
+                        debugNode.put("name", situationTemplate.getName());
+                        nodeREDModel.add(debugNode);
 
-                            // create the corresponding NodeRED JSON node
-                            JSONObject httpNode = NodeREDUtils.createNodeREDNode(NodeREDUtils.generateNodeREDId(),
+                        // create the corresponding NodeRED JSON node
+                        JSONObject httpNode = NodeREDUtils.createNodeREDNode(NodeREDUtils.generateNodeREDId(),
                                     "situation", "http request", Integer.toString(200), Integer.toString(200), zCoordinate);
-                            httpNode.put("method", "POST");
+                        httpNode.put("method", "POST");
 
-                            StringBuilder builder = new StringBuilder();
-                            builder.append(Properties.getSituationProtocol());
-                            builder.append("://");
-                            builder.append(Properties.getSituationServer());
-                            builder.append(":");
-                            builder.append(Properties.getSituationPort());
-                            if (!Properties.getSituationPath().startsWith("/")) {
-                                builder.append("/");
-                            }
-                            builder.append(Properties.getSituationPath());
-
-                            httpNode.put("url", builder.toString());
-
-                            JSONArray httpConn = new JSONArray();
-                            JSONArray httpWires = new JSONArray();
-                            httpConn.add(debugNode.get("id"));
-                            httpWires.add(httpConn);
-                            httpNode.put("wires", httpWires);
-
-                            connections.add(httpNode.get("id"));
-
-                            nodeREDModel.add(httpNode);
+                        StringBuilder builder = new StringBuilder();
+                        builder.append(Properties.getSituationProtocol());
+                        builder.append("://");
+                        builder.append(Properties.getSituationServer());
+                        builder.append(":");
+                        builder.append(Properties.getSituationPort());
+                        if (!Properties.getSituationPath().startsWith("/")) {
+                            builder.append("/");
                         }
+                        builder.append(Properties.getSituationPath());
+
+                        httpNode.put("url", builder.toString());
+
+                        JSONArray httpConn = new JSONArray();
+                        JSONArray httpWires = new JSONArray();
+                        httpConn.add(debugNode.get("id"));
+                        httpWires.add(httpConn);
+                        httpNode.put("wires", httpWires);
+
+                        connections.add(httpNode.get("id"));
+
+                        nodeREDModel.add(httpNode);
                     }
                 }
             } else {
@@ -186,7 +184,8 @@ public class OperationNodeMapper {
                 nodeREDModel.add(debugNode);
                 connections.add(debugNode.get("id"));
             }
-            nodeREDNode.put("outputs", String.valueOf(children));
+                        
+            nodeREDNode.put("outputs", String.valueOf(1));
             wiresNode.add(connections);
             nodeREDNode.put("wires", wiresNode);
             nodeREDModel.add(nodeREDNode);

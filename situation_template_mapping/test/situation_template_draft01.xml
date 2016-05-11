@@ -6,43 +6,33 @@
 		<operationNode id="A3" name="combine Sensors">
 			<type>and</type>
 			<parent parentID="A10"/>
-			<negated>true</negated>
+			<negated>false</negated>
 		</operationNode>
 		<conditionNode id="A4" name="% CPU load">
 			<type>type</type>
 			<measureName>measureName</measureName>
 			<opType>greaterThan</opType>
-			<condValue>
+			<condValues>
 				<value>70</value>
-			</condValue>
+			</condValues>
 			<parent parentID="A3"/>
 		</conditionNode>
 		<conditionNode id="A8" name="MB RAM free">
 			<type>type</type>
 			<measureName>measureName</measureName>
 			<opType>lowerThan</opType>
-			<condValue>
+			<condValues>
 				<value>10</value>
-			</condValue>
+			</condValues>
 			<parent parentID="A3"/>
-		</conditionNode>
-		<conditionNode id="A9" name="StatusCodeChecker">
-			<type>type</type>
-			<measureName>measureName</measureName>
-			<opType>notEquals</opType>
-			<condValue>
-				<value>200</value>
-			</condValue>
-			<parent parentID="A3"></parent>
 		</conditionNode>
 		<contextNode id="A5" type="memorySensor">
 			<parent parentID="A8"></parent>
+            <inputType>sensor</inputType>
 		</contextNode>
 		<contextNode id="A6" type="cpuSensor">
 			<parent parentID="A4"></parent>
-		</contextNode>
-		<contextNode id="A7" type="watchdogSensor">
-			<parent parentID="A9"/>
+            <inputType>sensor</inputType>
 		</contextNode>
 		<situationNode name="machine_failed" id="A10"/>
 </SituationTemplate>

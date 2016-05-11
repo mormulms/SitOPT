@@ -83,9 +83,9 @@ public class ObjectIdSensorIdMapping {
 				}
 			}
 			for (String object : set) {
-				builder.append("'");
+				builder.append("\'");
 				builder.append(object);
-				builder.append("',");
+				builder.append("\',");
 			}
 			builder.setLength(builder.length() - 1);
 			return builder.toString();
