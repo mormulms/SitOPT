@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SituationTemplate id="A0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="situation_template_draft01.xsd"
+	name="SystemObservation">
+		<operationNode id="A3" name="combine Sensors">
+			<type>and</type>
+			<parent parentID="A10"/>
+			<negated>false</negated>
+		</operationNode>
+		<conditionNode id="A4" name="% CPU load">
+			<type>type</type>
+			<measureName>measureName</measureName>
+			<opType>greaterThan</opType>
+			<condValues>
+				<value>70</value>
+			</condValues>
+			<parent parentID="A3"/>
+		</conditionNode>
+		<conditionNode id="A8" name="MB RAM free">
+			<type>type</type>
+			<measureName>measureName</measureName>
+			<opType>lowerThan</opType>
+			<condValues>
+				<value>10</value>
+			</condValues>
+			<parent parentID="A3"/>
+		</conditionNode>
+		<contextNode id="A5" type="memorySensor">
+			<parent parentID="A8"></parent>
+            <inputType>sensor</inputType>
+		</contextNode>
+		<contextNode id="A6" type="cpuSensor">
+			<parent parentID="A4"></parent>
+            <inputType>sensor</inputType>
+		</contextNode>
+		<situationNode name="machine_failed" id="A10"/>
+</SituationTemplate>
