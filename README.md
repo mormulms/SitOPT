@@ -9,7 +9,7 @@ More details on the installation of the modules can be found in the correspondin
 ### Requirements
 
  - Tomcat8
- - Node.JS
+ - Node.JS (executable may be called node or nodejs)
  - Java8
  - MongoDB
  - CouchDB
@@ -26,7 +26,9 @@ These are the default ports, where every module runs:
 |Situation Dashboard |:3001/                   |
 |Situationsverwaltung|:10010/                  |
 
-### Complete Installation
+### Complete Installation 
+
+#### Linux
 
 If you want to install the complete suite on one computer, simply execute
 following commands:
@@ -41,14 +43,25 @@ following commands:
 
 ``sudo cp situation_template_mapping/settings.properties ~root/situation_mapping.properties``
 
-``./db_setup.sh``
+``./db_setup.sh $COUCHDB_SERVER $MONGODB_SERVER``
 
 Everything is up and running now.
+
+#### Windows
+
+Windows doesn't have a script for installing SitOPT. If you want to install 
+SitOPT on Windows, you have to install each module on its own.
 
 ### ComputeSensor
 
 ComputeSensor for hardware monitoring
 This is a project, simply for creating mock data.
+
+#### Start
+
+``cd ComputeSensor``
+
+``nodejs app.js``
 
 ### Nexus Schema
 
@@ -60,13 +73,23 @@ XML schema files for context model and situation model.
 Mapper for situation templates to Node-RED JSON
 
 
-#### Setup
+#### Setup (Linux)
 
 ``cd situation_template_mapping && ant``
 
 ``cp situation_template_v01.jar ../SitTempModelingTool/lib``
 
 ``cp situation_template_v01.jar ../Situation\ Dashboard/public/mapper/nodeRed/mappingString.jar``
+
+#### Setup (Windows)
+
+``cd situation_template_mapping``
+
+``ant``
+
+``copy situation_template_v01.jar ..\SitTempModelingTool\lib``
+
+``copy situation_template_v01.jar "..\Situation Dashboard\public\mapper\nodeRed\mappingString.jar"``
 
 ### RMP
 
@@ -93,6 +116,46 @@ Either deploy via tomcat or execute following commands:
 ``sudo cp SitTempModelingTool.war /var/lib/tomcat8/webapps``
 
 ``sudo /etc/init.d/tomcat8 restart``
+
+### Situationsverwaltung
+
+SitDB with API
+
+#### Setup (Linux)
+
+``cd Situationsverwaltung``
+
+``npm install``
+
+``node_modules/.bin/swagger project start``
+
+#### Setup (Windows)
+
+``cd Situationsverwaltung``
+
+``npm install``
+
+``node_modules\.bin\swagger project start``
+
+#### Situation Dashboard
+
+Frontend for SitDB
+
+#### Setup (Linux)
+
+``cd Situation\ Dashboard``
+
+``npm install``
+
+``nodejs server.js``
+
+#### Setup (Windows)
+
+``cd "Situation Dashboard"``
+
+``npm install``
+
+``nodejs server.js``
 
 ## SoapUI
 
