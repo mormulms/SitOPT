@@ -12,8 +12,8 @@ exports.action = {
     middleware:             [],
 
     inputs: {
-        sensorID: {required: true},
-        objectID: {required: true},
+        sensorName: {required: true},
+        objectName: {required: true},
         sensorUrl: {required: true},
         sensorType: {required: true},
         timeStamp: {required: false},
@@ -26,8 +26,7 @@ exports.action = {
         var async = require('async');
         var timestamp = data.params.timeStamp || new Date();
         var sensorUrl = data.params.sensorUrl;
-        console.log("id: " + data.params.sensorID);
-        api.sensor.find({sensorID: data.params.sensorID}, function (err, result) {
+        api.sensor.find({sensorID: data.params.sensorName, objectID: data.params.objectName}, function (err, result) {
             if (err) {
                 data.response.error = err;
                 next(err);
@@ -38,8 +37,8 @@ exports.action = {
             } else {
                 // Add Sensor
                 var sensor = new api.sensor({
-                    sensorID: data.params.sensorID,
-                    objectID: data.params.objectID,
+                    sensorID: data.params.sensorName,
+                    objectID: data.params.objectName,
                     sensorType: data.params.sensorType,
                     sensorUrl: sensorUrl,
                     timestamp: timestamp.toString(),

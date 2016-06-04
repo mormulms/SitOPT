@@ -12,15 +12,14 @@ exports.action = {
     middleware:             [],
 
     inputs: {
-        objectID : {required : true},
-        sensorType : {required : true}
+        objectName : {required : true},
+        sensorName : {required : true}
     },
 
     run: function(api, data, next) {
-		console.log("Test");
 		if (typeof api.sensor != 'undefined') {
 			
-			api.sensor.find({objectID: data.params.objectID, sensorType: data.params.sensorType}, function (err, sensors) {
+			api.sensor.find({objectID: data.params.objectName, sensorID: data.params.sensorName}, function (err, sensors) {
 				var ids = [];
 				if (err) {
 					next(err);

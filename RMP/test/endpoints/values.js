@@ -9,8 +9,8 @@ var setup = require('./../_setup.js')._setup;
 describe('value tests', function () {
     var sensorId = "super secret sensor id which will nowhere else be used.";
     var sensorData = {
-        sensorID: sensorId,
-        objectID: "123",
+        sensorName: sensorId,
+        objectName: "123",
         sensorUrl: "123",
         sensorType: "1",
         timeStamp: new Date().toDateString(),
@@ -19,7 +19,8 @@ describe('value tests', function () {
         unitSymbol: "t"
     };
     var valueData = {
-        sensorID: sensorId,
+        sensorName: sensorId,
+        objectName: "123",
         value: 20,
         timeStamp: Date.now(),
         quality: 75
@@ -69,7 +70,7 @@ describe('value tests', function () {
                 setup.api.sensorCache.find({sensorID: sensorId}, function (err, docs) {
                     should.not.exist(err);
                     setup.api.sensorCache.find({sensorID: sensorId}).remove().exec();
-                    should.equal(1, docs.length);
+                    should.equal(docs.length, 1);
                     done();
                 });
             });
@@ -99,11 +100,11 @@ describe('value tests', function () {
                     res.on('data', function (data) {
                     });
                     res.on('end', function (data) {
-                        setup.api.sensorCache.find({sensorID: sensorId}, function (err, docs) {
+                        setup.api.sensorCache.find({sensorID: sensorId, objectID: "123"}, function (err, docs) {
                             should.not.exist(err);
                             setup.api.sensorCache.find({sensorID: sensorId}).remove().exec();
-                            should.equal(1, docs.length);
-                            should.equal(30, docs[0].value);
+                            should.equal(docs.length, 1);
+                            should.equal(docs[0].value, 30);
                             done();
                         });
                     });

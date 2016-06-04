@@ -12,12 +12,12 @@ exports.action = {
     middleware:             [],
 
     inputs: {
-        objectID: {required: true},
-        sensorID: {required: false}
+        objectName: {required: true},
+        sensorName: {required: true}
     },
 
     run: function(api, data, next){
-        api.sensor.findOne({sensorID: data.params.sensorID}).remove(function (err) {
+        api.sensor.findOne({sensorID: data.params.sensorName, objectID: data.params.objectName}).remove(function (err) {
             if (err) {
                 next(err);
             } else {

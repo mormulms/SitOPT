@@ -8,10 +8,10 @@ exports.action = {
     toDocument:             true,
     middleware:             [],
 
-    inputs: {sensorID: {required: true}},
+    inputs: {sensorName: {required: true}},
 
     run: function(api, data, next){
-        api.cache.find({sensorID: data.params.sensorID}, function (err, doc) {
+        api.cache.find({sensorID: data.params.sensorName}, function (err, doc) {
             data.response.payload = doc;
             next(err);
         });

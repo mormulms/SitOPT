@@ -9,7 +9,7 @@ exports.action = {
     middleware:             [],
 
     inputs: {
-        thingID: {required: true},
+        objectName: {required: true},
         attribute: {required: true}
     },
 
@@ -18,7 +18,7 @@ exports.action = {
         var sitdb = require('../config/sitdb.config.js');
         var attributes = data.params.attribute.split(".");
 
-        http.get('http://' + sitdb.server + ':' + sitdb.port + '/things/ByID?ID=' + data.params.thingID, function (result) {
+        http.get('http://' + sitdb.server + ':' + sitdb.port + '/things/ByID?ID=' + data.params.objectName, function (result) {
             //data.response.payload = result;
             result.resume();
             result.on('data', function (chunks) {

@@ -12,7 +12,7 @@ exports.action = {
     middleware:             [],
 
     inputs: {
-        thing: {required: true},
+        objectName: {required: true},
         situationtemplate: {required: true},
         occured: {required: true},
         timestamp: {required: false}
@@ -23,7 +23,7 @@ exports.action = {
         var quality = 100; //TODO: find real object structure
         var timeStamp = new Date(data.params.timestamp) || new Date().toString();
         var value = data.params.occured;
-        api.sensorCache.findOneAndUpdate({sensorID: id}, {objectID: data.params.thing, value: value, timeStamp: timeStamp, quality: quality}, {upsert: true}, function (error, rows, raw) {
+        api.sensorCache.findOneAndUpdate({sensorID: id}, {objectID: data.params.objectName, value: value, timeStamp: timeStamp, quality: quality}, {upsert: true}, function (error, rows, raw) {
             if (error) {
                 next(error);
             } else {

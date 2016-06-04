@@ -9,10 +9,10 @@ var setup = require('./../_setup.js')._setup;
 
 
 describe('sensors', function () {
-    var sensorId = "super secret sensor id which will nowhere else be used.";
+    var sensorName = "super secret sensor id which will nowhere else be used.";
     var data = {
-        sensorID: sensorId,
-        objectID: "123",
+        sensorName: sensorName,
+        objectName: "123",
         sensorUrl: "123",
         sensorType: "1",
         timeStamp: new Date().toDateString(),
@@ -34,8 +34,8 @@ describe('sensors', function () {
     });
 
     it('should create sensor', function (done) {
-        setup.api.sensor.find({"sensorID": sensorId}, function (error, result) {
-            should.not.exist(error);
+        setup.api.sensor.find({"sensorID": sensorName}, function (error, result) {
+            should.not.exist(error, "sensor exists");
             if (result.length >= 1) {
                 for (var i = 0; i < result.length; i++) {
                     result[i].remove();
@@ -49,9 +49,10 @@ describe('sensors', function () {
                     should.fail();
                 });
                 res.on('end', function (data) {
-                    setup.api.sensor.find({"sensorID": sensorId}, function (err, docs) {
-                        should.equal(1, docs.length);
-                        setup.api.sensor.findOneAndRemove({"sensorID": sensorId}, function (e, r) {
+                    setup.api.sensor.find({"sensorID": sensorName}, function (err, docs) {
+                        console.log(JSON.stringify(docs));
+                        should.equal(docs.length, 1);
+                        setup.api.sensor.findOneAndRemove({"sensorID": sensorName}, function (e, r) {
                             done();
                         });
                     });
@@ -66,7 +67,7 @@ describe('sensors', function () {
 
     it('should update sensor', function (done) {
         this.timeout(10000);
-        setup.api.sensor.find({"sensorID": sensorId}, function (error, result) {
+        setup.api.sensor.find({"sensorID": sensorName}, function (error, result) {
             should.not.exist(error);
             if (result.length > 0) {
                 for (var i = 0; i < result.length; i++) {
@@ -81,11 +82,11 @@ describe('sensors', function () {
                     should.fail();
                 });
                 res.on('end', function (chunk) {
-                    setup.api.sensor.find({"sensorID": sensorId}, function (err, docs) {
-                        should.equal(1, docs.length);
+                    setup.api.sensor.find({"sensorID": sensorName}, function (err, docs) {
+                        should.equal(docs.length, 1);
                         data.sensorUrl += "asdf";
                         options.method = "PUT";
-                        options.path = "/sensor/" + data.objectID + "/" + data.sensorID.replace(/ /g, '%20');
+                        options.path = "/sensor/" + data.objectName + "/" + data.sensorName.replace(/ /g, '%20');
                         d = querystring.stringify(data);
                         options.headers["Content-Length"] = Buffer.byteLength(d);
                         var req = http.request(options, function (res) {
@@ -93,10 +94,10 @@ describe('sensors', function () {
                                 should.fail();
                             });
                             res.on('end', function (c) {
-                                setup.api.sensor.find({"sensorID": sensorId}, function (err, docs) {
-                                    should.equal(1, docs.length);
-                                    should.equal("123asdf", docs[0].sensorUrl);
-                                    setup.api.sensor.findOneAndRemove({"sensorID": sensorId}, function (e, r) {
+                                setup.api.sensor.find({"sensorID": sensorName}, function (err, docs) {
+                                    should.equal(docs.length, 1);
+                                    should.equal(docs[0].sensorUrl, "123asdf");
+                                    setup.api.sensor.findOneAndRemove({"sensorID": sensorName}, function (e, r) {
                                         done();
                                     });
                                 });
@@ -117,7 +118,7 @@ describe('sensors', function () {
     });
 
     it('should delete sensor', function (done) {
-        setup.api.sensor.find({"sensorID": sensorId}, function (error, documents) {
+        setup.api.sensor.find({"sensorID": sensorName}, function (error, documents) {
             should.not.exist(error);
             if (documents.length > 0) {
                 for (var i = 0; i < documents.length; i++) {
@@ -133,11 +134,11 @@ describe('sensors', function () {
                     should.fail();
                 });
                 result.on('end', function (end) {
-                    setup.api.sensor.find({"sensorID": sensorId}, function (err, docs) {
+                    setup.api.sensor.find({"sensorID": sensorName}, function (err, docs) {
                         should.not.exist(err);
-                        should.equal(1, docs.length);
+                        should.equal(docs.length, 1);
                         options.method = "DELETE";
-                        options.path = "/sensor/" + data.objectID + "/" + data.sensorID.replace(/ /g, '%20');
+                        options.path = "/sensor/" + data.objectName + "/" + data.sensorName.replace(/ /g, '%20');
                         d = querystring.stringify(data);
                         options.headers["Content-Length"] = Buffer.byteLength(d);
                         var req = http.request(options, function (res) {
@@ -145,8 +146,8 @@ describe('sensors', function () {
                                 should.fail();
                             });
                             res.on('end', function (c) {
-                                setup.api.sensor.find({"sensorID": sensorId}, function (err, docs) {
-                                    should.equal(0, docs.length);
+                                setup.api.sensor.find({"sensorID": sensorName}, function (err, docs) {
+                                    should.equal(docs.length, 0);
                                     done()
                                 });
                             });
@@ -166,7 +167,7 @@ describe('sensors', function () {
     });
 
     it('sensor should only be created once', function (done) {
-        setup.api.sensor.find({"sensorID": sensorId}, function (error, result) {
+        setup.api.sensor.find({"sensorID": sensorName}, function (error, result) {
             should.not.exist(error);
             if (result.length >= 1) {
                 for (var i = 0; i < result.length; i++) {
@@ -187,9 +188,9 @@ describe('sensors', function () {
                             should.fail();
                         });
                         resp.on('end', function (data) {
-                            setup.api.sensor.find({"sensorID": sensorId}, function (err, docs) {
-                                setup.api.sensor.find({"sensorID": sensorId}).remove().exec();
-                                should.equal(1, docs.length);
+                            setup.api.sensor.find({"sensorID": sensorName}, function (err, docs) {
+                                setup.api.sensor.find({"sensorID": sensorName}).remove().exec();
+                                should.equal(docs.length, 1);
                                 done();
                             });
                         });

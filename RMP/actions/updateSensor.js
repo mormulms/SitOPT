@@ -12,8 +12,8 @@ exports.action = {
     middleware:             [],
 
     inputs: {
-        sensorID: {required: true},
-        objectID: {required: true},
+        sensorName: {required: true},
+        objectName: {required: true},
         sensorUrl: {required: false},
         sensorType: {required: false},
         timeStamp: {required: false},
@@ -24,8 +24,8 @@ exports.action = {
 
     run: function(api, data, next){
         var updates = {};
-        updates.sensorID = data.params.sensorID;
-        updates.objectID = data.params.objectID;
+        updates.sensorID = data.params.sensorName;
+        updates.objectID = data.params.objectName;
         if (data.params.sensorUrl != null) {
             updates.sensorUrl = data.params.sensorUrl;
         }
@@ -48,7 +48,7 @@ exports.action = {
             updates.unitSymbol = data.params.unitSymbol;
         }
         if (!(data.params.sensorType == null && data.params.sensorUrl == null)) {
-            api.sensor.update({sensorID: data.params.sensorID, objectID: data.params.objectID}, updates, function (err, amount) {
+            api.sensor.update({sensorID: data.params.sensorName, objectID: data.params.objectName}, updates, function (err, amount) {
                 if (err) {
                     next(err);
                 } else {

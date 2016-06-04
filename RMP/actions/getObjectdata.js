@@ -12,11 +12,11 @@ exports.action = {
     middleware:             [],
 
     inputs: {
-        objectID: {required: true}
+        objectName: {required: true}
     },
 
     run: function(api, data, next){
-        var object = data.params.objectID;
+        var object = data.params.objectName;
         api.sensorCache.find({objectID: object}, "sensorType", function (error, cache) {
             if (error) {
                 next(error);

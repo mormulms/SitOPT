@@ -9,7 +9,8 @@ exports.action = {
     middleware:             [],
 
     inputs: {
-        situationID: {required: true}
+        objectName: {required: true},
+        situationName: {required: true}
     },
 
     run: function(api, data, next) {
