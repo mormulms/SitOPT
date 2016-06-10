@@ -28,19 +28,9 @@ module.exports = {
 //Returns 504 if CouchDB does not respond
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 function saveThing(req, res){
-	//console.log(req.body.id);
-  validateGeoJSON(req.body.location, function(valid){
-    if (valid){
-      insertDocument(req.body, function() {
-        res.json("Created");
-      });
-    }else{
-      res.json("GeoJSON not valid");
-    }
-  });
-
-	
-}
+    insertDocument(req.body, function() {
+    res.json("Created");
+});
 
 function insertDocument(document, callback) {
    db.collection('Things').insertOne( {
