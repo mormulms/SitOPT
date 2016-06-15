@@ -29,12 +29,12 @@ function deleteSensorByID(req, res){
 	console.log(req.swagger.params.ID.value);
 
 	removeDocument(req.swagger.params.ID.value, function() {
-	    res.json("Deleted");
+	    res.json({name: "Deleted"});
 	});
 }
 function removeDocument(id, callback) {
    db.collection('Sensors').deleteOne(
-      { "_id": new require('mongodb').ObjectID(id) },
+      { "name": id },
       function(err, results) {
          callback();
       }
@@ -121,24 +121,34 @@ function getAllSensors(callback) {
 //Stores sensor in CouchDB
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 function saveSensor(req, res){
-	insertDocument(req.body, function() {
-	    res.json("Created");
+	console.log('saveSensor: ' + JSON.stringify(req.body));
+	insertDocument(req.body, function(message) {
+		console.log("message: " + JSON.stringify(message))
+	    res.json(message);
 	});
 }
 function insertDocument(document, callback) {
-   db.collection('Sensors').insertOne( {
-      "ObjectType" : "Sensor",
-      "SensorType" : document.sensortype,
-      "name" : document.name,
-      "url" : document.url,
-      "quality" : document.quality,
-      "description" : document.description,
-      "timestamp" : (new Date).getTime()
-   }, function(err, result) {
-    assert.equal(err, null);
-    //console.log(result);
-    callback(result);
-  });
+	console.log("insertSensor")
+	queryName(document.name, function (array) {
+		console.log("queryname: " + JSON.stringify(array))
+		if (array.length == 0) {
+			db.collection('Sensors').insertOne({
+				"ObjectType": "Sensor",
+				"SensorType": document.sensortype,
+				"name": document.name,
+				"url": document.url,
+				"quality": document.quality,
+				"description": document.description,
+				"timestamp": (new Date).getTime()
+			}, function (err, result) {
+				assert.equal(err, null);
+				//console.log(result);
+				callback({message: JSON.stringify(result)});
+			});
+		} else {
+			callback({message: 'name already exists'});
+		}
+	});
 };
 
 

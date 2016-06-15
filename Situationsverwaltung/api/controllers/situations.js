@@ -152,9 +152,11 @@ function allRegistrations(req, res){
 //Returns 404 if situation is not found
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 function situationOccured(req, res){
+	console.log("occurred")
 	var id = req.swagger.params.ID.value;
 	if (!req.swagger.params.ID.value){
-		//Change all situations			
+		//Change all situations
+		res.json({name: "not implemented"});
 	}else{
 		/*bucket.get(id, function (err, doc) {
 		 console.log(doc);
@@ -183,7 +185,7 @@ function situationOccured(req, res){
 		 });
 		 }
 		 });	*/
-		res.json("not implemented");
+		res.json({name: "not implemented"});
 
 	}
 }
@@ -219,7 +221,7 @@ function situationChangeDelete(req, res){
 		}
 	}
 
-	res.json("Registration deleted");
+	res.json({message: "Registration deleted"});
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -315,7 +317,7 @@ function SaveURL(thingID, templateID, url, continued){
 function deleteSituationByID(req, res){
 
 	removeDocument(req.swagger.params.ID.value, function() {
-		res.json("Deleted");
+		res.json({message: "Deleted"});
 	});
 }
 function removeDocument(id, callback) {
@@ -385,6 +387,7 @@ function queryThingAndTemplate(thing, template, callback){
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 function situationByID(req, res) {
 	queryID(req.swagger.params.ID.value, function(doc){
+		var val = doc[0] || {};
 		res.json(doc[0]);
 	})
 }
@@ -409,6 +412,7 @@ function queryID(id, callback){
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 function allSituations(req, res) {
 	getAll(function(allThings) {
+		console.log(JSON.stringify(allThings))
 		res.json(allThings);
 	});
 }
@@ -499,7 +503,7 @@ function insertDocument(document,template, callback) {
 		"timestamp" : document.timestamp,
 		"situationtemplate" : document.situationtemplate,
 		"occured" : document.occured,
-		"name" : template.situation,
+		"name" : document.situationtemplate,
 		"quality": 100,
 		"sensorvalues": sensorvalues,
 
@@ -547,30 +551,26 @@ function updateDocument(document, oldDoc, template, callback) {
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 function saveSituation(req, res){
 	//check if referenced id of thing exists
-	queryThingID(req.body.thing, function(thing){
-		queryTemplateID(req.body.situationtemplate, function(template){
-			queryThingAndTemplate(req.body.thing,
-				req.body.situationtemplate, function(doc){
-					//console.log(doc);
-					if (doc[0] == null){
-						insertDocument(req.body,template[0], function() {
-							checkCallbacks(req.body);
-							res.json("Created");
-						});
-					}else{
-						if (doc[0].occured != req.body.occured){
-							checkCallbacks(req.body);
-							updateDocument(req.body,doc[0], template[0], function(){
-								res.json("Updated");
-							});
-						}else{
-							res.json("No Update");
-
-						}
-					}
+	queryThingAndTemplate(req.body.thing,
+		req.body.situationtemplate, function(doc){
+			//console.log(doc);
+			if (doc[0] == null){
+				insertDocument(req.body,req.body.situationtemplate, function() {
+					console.log("template: " + req.body.situationtemplate);
+					checkCallbacks(req.body);
+					res.json({message: "Created"});
 				});
+			}else{
+				if (doc[0].occured != req.body.occured){
+					checkCallbacks(req.body);
+					updateDocument(req.body,doc[0], req.body.situationtemplate, function(){
+						res.json({message: "Updated"});
+					});
+				}else{
+					res.json({message: "No Update"});
+				}
+			}
 		});
-	});
 }
 
 

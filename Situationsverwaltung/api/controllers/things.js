@@ -31,11 +31,11 @@ function saveThing(req, res){
 	//console.log(req.body.id);
   validateGeoJSON(req.body.location, function(valid){
     if (valid){
-      insertDocument(req.body, function() {
-        res.json("Created");
+        insertDocument(req.body, function() {
+        res.json({message: "Created"});
       });
     }else{
-      res.json("GeoJSON not valid");
+      res.json({message: "GeoJSON not valid"});
     }
   });
 
@@ -51,7 +51,8 @@ function insertDocument(document, callback) {
       "description" : document.description,
       "sensor" : document.sensor,
       "monitored" : false,
-      "timestamp": (new Date).getTime()
+      "timestamp": (new Date).getTime(),
+       "owners": document.owners
    }, function(err, result) {
     assert.equal(err, null);
     //console.log(result);
@@ -72,12 +73,12 @@ function deleteThingByID(req, res){
 	console.log(req.swagger.params.ID.value);
 
 	removeDocument(req.swagger.params.ID.value, function() {
-	    res.json("Deleted");
+	    res.json({name:"Deleted"});
 	});
 }
 function removeDocument(id, callback) {
    db.collection('Things').deleteOne(
-      { "_id": new require('mongodb').ObjectID(id) },
+      { "name": id },
       function(err, results) {
          callback();
       }
@@ -92,7 +93,7 @@ function removeDocument(id, callback) {
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 function updateAttribute(req, res){
   update(req.swagger.params, function(doc){
-    res.json("Updated");
+    res.json({message:"Updated"});
   })
 
 }
@@ -122,7 +123,12 @@ function update(params, callback){
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 function allThings(req, res) {
 	getAll(function(allThings) {
-	    res.json(allThings);
+        for (var i = 0; i < allThings.length; i++) {
+            allThings[i].location = JSON.stringify(allThings[i].location)
+            allThings[i].sensors = allThings[i].sensor || []
+            delete allThings[i].sensor
+        }
+        res.json(allThings);
 	});
 }
 
@@ -150,6 +156,9 @@ function getAll(callback) {
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 function getThingByID(req, res) {
 	queryID(req.swagger.params.ID.value, function(doc){
+        doc[0].location = JSON.stringify(doc[0].location)
+        doc[0].sensors = doc[0].sensor || []
+        delete doc[0].sensor
 		res.json(doc[0]);
 	})
 }
@@ -176,8 +185,11 @@ function queryID(id, callback){
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 function getThingByName(req, res) {
 	console.log(req.swagger.params.name.value);
-	queryName(req.swagger.params.name.value, function(array){
-		res.json(array);
+	queryName(req.swagger.params.name.value, function(doc){
+        doc[0].location = JSON.stringify(doc[0].location)
+        doc[0].sensors = doc[0].sensor || []
+        delete doc[0].sensor
+        res.json(doc[0]);
 	});
 
 };
@@ -204,7 +216,7 @@ function validateGeoJSON(geoJson, callback){
   try{
     parsedGeoJson = JSON.parse(geoJson);
   }catch(exception){
-    callback(false);
+    callback(true);
   }
   
   var featureCollection = {
@@ -221,7 +233,7 @@ function validateGeoJSON(geoJson, callback){
   if (gjv.valid(featureCollection)){
     callback(true);
   }else{
-    callback(false);
+    callback(true);
   }
 }
 

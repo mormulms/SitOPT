@@ -64,12 +64,12 @@ function update(id, xml, callback){
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 function deleteTemplateByID(req, res){
 	removeDocument(req.swagger.params.ID.value, function() {
-	    res.json("Deleted");
+	    res.json({name: "Deleted"});
 	});
 }
 function removeDocument(id, callback) {
    db.collection('Situationtemplates').deleteOne(
-      { "_id": new require('mongodb').ObjectID(id) },
+      { "name": id },
       function(err, results) {
          callback();
       }
@@ -86,9 +86,9 @@ function removeDocument(id, callback) {
 function getAttachment(req, res){
 	queryID(req.swagger.params.ID.value, function(doc){
 		if (doc[0].xml == null){
-			res.json("No xml data attached");
+			res.json({message: "No xml data attached"});
 		}else{
-			res.json(doc[0].xml);
+			res.json({message: doc[0].xml});
 		}
 		
 	})
@@ -134,16 +134,19 @@ function attachFile(document, xml, callback){
 
 function uploadAttachment(req, res){
  // res.setHeader('Content-Type', 'application/json');
-	console.log(req.files.file.buffer.toString());
 	console.log(req.swagger.params.ID.value);
 	
 
 	queryID(req.swagger.params.ID.value, function(doc){
 		if(doc[0] == null){
-			res.json("Situationtemplate not found");
+			res.json({ message: "Situationtemplate not found"} );
 		}else{
-			attachFile(doc[0], req.files.file.buffer.toString(), function(){
-				res.json("File attached");
+			var text = "";
+			for (var i = 0; i < req.files.file.length; i++) {
+				text += req.files.file[i].buffer.toString()
+			}
+			attachFile(doc[0], text, function(){
+				res.json({ message: "File attached" });
 			});
 		}
 
@@ -176,7 +179,7 @@ function getTemplateByID(req, res) {
 
 function queryID(id, callback){
 	var array = [];
-	var cursor = db.collection('Situationtemplates').find({"_id": new require('mongodb').ObjectID(id)});
+	var cursor = db.collection('Situationtemplates').find({"name": id});
 	cursor.each(function(err, doc) {
       	assert.equal(err, null);
       	if (doc != null) {
@@ -266,24 +269,37 @@ function checkID(documentID, databaseID , callback){
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 function saveTemplate(req, res){
 
-	insertDocument(req.body, function() {
-	    res.json("Created");
+	insertDocument(req.body, function(message) {
+		if (message === "Created") {
+			res.json({message: "Created"});
+		} else {
+			res.json({
+				message: message
+			});
+		}
 	});
 }
 
 function insertDocument(document, callback) {
-   db.collection('Situationtemplates').insertOne( {
-      "objecttype" : "Situationtemplate",
-      "name" : document.name,
-      "situation" : document.situation,
-      "xml" : document.xml,
-      "description" : document.description,
-      "xml" : document.xml,
-      "timestamp" : (new Date).getTime()
-   }, function(err, result) {
-    assert.equal(err, null);
-    //console.log(result);
-    callback(result);
-  });
+	db.collection('Situationtemplates').find({name: document.name}).toArray(function (error, array) {
+		assert.equal(error, null);
+		console.log("length: " + array.length)
+		if (array.length == 0) {
+			db.collection('Situationtemplates').insertOne( {
+				"objecttype" : "Situationtemplate",
+				"name" : document.name,
+				"situation" : document.situation,
+				"xml" : document.xml,
+				"description" : document.description,
+				"timestamp" : (new Date).getTime()
+			}, function(err, result) {
+				assert.equal(err, null);
+				//console.log(result);
+				callback("Created");
+			});
+		} else {
+			callback("Name already exists")
+		}
+	});
 };
 

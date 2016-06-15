@@ -25,7 +25,7 @@ function allActuators(req, res) {
 	console.log("Test");
 	getAllActuators(function(allActuators) {
 		//res.statusCode("200");
-	    res.json(allActuators);
+        res.json(allActuators);
 	});
 }
 
@@ -51,7 +51,7 @@ function getAllActuators(callback) {
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 function saveActuator(req, res){
 	insertDocument(req.body, function() {
-	    res.json("Created");
+	    res.json({message: "Created"});
 	});
 }
 function insertDocument(document, callback) {

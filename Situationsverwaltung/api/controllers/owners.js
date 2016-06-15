@@ -9,27 +9,27 @@ app.use(bodyParser());
 
 module.exports = {
   //getAgentByID: getAgentByID,
-  allAgents: allAgents,
-  saveAgent: saveAgent,
+  allOwners: allOwners,
+  saveOwner: saveOwner,
   //getAgentByName: getAgentByName,
   //deleteAgentByID: deleteAgentByID
 };
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
-//allAgents
+//allOwners
 //
 //Returns array of all Agents
 /////////////////////////////////////////////////////////////////////////////////////////////////////
-function allAgents(req, res) {
+function allOwners(req, res) {
 	console.log("Test");
-	getAllAgents(function(allAgents) {
+	getAllOwners(function(allAgents) {
 		//res.statusCode("200");
 	    res.json(allAgents);
 	});
 }
 
-function getAllAgents(callback) {
+function getAllOwners(callback) {
 
    var cursor =db.collection('Agents').find( );
    var array = [];
@@ -45,13 +45,13 @@ function getAllAgents(callback) {
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
-//saveAgent
+//saveOwner
 //
 //Stores Agent in CouchDB
 /////////////////////////////////////////////////////////////////////////////////////////////////////
-function saveAgent(req, res){
+function saveOwner(req, res){
 	insertDocument(req.body, function() {
-	    res.json("Created");
+	    res.json({"message":"created"});
 	});
 }
 function insertDocument(document, callback) {
