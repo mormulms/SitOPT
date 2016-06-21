@@ -28,34 +28,34 @@ module.exports = {
 //Returns 504 if CouchDB does not respond
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 function saveThing(req, res){
+    var document = req.swagger.params.body.value;
 	//console.log(req.body.id);
   //validateGeoJSON(req.body.location, function(valid){
-        insertDocument(req.body, function() {
-            console.log("created")
-            res.json({message: "Created"});
-        });
+    db.collection('Things').find({name: document.name}).count(function (error, count) {
+        if (count != 0) {
+            res.statusCode = 400;
+            res.json({message: "Name already exists"});
+        } else {
+            db.collection('Things').insertOne( {
+                "name" : document.name,
+                "url" : document.url,
+                "location" : document.location,
+                "description" : document.description,
+                "sensor" : document.sensor,
+                "monitored" : false,
+                "timestamp": (new Date).getTime(),
+                "owners": document.owners
+            }, function(err, result) {
+                assert.equal(err, null);
+                //console.log(result);
+                res.json({message: "Created"});
+            });
+        }
+    });
   //});
 
 	
 }
-
-function insertDocument(document, callback) {
-   db.collection('Things').insertOne( {
-      
-      "name" : document.name,
-      "url" : document.url,
-      "location" : document.location,
-      "description" : document.description,
-      "sensor" : document.sensor,
-      "monitored" : false,
-      "timestamp": (new Date).getTime(),
-       "owners": document.owners
-   }, function(err, result) {
-    assert.equal(err, null);
-    //console.log(result);
-    callback(result);
-  });
-};
 
 
 

@@ -8,12 +8,12 @@ app.use(bodyParser());
 
 
 module.exports = {
-  //getActuatorByID: getActuatorByID,
-  allActuators: allActuators,
-  saveActuator: saveActuator,
-  //getActuatorByName: getActuatorByName,
-  //deleteActuatorByID: deleteActuatorByID
-  deleteActuator: deleteActuator
+    //getActuatorByID: getActuatorByID,
+    allActuators: allActuators,
+    saveActuator: saveActuator,
+    //getActuatorByName: getActuatorByName,
+    //deleteActuatorByID: deleteActuatorByID
+    deleteActuator: deleteActuator
 };
 
 
@@ -23,25 +23,26 @@ module.exports = {
 //Returns array of all Actuators
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 function allActuators(req, res) {
-	console.log("Test");
-	getAllActuators(function(allActuators) {
-		//res.statusCode("200");
+    console.log("Test");
+    getAllActuators(function(allActuators) {
+        //res.statusCode("200");
+        console.log(allActuators);
         res.json(allActuators);
-	});
+    });
 }
 
 function getAllActuators(callback) {
 
-   var cursor =db.collection('Actuators').find( );
-   var array = [];
-   cursor.each(function(err, doc) {
-      assert.equal(err, null);
-      if (doc != null) {
-         array.push(doc);
-      } else {
-         callback(array);
-      }
-   });
+    var cursor =db.collection('Actuators').find( );
+    var array = [];
+    cursor.each(function(err, doc) {
+        assert.equal(err, null);
+        if (doc != null) {
+            array.push(doc);
+        } else {
+            callback(array);
+        }
+    });
 };
 
 
@@ -51,24 +52,27 @@ function getAllActuators(callback) {
 //Stores Actuator in CouchDB
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 function saveActuator(req, res){
-	insertDocument(req.body, function() {
-	    res.json({message: "Created"});
-	});
-}
-function insertDocument(document, callback) {
-   db.collection('Actuators').insertOne( {
-      "objecttype" : "Actuator",
-      "name" : document.name,
-      "location" : document.location,
-      "actions" : document.actions,
-      "things" : document.things,
-      "timestamp" : (new Date).getTime()
+    var document = req.swagger.params.body.value;
+    db.collection('Actuators').find({name: document.name}).count(function (err, count) {
+        if (count == 0) {
+            db.collection('Actuators').insertOne({
+                "objecttype": "Actuator",
+                "name": document.name,
+                "location": document.location,
+                "actions": document.actions,
+                "things": document.things,
+                "timestamp": (new Date).getTime()
 
-   }, function(err, result) {
-    assert.equal(err, null);
-    //console.log(result);
-    callback(result);
-  });
+            }, function (err, result) {
+                assert.equal(err, null);
+                //console.log(result);
+                res.json({message: "Created"});
+            });
+        } else {
+            res.statusCode = 400;
+            res.json({message: "Name already exists"});
+        }
+    });
 }
 
 function deleteActuator(req, res) {

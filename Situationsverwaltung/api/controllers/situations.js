@@ -456,7 +456,8 @@ function insertDocument(document,template, callback) {
 	var occurence = 0;
 	for (var i = 0; i < document.sensorvalues.length; i++){
 		var sensor = document.sensorvalues[i].sensor;
-		var tuple = { sensor : sensor, value: document.sensorvalues[i].value};
+		var timestamp = document.sensorvalues[i].timestamp || new Date().getDate();
+		var tuple = { sensor : sensor, value: document.sensorvalues[i].value, timestamp: timestamp, quality: document.sensorvalues[i].quality};
 		sensorvalues.push(tuple);
 	}
 
@@ -526,7 +527,9 @@ function saveSituation(req, res){
 					res.json({message: "Created"});
 				});
 			}else{
-				if (doc[0].occured != req.body.occured){
+				console.log(doc[0].sensorvalues);
+				console.log(req.body.sensorvalues);
+				if (doc[0].occured != req.body.occured || JSON.stringify(doc[0].sensorvalues) != JSON.stringify(req.body.sensorvalues)) {
 					checkCallbacks(req.body);
 					updateDocument(req.body,doc[0], req.body.situationtemplate, function(){
 						res.json({message: "Updated"});

@@ -102,11 +102,7 @@ function getAllSensors(callback) {
 //Stores sensor in CouchDB
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 function saveSensor(req, res){
-	insertDocument(req.body, function(message) {
-	    res.json(message);
-	});
-}
-function insertDocument(document, callback) {
+	var document = req.swagger.params.body.value;
 	queryName(document.name, function (array) {
 		if (array.length == 0) {
 			db.collection('Sensors').insertOne({
@@ -120,12 +116,13 @@ function insertDocument(document, callback) {
 			}, function (err, result) {
 				assert.equal(err, null);
 				//console.log(result);
-				callback({message: JSON.stringify(result)});
+				res.json({message: JSON.stringify(result)});
 			});
 		} else {
-			callback({message: 'name already exists'});
+			res.statusCode = 400;
+			res.json({message: 'name already exists'});
 		}
 	});
-};
+}
 
 

@@ -253,19 +253,7 @@ function checkID(documentID, databaseID , callback){
 //XML data is stored afterwards as an attachment
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 function saveTemplate(req, res){
-
-	insertDocument(req.body, function(message) {
-		if (message === "Created") {
-			res.json({message: "Created"});
-		} else {
-			res.json({
-				message: message
-			});
-		}
-	});
-}
-
-function insertDocument(document, callback) {
+	var document = req.swagger.params.body.value;
 	db.collection('Situationtemplates').find({name: document.name}).toArray(function (error, array) {
 		assert.equal(error, null);
 		console.log("length: " + array.length)
@@ -280,11 +268,12 @@ function insertDocument(document, callback) {
 			}, function(err, result) {
 				assert.equal(err, null);
 				//console.log(result);
-				callback("Created");
+				res.json({message: "Created"});
 			});
 		} else {
-			callback("Name already exists")
+			res.statusCode = 400;
+			res.json({message: "Name already exists"});
 		}
 	});
-};
+}
 

@@ -51,23 +51,27 @@ function getAllOwners(callback) {
 //Stores Agent in CouchDB
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 function saveOwner(req, res){
-	insertDocument(req.body, function() {
-	    res.json({"message":"created"});
-	});
-}
-function insertDocument(document, callback) {
-   db.collection('Agents').insertOne( {
-      "objecttype" : "Agent",
-      "location" : document.location,
-      "name" : document.name,
-      "state": document.state,
-      "timestamp" : (new Date).getTime()
+    var document = req.swagger.params.body.value;
+    console.log(document)
+    db.collection('Agents').find({name: document.name}).count(function (error, count) {
+        if (count == 0) {
+            db.collection('Agents').insertOne({
+                "objecttype": "Agent",
+                "location": document.location,
+                "name": document.name,
+                "state": document.state,
+                "timestamp": (new Date).getTime()
 
-   }, function(err, result) {
-    assert.equal(err, null);
-    //console.log(result);
-    callback(result);
-  });
+            }, function (err, result) {
+                assert.equal(err, null);
+                //console.log(result);
+                res.json({"message":"created"});
+            });
+        } else {
+            res.statusCode = 404;
+            res.json({message: "Already exists"});
+        }
+    });
 }
 
 function deleteOwner(req, res) {
