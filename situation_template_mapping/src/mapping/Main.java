@@ -115,18 +115,11 @@ public class Main {
 				Unmarshaller u = jc.createUnmarshaller();
 				JAXBElement<TSituationTemplate> root;
 				if (args[1].toLowerCase().endsWith(".xml")) {
-				    File file = new File(args[1]);
+					File file = new File(args[1]);
 	                root = u.unmarshal(new StreamSource(file), TSituationTemplate.class);
 				} else {
-				    try (FileOutputStream s = new FileOutputStream(System.getProperty("user.home") + File.separator + "mapping.xml")) {
-                        s.write(args[1].getBytes());
-                    } catch (IOException e) {
-                        e.getMessage();
-                        e.getStackTrace()[0].toString().getBytes();
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
-                    }
-				    root = u.unmarshal(new StreamSource(new StringReader(args[1].replace("\n", "").replace("\r", "").replace("\t", ""))), TSituationTemplate.class);
+					String xml = args[1].replace("\n", "").replace("\r", "").replace("\t", "").replace("\\n", "").replace("\\r", "").replace("\\t", "");
+					root = u.unmarshal(new StreamSource(new StringReader(xml)), TSituationTemplate.class);
 				}
 				
 				TSituationTemplate situationTemplate = root.getValue();
