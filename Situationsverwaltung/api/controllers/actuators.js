@@ -13,6 +13,7 @@ module.exports = {
   saveActuator: saveActuator,
   //getActuatorByName: getActuatorByName,
   //deleteActuatorByID: deleteActuatorByID
+  deleteActuator: deleteActuator
 };
 
 
@@ -68,7 +69,18 @@ function insertDocument(document, callback) {
     //console.log(result);
     callback(result);
   });
-};
+}
+
+function deleteActuator(req, res) {
+    db.collection('Actuators').deleteOne({name: req.swagger.params.name.value}, function (err, answer) {
+        if (answer.result.n == answer.result.ok && answer.result.n == 1) {
+            res.json({message: "deleted"});
+        } else {
+            res.statusCode = 400;
+            res.json({message: "Element not found"});
+        }
+    });
+}
 
 
 

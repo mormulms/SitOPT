@@ -13,6 +13,7 @@ module.exports = {
   saveOwner: saveOwner,
   //getAgentByName: getAgentByName,
   //deleteAgentByID: deleteAgentByID
+  deleteOwner: deleteOwner
 };
 
 
@@ -67,7 +68,18 @@ function insertDocument(document, callback) {
     //console.log(result);
     callback(result);
   });
-};
+}
+
+function deleteOwner(req, res) {
+    db.collection('Agents').deleteOne({name: req.swagger.params.name.value}, function (err, answer) {
+        if (answer.result.n == answer.result.ok && answer.result.n == 1) {
+            res.json({message: "deleted"});
+        } else {
+            res.statusCode = 400;
+            res.json({message: "Element not found"});
+        }
+    });
+}
 
 
 

@@ -11,11 +11,10 @@ app.use(bodyParser());
 
 //exporting modules to swagger editor
 module.exports = {
-  getSensorByID: getSensorByID,
   allSensors: allSensors,
   saveSensor: saveSensor,
   getSensorByName: getSensorByName,
-  deleteSensorByID: deleteSensorByID
+  deleteSensor: deleteSensor
 };
 
 
@@ -25,46 +24,23 @@ module.exports = {
 //Deletes specified sensor
 //Returns 404 if situation is not found
 /////////////////////////////////////////////////////////////////////////////////////////////////////
-function deleteSensorByID(req, res){
-	console.log(req.swagger.params.ID.value);
-
-	removeDocument(req.swagger.params.ID.value, function() {
-	    res.json({name: "Deleted"});
+function deleteSensor(req, res){
+	removeDocument(req.swagger.params.name.value, function(items) {
+		if (items.deletedCount > 0) {
+			res.json({name: "Deleted"});
+		} else {
+			res.statusCode = 404;
+			res.json({message: "Not Found"});
+		}
 	});
 }
 function removeDocument(id, callback) {
    db.collection('Sensors').deleteOne(
       { "name": id },
       function(err, results) {
-         callback();
+         callback(results);
       }
    );
-};
-
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////
-//getSensorByID
-//
-//Returns document of specified sensor
-//Returns 404 if sensor is not found
-/////////////////////////////////////////////////////////////////////////////////////////////////////
-function getSensorByID(req, res) {
-	
-	queryID(req.swagger.params.ID.value, function(doc){
-		res.json(doc[0]);
-	})
-}
-function queryID(id, callback){
-	var array = [];
-	var cursor = db.collection('Sensors').find({"_id": new require('mongodb').ObjectID(id)});
-	cursor.each(function(err, doc) {
-      	assert.equal(err, null);
-      	if (doc != null) {
-         	array.push(doc);
-      	}else{
-      		callback(array);
-      	}
-   	});
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -75,7 +51,12 @@ function queryID(id, callback){
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 function getSensorByName(req, res) {
 	queryName(req.swagger.params.name.value, function(array){
-		res.json(array);
+		if (array.length > 0) {
+			res.json(array[0]);
+		} else {
+			res.statusCode = 404;
+			res.json({message: "Not Found"})
+		}
 	});
 }
 function queryName(name, callback){
@@ -121,20 +102,16 @@ function getAllSensors(callback) {
 //Stores sensor in CouchDB
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 function saveSensor(req, res){
-	console.log('saveSensor: ' + JSON.stringify(req.body));
 	insertDocument(req.body, function(message) {
-		console.log("message: " + JSON.stringify(message))
 	    res.json(message);
 	});
 }
 function insertDocument(document, callback) {
-	console.log("insertSensor")
 	queryName(document.name, function (array) {
-		console.log("queryname: " + JSON.stringify(array))
 		if (array.length == 0) {
 			db.collection('Sensors').insertOne({
 				"ObjectType": "Sensor",
-				"SensorType": document.sensortype,
+				"SensorType": document.SensorType,
 				"name": document.name,
 				"url": document.url,
 				"quality": document.quality,

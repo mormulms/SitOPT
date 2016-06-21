@@ -24,7 +24,7 @@ produces:
 
 paths:
 
-  /situations/occured:
+  /situations/occured/{thing}/{situation}:
     x-swagger-router-controller: situations
     put:
       tags:
@@ -34,39 +34,14 @@ paths:
       operationId: situationOccured
       
       parameters:
-        - in: query
-          name: ID
-          description: ID of situation. If left empty, all situations change their "occured"-attribute.
-          required: false
+        - in: path
+          name: situation
+          description: Name of situation.
+          required: true
           type: string
-       
-
-      responses:
-        "200":
-          description: Success
-          schema:
-            # a pointer to a definition
-            $ref: "#/definitions/GetModel"
-        # responses may fall through to errors
-        "404":
-          description: Not found
-          schema:
-            $ref: "#/definitions/ErrorResponse"
-
-
-  /situations/byName:
-    x-swagger-router-controller: situations
-    get:
-      tags:
-        - situation
-      summary: Get situation by name
-      description: Returns an array of situations with the specified name. Multiple results possible
-      operationId: situationByName
-      
-      parameters:
-        - in: query
-          name: name
-          description: Name of situation
+        - in: path
+          name: thing
+          description: Name of the thing.
           required: true
           type: string
        
@@ -82,55 +57,27 @@ paths:
           description: Not found
           schema:
             $ref: "#/definitions/ErrorResponse"
+  
+  
 
-  /situations/ByThingAndTemplate:
+  /situations/{thing}/{situation}:
     x-swagger-router-controller: situations
     get:
       tags:
         - situation
-      summary: Get situation by thing and situation template
-      description: A situation is uniquely identifiable by the thing it belongs to and the situation template it derives from. Returns a document.
+      summary: Get situation
+      description: Get specified situations
       operationId: situationByThingAndTemplate
       
       parameters:
+        - name: situation
+          in: path
+          description: name of situationtemplate
+          required: true
+          type: string
         - name: thing
-          in: query
-          description: ID of thing
-          required: true
-          type: string
-        - in: query
-          name: situationtemplate
-          description: ID of situation template
-          required: true
-          type: string
-
-      responses:
-        "200":
-          description: Success
-          schema:
-            # a pointer to a definition
-            $ref: "#/definitions/GetModel"
-        # responses may fall through to errors
-        "404":
-          description: Not found
-          schema:
-            $ref: "#/definitions/ErrorResponse"
-  
-  
-
-  /situations/byID:
-    x-swagger-router-controller: situations
-    get:
-      tags:
-        - situation
-      summary: Get situation by ID
-      description: Get specified situations
-      operationId: situationByID
-      
-      parameters:
-        - name: ID
-          in: query
-          description: ID of situation
+          in: path
+          description: name of the thing
           required: true
           type: string
 
@@ -149,14 +96,19 @@ paths:
     delete:
       tags:
         - situation
-      summary: Delete situation by ID
+      summary: Delete situation
       description: Deletes specified situation 
-      operationId: deleteSituationByID
+      operationId: deleteSituation
       
       parameters:
-        - name: ID
-          in: query
-          description: ID of situation
+        - name: situation
+          in: path
+          description: name of the situation template
+          required: true
+          type: string
+        - name: thing
+          in: path
+          description: name of the thing
           required: true
           type: string
 
@@ -216,15 +168,15 @@ paths:
       operationId: situationChange
       
       parameters:
-        - name: SitTempID
+        - name: SitTempName
           in: query
-          description: ID of situation template. If empty, any situation change will be sent to the callback URL
+          description: name of situation template. If empty, any situation change will be sent to the callback URL
           required: false
           type: string
           
-        - name: ThingID
+        - name: ThingName
           in: query
-          description: ID of thing. If empty, any situation change will be sent to the callback URL
+          description: name of thing. If empty, any situation change will be sent to the callback URL
           required: false
           type: string
           
@@ -347,18 +299,18 @@ paths:
           schema:
             $ref: "#/definitions/ErrorResponse"
             
-  /things/ByName:
+  /things/{name}:
     x-swagger-router-controller: things
     get:
       tags:
         - thing
       summary: Get thing by name
-      description: Returns array of things with specified name. Multiple things may have the same name.
+      description: Returns array of things with specified name. Names are unique.
       operationId: getThingByName
       
       parameters:
         - name: name
-          in: query
+          in: path
           description: name of thing
           required: true
           type: string
@@ -374,47 +326,17 @@ paths:
           description: Not found
           schema:
             $ref: "#/definitions/ErrorResponse"
-  
-            
-  /things/ByID:
-    x-swagger-router-controller: things
-    get:
-      tags:
-        - thing
-      summary: Get thing by ID
-      description: Get thing by specified ID
-      operationId: getThingByID
-      
-      parameters:
-        - name: ID
-          in: query
-          description: ID of thing
-          required: true
-          type: string
 
-      responses:
-        "200":
-          description: Success
-          schema:
-            # a pointer to a definition
-            $ref: "#/definitions/ThingModel"
-        # responses may fall through to errors
-        "404":
-          description: Not found
-          schema:
-            $ref: "#/definitions/ErrorResponse"
-            
     delete:
       tags:
         - thing
-      summary: Delete thing by ID
-      description: Deletes thing by specified ID
-      operationId: deleteThingByID
-      
+      summary: delete thing by name
+      description: deletes a thing.
+      operationId: deleteThing
       parameters:
-        - name: ID
-          in: query
-          description: ID of thing
+        - name: name
+          in: path
+          description: name of the thing
           required: true
           type: string
 
@@ -422,15 +344,11 @@ paths:
         "200":
           description: Success
           schema:
-            # a pointer to a definition
-            $ref: "#/definitions/GetModel"
-        # responses may fall through to errors
-        "404":
-          description: Not found
+            $ref: "#/definitions/Response"
+        default:
+          description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
-  
-  
   
   /things:
   # binds a127 app logic to a route
@@ -485,7 +403,7 @@ paths:
           schema:
             $ref: "#/definitions/ErrorResponse"
             
-  /things/{ID}/{attribute}/{value}:
+  /things/{name}/{attribute}/{value}:
    # binds a127 app logic to a route
     x-swagger-router-controller: things
     
@@ -497,9 +415,9 @@ paths:
       operationId: updateAttribute
       # used as the method name of the controller
       parameters:
-        - name: "ID"
+        - name: "name"
           in: "path"
-          description: "ID of Thing"
+          description: "name of Thing"
           required: true
           type: "string"
         - name: "attribute"
@@ -577,6 +495,29 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+
+    delete:
+      tags:
+        - actuator
+      summary: Delete actuator
+      description: Delete actuator from the database
+      operationId: deleteActuator
+      parameters:
+        - in: body
+          name: name
+          description: Name of the actuator
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/Response"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
     
     
   /owners:
@@ -618,8 +559,6 @@ paths:
           required: false
           schema:
             $ref: "#/definitions/OwnerModel"
-            
-     
       responses:
         "200":
           description: Success
@@ -631,9 +570,32 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+
+    delete:
+      tags:
+        - owner
+      summary: Delete Owner
+      description: Delete Owner from the database
+      operationId: deleteOwner
+      parameters:
+        - in: body
+          name: name
+          description: name of the owner
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/Response"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
     
   
-  /situationtemplates/ByName:
+  /situationtemplates/{name}:
     x-swagger-router-controller: situationtemplate
     get:
       tags:
@@ -641,10 +603,36 @@ paths:
       summary: Get situation template by name
       description: Returns array of situation templates with specified name. Multiple situation templates may have the same name.
       operationId: getTemplateByName
-      
+
       parameters:
         - name: name
-          in: query
+          in: path
+          description: name of situation template
+          required: true
+          type: string
+
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/SituationtemplateModel"
+        # responses may fall through to errors
+        "404":
+          description: Not found
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
+    delete:
+      tags:
+        - situation template
+      summary: Delete situation template by ID
+      description: Deletes specified situation template
+      operationId: deleteTemplate
+
+      parameters:
+        - name: name
+          in: path
           description: name of situation template
           required: true
           type: string
@@ -660,65 +648,8 @@ paths:
           description: Not found
           schema:
             $ref: "#/definitions/ErrorResponse"
-  
 
-  /situationtemplates/ByID:
-    x-swagger-router-controller: situationtemplate
-    get:
-      tags:
-        - situation template
-      summary: Get situation template  by ID
-      description: Get thing by specified ID
-      operationId: getTemplateByID
-      
-      parameters:
-        - name: ID
-          in: query
-          description: ID of thing
-          required: true
-          type: string
-
-      responses:
-        "200":
-          description: Success
-          schema:
-            # a pointer to a definition
-            $ref: "#/definitions/GetModel"
-        # responses may fall through to errors
-        "404":
-          description: Not found
-          schema:
-            $ref: "#/definitions/ErrorResponse"
-            
-    delete:
-      tags:
-        - situation template
-      summary: Delete situation template by ID
-      description: Deletes specified situation template
-      operationId: deleteTemplateByID
-      
-      parameters:
-        - name: ID
-          in: query
-          description: ID of situation template
-          required: true
-          type: string
-
-      responses:
-        "200":
-          description: Success
-          schema:
-            # a pointer to a definition
-            $ref: "#/definitions/GetModel"
-        # responses may fall through to errors
-        "404":
-          description: Not found
-          schema:
-            $ref: "#/definitions/ErrorResponse"
-            
-  
-  
-  /situationtemplateFiles/{ID}:
+  /situationtemplateFiles/{name}:
     x-swagger-router-controller: situationtemplate
     get:
       tags:
@@ -729,7 +660,7 @@ paths:
       # used as the method name of the controller
 
       parameters:
-      - name: "ID"
+      - name: "name"
         in: "path"
         description: "ID of situation template"
         required: true
@@ -746,9 +677,8 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
- 
-  
-  /situationtemplates/{ID}:
+
+  /situationtemplates/{name}/xml:
     x-swagger-router-controller: situationtemplate
     post:
       tags:
@@ -762,13 +692,11 @@ paths:
       produces:
       - "application/json"
       parameters:
-      - name: "ID"
+      - name: "name"
         in: "path"
-        description: "ID of situation template"
+        description: "name of situation template"
         required: true
         type: "string"
-     
-
       - in: "formData"
         #description: "Additional data to pass to server"
         #required: false
@@ -778,8 +706,7 @@ paths:
         description: "file to upload"
         required: true
         type: "file"
-        
-          
+
       responses:
         "200":
           description: Success
@@ -791,10 +718,7 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
-            
-    
-  
-  
+
   /situationtemplates:
   # binds a127 app logic to a route
     x-swagger-router-controller: situationtemplate
@@ -844,10 +768,8 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
-          
-  
-  
-  /sensors/ByName:
+
+  /sensors/{name}:
     x-swagger-router-controller: sensors
     get:
       tags:
@@ -858,37 +780,8 @@ paths:
       
       parameters:
         - name: name
-          in: query
+          in: path
           description: name of sensor
-          required: true
-          type: string
-
-      responses:
-        "200":
-          description: Success
-          schema:
-            # a pointer to a definition
-            $ref: "#/definitions/GetModel"
-        # responses may fall through to errors
-        "404":
-          description: Not found
-          schema:
-            $ref: "#/definitions/ErrorResponse"
-  
-            
-  /sensors/ByID:
-    x-swagger-router-controller: sensors
-    get:
-      tags:
-        - sensor
-      summary: Get sensor by ID
-      description: Get sensor by specified ID
-      operationId: getSensorByID
-      
-      parameters:
-        - name: ID
-          in: query
-          description: ID of sensor
           required: true
           type: string
 
@@ -903,17 +796,17 @@ paths:
           description: Not found
           schema:
             $ref: "#/definitions/ErrorResponse"
-  
+
     delete:
       tags:
         - sensor
       summary: Delete sensor by ID
       description: Deletes specified sensor
-      operationId: deleteSensorByID
+      operationId: deleteSensor
       
       parameters:
-        - name: ID
-          in: query
+        - name: name
+          in: path
           description: ID of sensor
           required: true
           type: string
@@ -929,16 +822,13 @@ paths:
           description: Not found
           schema:
             $ref: "#/definitions/ErrorResponse"
-  
-  
+
   /sensors:
   # binds a127 app logic to a route
     x-swagger-router-controller: sensors
-    
     get:
       tags:
         - sensor
-          
       summary: Get all sensors
       description: Returns an array of all sensors
       operationId: allSensors
@@ -954,8 +844,7 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
-    
-    
+
     post:
       tags:
         - sensor
@@ -982,13 +871,9 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
-          
-  
-  
 
 # complex objects have schema definitions
 definitions:
-
   SituationModel:
     required:
       - thing
@@ -1009,9 +894,7 @@ definitions:
         type: array
         items:
           $ref: "#/definitions/SensorvalueModel"
-  
 
-        
   GetModel:
     required:
       - name
@@ -1019,9 +902,6 @@ definitions:
       name:
         type: string
 
-         
-         
-            
   ThingModel:
     required:
       - name
@@ -1049,15 +929,13 @@ definitions:
         items:
           type: string
 
-        
-       
   SensorModel:
     required:
       - name
     properties:
       name:
         type: string
-      sensortype:
+      SensorType:
         type: string
       url:
         type: string
@@ -1068,12 +946,7 @@ definitions:
         type: string
       location:
         type: string
-        
-    
-        
-             
- 
-        
+
   SituationtemplateModel:
     required:
       - name
@@ -1117,8 +990,7 @@ definitions:
         type: string
       location:
         type: string
-      
-    
+
   SensorvalueModel:
     required:
       - sensor
@@ -1134,17 +1006,14 @@ definitions:
       quality:
         type: number
         format: float
-        
 
-
-        
-        
   Response:
     required:
       - message
     properties:
       message:
         type: string
+
   ErrorResponse:
     required:
       - message

@@ -15,7 +15,7 @@ module.exports = {
   allThings: allThings,
   saveThing: saveThing,
   getThingByName: getThingByName,
-  deleteThingByID: deleteThingByID,
+  deleteThing: deleteThing,
   updateAttribute: updateAttribute
 };
 
@@ -29,15 +29,12 @@ module.exports = {
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 function saveThing(req, res){
 	//console.log(req.body.id);
-  validateGeoJSON(req.body.location, function(valid){
-    if (valid){
+  //validateGeoJSON(req.body.location, function(valid){
         insertDocument(req.body, function() {
-        res.json({message: "Created"});
-      });
-    }else{
-      res.json({message: "GeoJSON not valid"});
-    }
-  });
+            console.log("created")
+            res.json({message: "Created"});
+        });
+  //});
 
 	
 }
@@ -47,7 +44,7 @@ function insertDocument(document, callback) {
       
       "name" : document.name,
       "url" : document.url,
-      "location" : JSON.parse(document.location),
+      "location" : document.location,
       "description" : document.description,
       "sensor" : document.sensor,
       "monitored" : false,
@@ -69,18 +66,23 @@ function insertDocument(document, callback) {
 //Deletes specified thing
 //Returns 404 if thing is not found
 /////////////////////////////////////////////////////////////////////////////////////////////////////
-function deleteThingByID(req, res){
-	console.log(req.swagger.params.ID.value);
+function deleteThing(req, res){
+	console.log(req.swagger.params.name.value);
 
-	removeDocument(req.swagger.params.ID.value, function() {
-	    res.json({name:"Deleted"});
+	removeDocument(req.swagger.params.name.value, function(items) {
+	    if (items.deletedCount > 0) {
+            res.json({message: "Deleted"});
+        } else {
+            res.statusCode = 404;
+            res.json({message: "Not found"});
+        }
 	});
 }
 function removeDocument(id, callback) {
    db.collection('Things').deleteOne(
       { "name": id },
       function(err, results) {
-         callback();
+         callback(results);
       }
    );
 };
@@ -93,9 +95,13 @@ function removeDocument(id, callback) {
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 function updateAttribute(req, res){
   update(req.swagger.params, function(doc){
-    res.json({message:"Updated"});
-  })
-
+      if (doc.matchedCount == 0) {
+          res.statusCode = 404;
+          res.json({message: "Not Found"});
+      } else {
+          res.json({message: "Updated"});
+      }
+  });
 }
 function update(params, callback){
 
@@ -103,14 +109,14 @@ function update(params, callback){
   tuple[params.attribute.value] = params.value.value;
   db.collection('Things').updateOne( 
 
-      {"_id" :  new require('mongodb').ObjectID(params.ID.value) },
+      {"name" :  params.name.value },
       {
 
         $set: tuple
       }, function(err, result) {
       assert.equal(err, null);
       //console.log(result);
-      callback();
+      callback(result);
     });
 }
 
@@ -186,10 +192,15 @@ function queryID(id, callback){
 function getThingByName(req, res) {
 	console.log(req.swagger.params.name.value);
 	queryName(req.swagger.params.name.value, function(doc){
-        doc[0].location = JSON.stringify(doc[0].location)
-        doc[0].sensors = doc[0].sensor || []
-        delete doc[0].sensor
-        res.json(doc[0]);
+	    if (doc.length > 0) {
+            doc[0].location = JSON.stringify(doc[0].location);
+            doc[0].sensors = doc[0].sensor || [];
+            delete doc[0].sensor;
+            res.json(doc[0]);
+        } else {
+            res.statusCode = 404;
+            res.json({message: "Not found"});
+        }
 	});
 
 };

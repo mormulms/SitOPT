@@ -14,13 +14,12 @@ app.use(bodyParser());
 
 //exporting modules to swagger editor
 module.exports = {
-  getTemplateByID: getTemplateByID,
   allTemplates: allTemplates,
   saveTemplate: saveTemplate,
   getTemplateByName: getTemplateByName,
   uploadAttachment: uploadAttachment,
   getAttachment: getAttachment,
-  deleteTemplateByID: deleteTemplateByID
+  deleteTemplate: deleteTemplate
 };
 
 
@@ -62,16 +61,21 @@ function update(id, xml, callback){
 //Use document ID to delete the specified situation template
 //Returns 404 if document not found
 /////////////////////////////////////////////////////////////////////////////////////////////////////
-function deleteTemplateByID(req, res){
-	removeDocument(req.swagger.params.ID.value, function() {
-	    res.json({name: "Deleted"});
+function deleteTemplate(req, res){
+	removeDocument(req.swagger.params.name.value, function(items) {
+		if (items.deletedCount > 0) {
+			res.json({name: "Deleted"});
+		} else {
+			res.statusCode = 404;
+			res.json({message: "Not Found"});
+		}
 	});
 }
-function removeDocument(id, callback) {
+function removeDocument(name, callback) {
    db.collection('Situationtemplates').deleteOne(
-      { "name": id },
+      { "name": name },
       function(err, results) {
-         callback();
+         callback(results);
       }
    );
 };
@@ -84,7 +88,7 @@ function removeDocument(id, callback) {
 //not fully implemented
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 function getAttachment(req, res){
-	queryID(req.swagger.params.ID.value, function(doc){
+	queryName(req.swagger.params.ID.value, function(doc){
 		if (doc[0].xml == null){
 			res.json({message: "No xml data attached"});
 		}else{
@@ -134,11 +138,12 @@ function attachFile(document, xml, callback){
 
 function uploadAttachment(req, res){
  // res.setHeader('Content-Type', 'application/json');
-	console.log(req.swagger.params.ID.value);
+	console.log(req.swagger.params.name.value);
 	
 
-	queryID(req.swagger.params.ID.value, function(doc){
+	queryName(req.swagger.params.name.value, function(doc){
 		if(doc[0] == null){
+			res.statusCode = 404;
 			res.json({ message: "Situationtemplate not found"} );
 		}else{
 			var text = "";
@@ -166,31 +171,6 @@ function uploadAttachment(req, res){
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
-//getTemplateByID
-//
-//Returns document of specified situation template
-//Returns 404 if document not found
-/////////////////////////////////////////////////////////////////////////////////////////////////////
-function getTemplateByID(req, res) {
-	queryID(req.swagger.params.ID.value, function(doc){
-		res.json(doc[0]);
-	})
-}
-
-function queryID(id, callback){
-	var array = [];
-	var cursor = db.collection('Situationtemplates').find({"name": id});
-	cursor.each(function(err, doc) {
-      	assert.equal(err, null);
-      	if (doc != null) {
-         	array.push(doc);
-      	}else{
-      		callback(array);
-      	}
-   	});
-}
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////
 //getTemplateByName
 //
 //Returns array of documents filtered by name
@@ -198,7 +178,12 @@ function queryID(id, callback){
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 function getTemplateByName(req, res) {
 	queryName(req.swagger.params.name.value, function(array){
-		res.json(array);
+		if (array.length > 0) {
+			res.json(array[0]);
+		} else {
+			res.statusCode = 404;
+			res.json({message: "Not Found"});
+		}
 	});
 }
 

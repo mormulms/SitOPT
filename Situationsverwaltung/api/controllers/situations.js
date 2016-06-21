@@ -17,7 +17,6 @@ app.use(bodyParser());
 
 //exporting modules to swagger editor
 module.exports = {
-	situationByID: situationByID,
 	allSituations: allSituations,
 	saveSituation: saveSituation,
 	situationByName: situationByName,
@@ -25,7 +24,7 @@ module.exports = {
 	situationChange: situationChange,
 	situationChangeDelete: situationChangeDelete,
 	situationOccured: situationOccured,
-	deleteSituationByID: deleteSituationByID,
+	deleteSituation: deleteSituation,
 	allRegistrations: allRegistrations
 };
 
@@ -152,42 +151,22 @@ function allRegistrations(req, res){
 //Returns 404 if situation is not found
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 function situationOccured(req, res){
-	console.log("occurred")
-	var id = req.swagger.params.ID.value;
-	if (!req.swagger.params.ID.value){
-		//Change all situations
-		res.json({name: "not implemented"});
-	}else{
-		/*bucket.get(id, function (err, doc) {
-		 console.log(doc);
-		 if (err) {
-		 res.statusCode = 404;
-		 res.json("Not found");
-		 } else {
-		 res.statusCode = 200;
-		 res.json ("OK");
-		 bucket.upsert(req.body.id,
-		 {thing: doc.thing,
-		 timestamp: doc.timestamp,
-		 situationtemplate: doc.situationtemplate,
-		 occured: !doc.occured,
-		 name: doc.name,
-		 quality: doc.quality,
-		 sensorvalues: doc.sensorvalues
-		 }, function (err, response) {
-		 if (err) {
-		 res.statusCode = 504;
-		 res.json("Error");
-		 } else {
-		 res.statusCode = 201;
-		 res.json("Created");
-		 }
-		 });
-		 }
-		 });	*/
-		res.json({name: "not implemented"});
-
-	}
+	console.log(req.swagger.params.thing.value);
+	console.log(req.swagger.params.situation.value);
+	db.collection('Situations').find({thing: req.swagger.params.thing.value, situationtemplate: req.swagger.params.situation.value}, function (err, items) {
+		items.count(function (e, c) {
+			if (c !== 1) {
+				res.statusCode = 400;
+				res.json({message: "Situation not found"});
+			} else {
+				items.forEach(function (item) {
+					item.occured = !item.occured;
+					db.collection('Situations').updateOne({_id: item._id}, item);
+					res.json({name: "updated"});
+				});
+			}
+		})
+	});
 }
 /*var updateOccured = function(db, callback) {
  db.collection('Situations').updateOne(
@@ -232,13 +211,13 @@ function situationChangeDelete(req, res){
 function situationChange(req, res){
 
 	//XOR not allowerd
-	if (!(req.swagger.params.SitTempID.value==undefined)&&req.swagger.params.ThingID.value==undefined ||
-		req.swagger.params.SitTempID.value==undefined&&!(req.swagger.params.ThingID.value==undefined)){
+	if (!(req.swagger.params.SitTempName.value==undefined)&&req.swagger.params.ThingName.value==undefined ||
+		req.swagger.params.SitTempName.value==undefined&&!(req.swagger.params.ThingName.value==undefined)){
 		res.statusCode = 400;
 		res.json("Specify both IDs or none.");
 		console.log("Case1");
 		//Registration for all situations
-	} else if (req.swagger.params.SitTempID.value==undefined&&req.swagger.params.ThingID.value==undefined){
+	} else if (req.swagger.params.SitTempName.value==undefined&&req.swagger.params.ThingName.value==undefined){
 		console.log("Case2");
 
 
@@ -261,8 +240,8 @@ function situationChange(req, res){
 		}
 		//Registration for specified situation
 	}else{
-		queryThingAndTemplate(req.swagger.params.ThingID.value,
-			req.swagger.params.SitTempID.value, function(doc){
+		queryThingAndTemplate(req.swagger.params.ThingName.value,
+			req.swagger.params.SitTempName.value, function(doc){
 
 				if (doc[0] == null){
 					res.statusCode = 404;
@@ -270,8 +249,8 @@ function situationChange(req, res){
 				}else{
 					var registrated = false;
 					for (var i = 0; i < callbackArray.length; i++){
-						if ((callbackArray[i].callbackURL == req.swagger.params.CallbackURL.value && callbackArray[i].ThingID == doc[0].thing && callbackArray[i].TemplateID == doc[0].situationtemplate) ||
-							(callbackArray[i].callbackURL == req.swagger.params.CallbackURL.value && callbackArray[i].ThingID == "")){
+						if ((callbackArray[i].callbackURL == req.swagger.params.CallbackURL.value && callbackArray[i].ThingName == doc[0].thing && callbackArray[i].TemplateID == doc[0].situationtemplate) ||
+							(callbackArray[i].callbackURL == req.swagger.params.CallbackURL.value && callbackArray[i].ThingName == "")){
 							registrated = true;
 						}
 					}
@@ -314,17 +293,23 @@ function SaveURL(thingID, templateID, url, continued){
 //Deletes specified situation
 //Returns 404 if situation is not found
 /////////////////////////////////////////////////////////////////////////////////////////////////////
-function deleteSituationByID(req, res){
+function deleteSituation(req, res){
 
-	removeDocument(req.swagger.params.ID.value, function() {
-		res.json({message: "Deleted"});
+	removeDocument(req.swagger.params.thing.value, req.swagger.params.situation.value, function(err, items) {
+		console.log(items)
+		if (err || items.deletedCount == 0) {
+			res.statusCode = 404;
+			res.json({message: "Document not found"})
+		} else {
+			res.json({name: "Deleted"});
+		}
 	});
 }
-function removeDocument(id, callback) {
+function removeDocument(thing, situation, callback) {
 	db.collection('Situations').deleteOne(
-		{ "_id": new require('mongodb').ObjectID(id) },
+		{ thing: thing, situationtemplate: situation },
 		function(err, results) {
-			callback();
+			callback(err, results);
 		}
 	);
 };
@@ -361,39 +346,20 @@ function queryName(name, callback){
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 function situationByThingAndTemplate(req, res){
 	queryThingAndTemplate(req.swagger.params.thing.value,
-		req.swagger.params.situationtemplate.value, function(array){
-			res.json(array);
+		req.swagger.params.situation.value, function(array){
+			if (array.length > 0) {
+				var situation = array[0];
+				res.json(situation);
+			} else {
+				res.statusCode = 400;
+				res.json({message: "Element not found"});
+			}
 		});
 
 }
 function queryThingAndTemplate(thing, template, callback){
 	var array = [];
 	var cursor = db.collection('Situations').find( { "thing": thing, "situationtemplate": template } );
-	cursor.each(function(err, doc) {
-		assert.equal(err, null);
-		if (doc != null) {
-			array.push(doc);
-		}else{
-			callback(array);
-		}
-	});
-}
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////
-//situationByID
-//
-//Returns document of specified situation
-//Returns 404 if document not found
-/////////////////////////////////////////////////////////////////////////////////////////////////////
-function situationByID(req, res) {
-	queryID(req.swagger.params.ID.value, function(doc){
-		var val = doc[0] || {};
-		res.json(doc[0]);
-	})
-}
-function queryID(id, callback){
-	var array = [];
-	var cursor = db.collection('Situations').find({"_id": new require('mongodb').ObjectID(id)});
 	cursor.each(function(err, doc) {
 		assert.equal(err, null);
 		if (doc != null) {
@@ -490,7 +456,7 @@ function insertDocument(document,template, callback) {
 	var occurence = 0;
 	for (var i = 0; i < document.sensorvalues.length; i++){
 		var sensor = document.sensorvalues[i].sensor;
-		var tuple = { sensor : document.sensorvalues[i].value};
+		var tuple = { sensor : sensor, value: document.sensorvalues[i].value};
 		sensorvalues.push(tuple);
 	}
 
@@ -556,7 +522,6 @@ function saveSituation(req, res){
 			//console.log(doc);
 			if (doc[0] == null){
 				insertDocument(req.body,req.body.situationtemplate, function() {
-					console.log("template: " + req.body.situationtemplate);
 					checkCallbacks(req.body);
 					res.json({message: "Created"});
 				});
