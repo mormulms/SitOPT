@@ -103,9 +103,12 @@ html
                   
       function startRecognition(thing)
         {
-        
         var e = document.getElementById('selectedTemplate');
         var strUser = e.options[e.selectedIndex].value;
-        document.getElementById('sendTemplate').value = strUser;
-          document.getElementById('sendThing').value = thing;
+          var ids = document.getElementsByName("id");
+          var things = document.getElementsByName("thing");
+          for (var i = 0; i < ids.length; i++) {
+            ids[i].value = strUser;
+            things[i].value = thing;
+          }
         }  
