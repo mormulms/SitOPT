@@ -88,7 +88,7 @@ function removeDocument(name, callback) {
 //not fully implemented
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 function getAttachment(req, res){
-	queryName(req.swagger.params.ID.value, function(doc){
+	queryName(req.swagger.params.name.value, function(doc){
 		if (doc[0].xml == null){
 			res.json({message: "No xml data attached"});
 		}else{

@@ -112,12 +112,13 @@ function checkCallbacks(document){
 //Returns all registrations by the Situation Handler
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 function allRegistrations(req, res){
-
 	if (req.swagger.params.CallbackURL.value == undefined){
 		res.statusCode = 200;
 		if (callbackArray.length == 0){
-			res.json("No registrations");
+			res.statusCode = 404;
+			res.json({message: "No registrations"});
 		}else{
+			console.log(callbackArray)
 			res.json(callbackArray);
 		}
 
@@ -131,7 +132,7 @@ function allRegistrations(req, res){
 		}
 		if(URLArray.length == 0){
 			res.statusCode = 404;
-			res.json("No registrations found for this URL");
+			res.json({message: "No registrations found for this URL"});
 		}else{
 			res.statusCode = 200;
 			res.json(URLArray);
@@ -214,7 +215,7 @@ function situationChange(req, res){
 	if (!(req.swagger.params.SitTempName.value==undefined)&&req.swagger.params.ThingName.value==undefined ||
 		req.swagger.params.SitTempName.value==undefined&&!(req.swagger.params.ThingName.value==undefined)){
 		res.statusCode = 400;
-		res.json("Specify both IDs or none.");
+		res.json({message: "Specify both IDs or none."});
 		console.log("Case1");
 		//Registration for all situations
 	} else if (req.swagger.params.SitTempName.value==undefined&&req.swagger.params.ThingName.value==undefined){
@@ -233,10 +234,10 @@ function situationChange(req, res){
 
 		if (!registrated){
 			res.statusCode = 200;
-			res.json("Registration successful");
+			res.json({message: "Registration successful"});
 		}else{
 			res.statusCode = 200;
-			res.json("Previous registration deleted. New registration successful");
+			res.json({message: "Previous registration deleted. New registration successful"});
 		}
 		//Registration for specified situation
 	}else{
@@ -245,7 +246,7 @@ function situationChange(req, res){
 
 				if (doc[0] == null){
 					res.statusCode = 404;
-					res.json("File not found");
+					res.json({message: "File not found"});
 				}else{
 					var registrated = false;
 					for (var i = 0; i < callbackArray.length; i++){
@@ -258,10 +259,10 @@ function situationChange(req, res){
 						console.log(doc[0].thing);
 						SaveURL(doc[0].thing, doc[0].situationtemplate, req.swagger.params.CallbackURL.value, req.swagger.params.once.value);
 						res.statusCode = 200;
-						res.json("Registration successful");
+						res.json({message: "Registration successful"});
 					}else{
 						res.statusCode = 400;
-						res.json("Already registered");
+						res.json({message: "Already registered"});
 					}
 
 				}

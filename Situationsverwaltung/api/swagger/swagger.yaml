@@ -149,7 +149,7 @@ paths:
           schema:
             type: array
             items:
-              type: string
+              $ref: "#/definitions/RegistrationModel"
         # responses may fall through to errors
         "404":
           description: Error
@@ -877,7 +877,6 @@ definitions:
   SituationModel:
     required:
       - thing
-      - timestamp
       - situationtemplate
       - occured
       - sensorvalues
@@ -1006,6 +1005,22 @@ definitions:
       quality:
         type: number
         format: float
+
+  RegistrationModel:
+    required:
+      - ThingID
+      - TemplateID
+      - callbackURL
+      - once
+    properties:
+      ThingID:
+        type: string
+      TemplateID:
+        type: string
+      callbackURL:
+        type: string
+      once:
+        type: boolean
 
   Response:
     required:

@@ -41,7 +41,7 @@ function saveThing(req, res){
                 "url" : document.url,
                 "location" : document.location,
                 "description" : document.description,
-                "sensor" : document.sensor,
+                "sensors" : document.sensors,
                 "monitored" : false,
                 "timestamp": (new Date).getTime(),
                 "owners": document.owners
@@ -130,9 +130,7 @@ function update(params, callback){
 function allThings(req, res) {
 	getAll(function(allThings) {
         for (var i = 0; i < allThings.length; i++) {
-            allThings[i].location = JSON.stringify(allThings[i].location)
-            allThings[i].sensors = allThings[i].sensor || []
-            delete allThings[i].sensor
+            allThings[i].location = JSON.stringify(allThings[i].location);
         }
         res.json(allThings);
 	});
