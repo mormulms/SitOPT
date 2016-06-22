@@ -67,7 +67,7 @@ public class ContextNodeMapper {
 
 				String sensorURL = url;
 				if (sensorNode.getInputType().toLowerCase().equals("sensor")) {
-				    sensorURL += "/" + sensorNode.getType();
+				    sensorURL += "/" + sensorNode.getName();
 				}
 				// create the corresponding NodeRED JSON node
 				ArrayList<JSONObject> nodeREDNodes = new ArrayList<>();
