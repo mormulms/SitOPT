@@ -55,8 +55,9 @@ html
 
 
                 form(method='post', action='/') 
-                  input(type='submit', value='Start situation recognition', onclick='startRecognition();')
+                  input(type='submit', value='Start situation recognition', onclick='startRecognition("' + thing.name + '");')
                   input(type='hidden', id='sendTemplate', name= "id", value= '')
+                  input(type='hidden', id='sendThing', name="thing", value='')
                 br
                 br
                 | Situations: 
@@ -100,10 +101,11 @@ html
 
     script(language='JavaScript').
                   
-      function startRecognition()
+      function startRecognition(thing)
         {
         
         var e = document.getElementById('selectedTemplate');
         var strUser = e.options[e.selectedIndex].value;
         document.getElementById('sendTemplate').value = strUser;
+          document.getElementById('sendThing').value = thing;
         }  
