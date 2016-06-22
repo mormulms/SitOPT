@@ -190,26 +190,22 @@ function queryTemplateID(id, callback){
    	});
 }
 
-var startSRS = function(templateID){
+var startSRS = function(template, thing){
 	//var database = conn.database('situationtemplates');
 	console.log("Test");
-	console.log(templateID);
-	queryTemplateID(templateID, function(doc){	
+	console.log(template);
+	queryTemplateID(template, function(doc){
 		/*if (err) {
 			console.log("Not found");
 		} else {*/
 			//console.log(JSON.stringify(doc[0]));
 			var xml = JSON.stringify(doc[0].xml.substr(doc[0].xml.indexOf('<')));
-			console.log(xml);
 			var exec = require('child_process').exec, child;
-			child = exec('java -jar public/nodeRed/mappingString.jar public/nodeRed/test.json ' + xml + ' "false" ',
+			child = exec('java -jar public/nodeRed/mappingString.jar ' + thing + ' ' + xml,
 				function (error, stdout, stderr){
 		  			//open('http://localhost:1880');
 		    		console.log('stdout: ' + stdout);
-
-				    if(error !== null){
-				      console.log('exec error: ' + error);
-				    }
+				      console.log('exec error: ' + stderr);
 			});
 
 			//request('http://localhost:5984/situationtemplates/'+templateID+'/'+ (Object.keys(doc._attachments)[0]), function (error, response, body) {
@@ -238,11 +234,11 @@ exports.nodered = function(req, res){
 }
 
 exports.things_post_handler = function(req, res) {
-	console.log("Body: " + req.body);
+	console.log("Body: " + JSON.stringify(req.body));
 	console.log("TemplateID: " + req.body.templateid);
 	console.log("ThingID: " + req.body.thingid);
 	console.log("ReqID" + req.body.id);
-    startSRS(req.body.id);
+    startSRS(req.body.id, req.body.thing);
     //res.render('things', { title: 'Things', things: things, templates: templates});
 };
 
