@@ -487,7 +487,8 @@ function updateDocument(document, oldDoc, template, callback) {
 	var sensorvalues = [];
 	for (var i = 0; i < document.sensorvalues.length; i++){
 		var sensor = document.sensorvalues[i].sensor;
-		var tuple = { sensor : document.sensorvalues[i].value};
+		var timestamp = document.sensorvalues[i].timestamp || new Date().getDate();
+		var tuple = { sensor : sensor, value: document.sensorvalues[i].value, timestamp: timestamp, quality: document.sensorvalues[i].quality};
 		sensorvalues.push(tuple);
 	}
 	db.collection('Situations').updateOne(
