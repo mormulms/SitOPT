@@ -34,7 +34,9 @@ module.exports = {
                 quality: Number,
                 sensorType: String,
                 unit: String,
-                unitSymbol: String
+                unitSymbol: String,
+                defaultValue: { type: String, default: '' },
+                defaultValueActive: { type: Boolean, default: false}
             });
 
             api.sensor = mongoose.model('Sensor', sensorSchema);

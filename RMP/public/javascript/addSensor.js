@@ -11,15 +11,17 @@ function save() {
     var quality = $('#sensorQuality').val();
     var unit = $('#unit').val();
     var unitSymbol = $('#unitSymbol').val();
+    var defaultValue = $('#defaultValue').val();
     if (!(sensorUrl == null || sensorUrl == "" || sensorID == null || sensorID == "" || sensorType == null || sensorType == "" || objectID == null || objectID == "" || quality == null || quality == "")) {
         $.post(url, {
-            objectID: objectID,
-            sensorID: sensorID,
+            objectName: objectID,
+            sensorName: sensorID,
             sensorUrl: sensorUrl,
             sensorType: sensorType,
             quality: quality,
             unit: unit,
-            unitSymbol: unitSymbol
+            unitSymbol: unitSymbol,
+            defaultValue: defaultValue
         }, function (res, code) {
             console.log(res);
             if (code == "success") {

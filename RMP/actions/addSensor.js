@@ -19,7 +19,8 @@ exports.action = {
         timeStamp: {required: false},
         quality: {required: true},
         unit: {required: true},
-        unitSymbol: {required: true}
+        unitSymbol: {required: true},
+        defaultValue: {required: false}
     },
 
     run: function(api, data, next){
@@ -44,7 +45,9 @@ exports.action = {
                     timestamp: timestamp.toString(),
                     quality: data.params.quality,
                     unit: data.params.unit,
-                    unitSymbol: data.params.unitSymbol
+                    unitSymbol: data.params.unitSymbol,
+                    defaultValue: data.params.defaultValue,
+                    defaultValueActive: data.params.defaultValue != null
                 });
                 sensor.save(function (err) {
                     if (err) {

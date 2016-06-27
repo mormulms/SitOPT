@@ -8,11 +8,13 @@ function tableclick(e) {
         var child = $(row.children()[i]);
         var text = child.text();
         child.text("");
-        if (text != null && text != "") {
+        if (text != null && (text != "" || i == 8)) {
             $("body").append("<p style='display:none;'>" + text + "</p>");
             var input = "";
             if (i < 2) {
                 input = "<input type='text' value='" + text + "' name='" + i + "' disabled />";
+            } else if (i == 8) {
+                input = "<input type='text' value='' placeholder='default value (" + text + ")' name='" + i + "' />"
             } else {
                 input = "<input type='text' value='" + text + "' name='" + i + "' />";
             }
@@ -37,12 +39,13 @@ function tableclick(e) {
 }
 
 function formatSensors(sensors) {
-    var table = "<table class='table table-striped table-bordered table-hover'><tbody><tr id='header'><th>ObjectID</th><th>SensorID</th><th>Sensor Type</th><th>Sensor Quality</th><th>Sensor URL</th><th>Last Changed</th><th>Sensor Unit</th><th>Unit Symbol</th></tr>";
+    var table = "<table class='table table-striped table-bordered table-hover'><tbody><tr id='header'><th>ObjectID</th><th>SensorID</th><th>Sensor Type</th><th>Sensor Quality</th><th>Sensor URL</th><th>Last Changed</th><th>Sensor Unit</th><th>Unit Symbol</th><th>Default Value</th></tr>";
     var entries = "";
     for (var index in sensors) {
         var sensor = sensors[index];
         entries += "<tr><td>" + sensor.objectID + "</td><td>" + sensor.sensorID + "</td><td>" + sensor.sensorType + "</td><td>" + sensor.quality + "</td><td>" + sensor.sensorUrl +
-            "</td><td>" + new Date(sensor.timeStamp) + "</td><td>" + sensor.unit + "</td><td>" + sensor.unitSymbol + "</td></tr>";
+            "</td><td>" + new Date(sensor.timeStamp) + "</td><td>" + sensor.unit + "</td><td>" + sensor.unitSymbol + "</td>" +
+            "<td>" + sensor.defaultValue + "</td></tr>";
     }
     return table + entries + "</tbody></table>";
 }
@@ -66,10 +69,11 @@ function buttonclick(action) {
         var surl = $($("input")[4]).val();
         var qual = $($("input")[3]).val();
         var type = $($("input")[2]).val();
+        var defaultValue = $($("input")[8]).val();
         if (!(surl == null || surl == "" || type == null || type == "")) {
             var match = [surl];
             if (match != null && match[0].length == surl.length) {
-                $.put(url, {sensorUrl: surl, sensorType: type, quality: qual, unit: unit, unitSymbol: unitSymbol}, function(res, code) {
+                $.put(url, {sensorUrl: surl, sensorType: type, quality: qual, unit: unit, unitSymbol: unitSymbol, defaultValue: defaultValue}, function(res, code) {
                     if (code == "success") {
                         $("nav.navbar-fixed-bottom").remove();
                         $("p").remove();

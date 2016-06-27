@@ -13,19 +13,24 @@ exports.action = {
 
     inputs: {
         sensorName: {required: true},
-        objectName: {required: true},
+        thingName: {required: true},
         sensorUrl: {required: false},
         sensorType: {required: false},
         timeStamp: {required: false},
         quality: {required: false},
         unit: {required: false},
-        unitSymbol: {required: false}
+        unitSymbol: {required: false},
+        defaultValue: {required: false}
     },
 
     run: function(api, data, next){
         var updates = {};
         updates.sensorID = data.params.sensorName;
-        updates.objectID = data.params.objectName;
+        updates.objectID = data.params.thingName;
+        if (data.params.defaultValue != '') {
+            updates.defaultValue = data.params.defaultValue;
+            updates.defaultValueActive = true;
+        }
         if (data.params.sensorUrl != null) {
             updates.sensorUrl = data.params.sensorUrl;
         }
@@ -48,7 +53,7 @@ exports.action = {
             updates.unitSymbol = data.params.unitSymbol;
         }
         if (!(data.params.sensorType == null && data.params.sensorUrl == null)) {
-            api.sensor.update({sensorID: data.params.sensorName, objectID: data.params.objectName}, updates, function (err, amount) {
+            api.sensor.update({sensorID: data.params.sensorName, objectID: data.params.thingName}, updates, function (err, amount) {
                 if (err) {
                     next(err);
                 } else {

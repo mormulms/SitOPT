@@ -28,7 +28,7 @@ exports.default = {
              ---------------------- */
 
             get : [
-                { path: '/rmp/sensordata/:objectName/:sensorName', action: 'getSensordata' },
+                { path: '/rmp/sensordata/:thingName/:sensorName', action: 'getSensordata' },
                 { path: '/sensor/:objectName/:sensorName', action: 'getSensor' },
                 { path: '/sensor', action: 'getAllSensors' },
                 { path: '/rmp/objectdata/:objectName', action: 'getObjectdata' }
@@ -41,11 +41,11 @@ exports.default = {
             ],
 
             put: [
-                { path: '/sensor/:objectName/:sensorName', action: 'updateSensor' }
+                { path: '/sensor/:thingName/:sensorName', action: 'updateSensor' }
             ],
 
             delete: [
-                { path: '/sensor/:objectName/:sensorName', action: 'deleteSensor'}
+                { path: '/sensor/:thingName/:sensorName', action: 'deleteSensor'}
             ]
 
         }
