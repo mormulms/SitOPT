@@ -494,11 +494,9 @@ function updateDocument(document, oldDoc, template, callback) {
 	db.collection('Situations').updateOne(
 		{"_id" :  new require('mongodb').ObjectID(oldDoc._id) },
 		{
-			$set: { "thing" : document.thing,
+			$set: {
 				"timestamp" : document.timestamp,
-				"situationtemplate" : document.situationtemplate,
 				"occured" : document.occured,
-				"name" : template.situation,
 				"quality": 100,
 				"sensorvalues": sensorvalues
 			}
