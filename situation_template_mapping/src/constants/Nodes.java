@@ -230,7 +230,7 @@ public class Nodes {
 				+ "    returnValue = counter == " + numberOfInputs + ";\n";
         String things = mapping.getObjects();
         if (things.equals("")) {
-            things = objectID;
+            things = "\'" + objectID + "\'";
         }
         return String.format(accumulationString, numberOfInputs, immediateReturnValue, things, situationTemplateID, things, situationTemplateID);
 	}
@@ -245,7 +245,7 @@ public class Nodes {
 		final String immediateReturnValue = "if (context.values[i]) {\n	  		counter++;}\n                returnValue = counter >= 1;\n";
         String things = mapping.getObjects();
         if (things.equals("")) {
-            things = objectID;
+            things = "\'" + objectID + "\'";
         }
         return String.format(accumulationString, numberOfInputs, immediateReturnValue, things, situationTemplateID, things, situationTemplateID);
 	}
