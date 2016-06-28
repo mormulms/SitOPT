@@ -57,7 +57,7 @@ public class Nodes {
 			+ "  if (returnValue) {\n"
 			+ "    var array = [%s];\n"
 			+ "    for (var index in array) {\n"
-			+ "      situations.push({'thing':array[index], 'timestamp':new Date().toString(), 'situationtemplate':'%s' , 'occured':true, 'sensorvalues': values});\n"
+			+ "      situations.push({'thing':array[index], 'name': array[index], 'timestamp':new Date().toString(), 'situationtemplate':'%s' , 'occured':true, 'sensorvalues': values});\n"
 			+ "    }\n"
 			+ "  } else {\n"
 			+ "    var array = [%s];\n"
