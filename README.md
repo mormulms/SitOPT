@@ -18,56 +18,89 @@ More details on the installation of the modules can be found in the correspondin
  
 ### Installation (tested on Ubuntu 16.04)
  - Tomcat8:
+ 
 ``$ sudo apt-get install tomcat8``
  
  - Node.js
+ 
 ``$ sudo apt-get install nodejs-legacy``
+
 ``$ sudo apt-get install npm``
  
  - Java8
+ 
 ``$ sudo add-apt-repository ppa:webupd8team/java``
+
 ``$ sudo apt-get update``
+
 ``$ sudo apt-get install oracle-java8-installer``
 
  - MongoDB
+ 
 ``$ sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv EA312927``
+
 ``$ echo "deb http://repo.mongodb.org/apt/ubuntu xenial/mongodb-org/3.2 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-3.2.list``
+
 ``$ sudo apt-get update``
+
 ``$ sudo apt-get install -y mongodb-org``
+
 ``$ sudo nano /etc/systemd/system/mongodb.service``
+
   Paste in the following contents and save:
   
   ``[Unit]
+  
   Description=High-performance, schema-free document-oriented database
+  
   After=network.target
 
+
   [Service]
+  
   User=mongodb
+  
   ExecStart=/usr/bin/mongod --quiet --config /etc/mongod.conf
 
   [Install]
+  
   WantedBy=multi-user.target``
   
+  
 ``$ sudo systemctl start mongodb (start MongoDB to verify installation, no output expected)``
+
 ``$ sudo systemctl status mongodb (check if Mongo is running)``
+
 ``$ sudo systemctl enable mongodb (automatically start Mongo when starting system)``
+
   
   - CouchDB
+  
 ``$ sudo apt-get update``
+
 ``$ sudo apt-get upgrade``
+
 ``$ sudo apt-get install software-properties-common``
+
 ``$ sudo add-apt-repository ppa:couchdb/stable``
+
 ``$ sudo apt-get update``
+
 ``$ sudo apt-get install couchdb``
+
 
 Default config does not allow remote access to CouchDB. Change config files local.ini and default.ini located in /etc/couchdb/
 Change "bind_address" in both .ini files from "127.0.0.1" to "0.0.0.0" to enable remote access
 
   - Swagger
+  
 ``$ npm install -g swagger``
 
+
   - Ant
+  
 ``$ npm install -g ant``
+
 
 ### Defaults
 
