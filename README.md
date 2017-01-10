@@ -14,6 +14,7 @@ More details on the installation of the modules can be found in the correspondin
  - MongoDB
  - CouchDB
  - Swagger
+ - ant
  
 ### Defaults
 
