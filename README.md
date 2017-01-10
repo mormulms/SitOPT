@@ -9,7 +9,7 @@ More details on the installation of the modules can be found in the correspondin
 ### Requirements
 
  - Tomcat8
- - Node.JS (executable may be called node or nodejs)
+ - Node.JS (executable may be called node or nodejs) (Legacy)
  - Java8
  - MongoDB
  - CouchDB
