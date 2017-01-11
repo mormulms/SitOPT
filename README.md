@@ -140,7 +140,9 @@ Create a user in the database RBS in the mongo shell like the following:
 
 ``use RBS``
 
-``db.createUser({user: "RBS", pwd: "RBS", roles:[]})
+``db.createUser({user: "RBS", pwd: "RBS", roles:[]})``
+
+
 
 
 
