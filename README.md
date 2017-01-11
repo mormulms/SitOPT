@@ -120,19 +120,29 @@ These are the default ports, where every module runs:
 If you want to install the complete suite on one computer, simply execute
 following commands:
 
-``git clone https://github.com/mormulms/SitOPT.git``
+``$ git clone https://github.com/mormulms/SitOPT.git``
 
-``cd SitOPT``
+``$ cd SitOPT``
 
-``sudo ./build.sh``
+``$ sudo ./build.sh``
 
-``sudo cp situation_template_mapping/settings.properties ~tomcat8/situation_mapping.properties``
+``$ sudo cp situation_template_mapping/settings.properties ~tomcat8/situation_mapping.properties``
 
-``sudo cp situation_template_mapping/settings.properties ~root/situation_mapping.properties``
+``$ sudo cp situation_template_mapping/settings.properties ~root/situation_mapping.properties``
 
-``./db_setup.sh $COUCHDB_SERVER $MONGODB_SERVER`` (both are localhost if installed locally)
+``$ ./db_setup.sh $COUCHDB_SERVER $MONGODB_SERVER`` (both are localhost if installed locally)
 
-Everything is up and running now.
+Login to MongoDB:
+
+``$ mongo``
+
+Create a user in the database RBS in the mongo shell like the following:
+
+``use RBS``
+
+``db.createUser({user: "RBS", pwd: "RBS", roles:[]})
+
+
 
 #### Windows
 
