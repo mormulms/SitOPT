@@ -12,10 +12,10 @@ fi
 date
 
 # pull newest changes
-PULL=$(git pull)
+#PULL=$(git pull)
 
 # only execute if changes in git
-if [[ $PULL != "Already up-to-date." ]]; then
+#if [[ $PULL != "Already up-to-date." ]]; then
   # kill running processes
   pkill -9 nodejs
   pkill -9 npm
@@ -75,4 +75,4 @@ if [[ $PULL != "Already up-to-date." ]]; then
   # start node-red
   cd node-red/node_modules/.bin
   ./node-red 2>&1 > /dev/null &
-fi
+#fi
